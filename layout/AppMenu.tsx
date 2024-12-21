@@ -1,0 +1,165 @@
+/* eslint-disable @next/next/no-img-element */
+
+import React, { useContext } from 'react';
+import AppMenuitem from './AppMenuitem';
+import { LayoutContext } from './context/layoutcontext';
+import { MenuProvider } from './context/menucontext';
+import Link from 'next/link';
+import { AppMenuItem } from '@/types';
+
+const AppMenu = () => {
+    const { layoutConfig } = useContext(LayoutContext);
+
+    const model: AppMenuItem[] = [
+        {
+            label: '',
+            icon: 'pi pi-fw pi-briefcase', // General category icon
+            to: '/pages',
+            items: [
+                {
+                    label: 'Dashboard',
+                    icon: 'pi pi-fw pi-home', // Home or main dashboard icon
+                    to: '/',
+                },
+                {
+                    label: 'Company & Service',
+                    icon: 'pi pi-fw pi-sitemap', // Hierarchy or company services
+                    items: [
+                        {
+                            label: 'Company',
+                            icon: 'pi pi-fw pi-building', // Company or organization icon
+                            to: '/pages/dictionary',
+                        },
+                        {
+                            label: 'Company Code',
+                            icon: 'pi pi-fw pi-key', // Code or identifier icon
+                            to: '/pages/product-category',
+                        },
+                        {
+                            label: 'Service Sub Type',
+                            icon: 'pi pi-fw pi-cog', // Subcategories or settings icon
+                            to: '/pages/variations',
+                        },
+                        {
+                            label: 'Service Category',
+                            icon: 'pi pi-fw pi-tags', // Tags or categorization icon
+                            to: '/pages/brands',
+                        },
+                        {
+                            label: 'Service',
+                            icon: 'pi pi-fw pi-box', // Service or package icon
+                            to: '/pages/units',
+                        },
+                        {
+                            label: 'Bundle',
+                            icon: 'pi pi-fw pi-layer-group', // Layers or bundles icon
+                            to: '/pages/base-units',
+                        },
+                    ],
+                },
+                {
+                    label: 'Financials',
+                    icon: 'pi pi-fw pi-dollar', // Financial or money-related icon
+                    items: [
+                        {
+                            label: 'Money Transactions',
+                            icon: 'pi pi-fw pi-wallet', // Wallet for transactions
+                            to: '/pages/dictionary',
+                        },
+                        {
+                            label: 'Payment Method',
+                            icon: 'pi pi-fw pi-credit-card', // Credit card for payments
+                            to: '/pages/product-category',
+                        },
+                        {
+                            label: 'Suppliers',
+                            icon: 'pi pi-fw pi-truck', // Truck or supplier icon
+                            to: '/pages/variations',
+                        },
+                        {
+                            label: 'Purchase Products',
+                            icon: 'pi pi-fw pi-shopping-cart', // Shopping cart for purchases
+                            to: '/pages/brands',
+                        },
+                        {
+                            label: 'Payments',
+                            icon: 'pi pi-fw pi-money-bill', // Money bill for payments
+                            to: '/pages/units',
+                        },
+                        {
+                            label: 'Balance',
+                            icon: 'pi pi-fw pi-chart-line', // Line chart for balance
+                            to: '/pages/units',
+                        },
+                    ],
+                },
+                {
+                    label: 'Geographical',
+                    icon: 'pi pi-fw pi-globe', // Globe for geographical data
+                    items: [
+                        {
+                            label: 'Country',
+                            icon: 'pi pi-fw pi-flag', // Flag for country
+                            to: '/pages/dictionary',
+                        },
+                        {
+                            label: 'Province',
+                            icon: 'pi pi-fw pi-map', // Map for provinces
+                            to: '/pages/product-category',
+                        },
+                        {
+                            label: 'District',
+                            icon: 'pi pi-fw pi-compass', // Compass for district
+                            to: '/pages/variations',
+                        },
+                    ],
+                },
+                {
+                    label: 'Reseller',
+                    icon: 'pi pi-fw pi-users', // Group or reseller icon
+                    to: '',
+                },
+                {
+                    label: 'Order',
+                    icon: 'pi pi-fw pi-shopping-bag', // Bag for orders
+                    to: '',
+                },
+                {
+                    label: 'Language',
+                    icon: 'pi pi-fw pi-globe', // Globe for languages
+                    to: '',
+                },
+                {
+                    label: 'Currency',
+                    icon: 'pi pi-fw pi-money-bill', // Money bill for currency
+                    to: '/pages/currencies',
+                },
+                {
+                    label: 'Advertisement',
+                    icon: 'pi pi-fw pi-bullhorn', // Bullhorn for advertisements
+                    to: '',
+                },
+                {
+                    label: 'General Settings',
+                    icon: 'pi pi-fw pi-cog', // Cogwheel for settings
+                    to: '',
+                },
+            ],
+        },
+    ];
+
+
+    return (
+        <MenuProvider>
+            <ul className="layout-menu">
+                {model.map((item, i) => {
+                    return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
+                })}
+
+
+            </ul>
+        </MenuProvider>
+    );
+};
+
+export default AppMenu;
