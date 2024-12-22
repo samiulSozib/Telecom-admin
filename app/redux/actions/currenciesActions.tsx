@@ -18,7 +18,6 @@ export const fetchCurrencies=()=>async(dispatch:Dispatch)=>{
                 Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG `,
             },
         });
-        console.log(response.data)
         dispatch({type:FETCH_CURRENCIES_SUCCESS,payload:response.data})
     }catch(error:any){
         dispatch({type:FETCH_CURRENCIES_FAILURE,payload:error.message})
