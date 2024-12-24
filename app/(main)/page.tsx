@@ -12,10 +12,16 @@ import Link from 'next/link';
 import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { useDispatch } from 'react-redux';
-import { fetchDashboardData } from '../redux/actions/dashboardActions';
+import { _fetchDashboardData } from '../redux/actions/dashboardActions';
 import { useSelector } from 'react-redux';
 import { dashboardDataReducer } from '../redux/reducers/dashboardReducer';
 import { Divider } from 'primereact/divider';
+import { countriesReducer } from '../redux/reducers/countriesReducer';
+import { _fetchCountries } from '../redux/actions/countriesActions';
+import { _fetchTelegramList } from '../redux/actions/telegramActions';
+import { telegramReducer } from '../redux/reducers/telegramReducer';
+import { _fetchCompanies } from '../redux/actions/companyActions';
+import { companyReducer } from '../redux/reducers/companyReducer';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -46,15 +52,21 @@ const Dashboard = () => {
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
+    const {countries}=useSelector((state:any)=>state.countriesReducer)
+    const {telegramChatIds}=useSelector((state:any)=>state.telegramReducer)
+    const {companies}=useSelector((state:any)=>state.companyReducer)
 
     const dispatch=useDispatch()
     useEffect(()=>{
-        dispatch(fetchDashboardData())
+        dispatch(_fetchDashboardData())
+        dispatch(_fetchCountries())
+        dispatch(_fetchTelegramList())
+        dispatch(_fetchCompanies())
     },[dispatch])
 
     useEffect(()=>{
-        console.log(data)
-    },[dispatch,data])
+        console.log(companies)
+    },[dispatch,companies])
 
     const applyLightTheme = () => {
         const lineOptions: ChartOptions = {

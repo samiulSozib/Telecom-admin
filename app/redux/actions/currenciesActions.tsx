@@ -9,7 +9,7 @@ import {
 
 import { Currency } from "../reducers/currenciesReducer";
 
-export const fetchCurrencies=()=>async(dispatch:Dispatch)=>{
+export const _fetchCurrencies=()=>async(dispatch:Dispatch)=>{
     dispatch({type:FETCH_CURRENCIES_REQUEST})
 
     try{

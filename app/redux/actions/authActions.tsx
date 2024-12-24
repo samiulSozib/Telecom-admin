@@ -7,7 +7,7 @@ import {
     LOGIN_FAIL
 } from '../constants/authConstants'
 
-export const login = (username: string, password: string) => async (dispatch: Dispatch) => {
+export const _login = (username: string, password: string) => async (dispatch: Dispatch) => {
     dispatch({ type: LOGIN_REQUEST });
 
     try {

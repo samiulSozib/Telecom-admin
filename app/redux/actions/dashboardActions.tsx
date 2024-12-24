@@ -8,7 +8,7 @@ import {
 } from '../constants/dashboardConstants'
 
 
-export const fetchDashboardData=()=>async(dispatch:Dispatch)=>{
+export const _fetchDashboardData=()=>async(dispatch:Dispatch)=>{
     dispatch({type:FETCH_DASHBOARD_DATA_REQUEST})
 
     try{

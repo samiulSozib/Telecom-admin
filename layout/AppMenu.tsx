@@ -28,7 +28,7 @@ const AppMenu = () => {
                         {
                             label: 'Company',
                             icon: 'pi pi-fw pi-building', // Company or organization icon
-                            to: '/pages/dictionary',
+                            to: '/pages/companies',
                         },
                         {
                             label: 'Company Code',

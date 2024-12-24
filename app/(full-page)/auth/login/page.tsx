@@ -8,7 +8,7 @@ import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { useDispatch } from 'react-redux';
-import { login } from '../../../../app/redux/actions/authActions';
+import { _login } from '../../../../app/redux/actions/authActions';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -40,7 +40,7 @@ const LoginPage = () => {
         setLoading(true);
 
         try {
-            const result = await dispatch<any>(login(email, password)); // Use the return value
+            const result = await dispatch<any>(_login(email, password)); // Use the return value
             if (result.success) {
                 if (checked) {
                     localStorage.setItem('rememberedEmail', email);

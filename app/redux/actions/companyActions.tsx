@@ -1,0 +1,157 @@
+import { Dispatch } from "redux";
+import axios from "axios";
+
+import {
+    FETCH_COMPANY_LIST_REQUEST,
+    FETCH_COMPANY_LIST_SUCCESS,
+    FETCH_COMPANY_LIST_FAIL,
+    DELETE_COMPANY_REQUEST,
+    DELETE_COMPANY_SUCCESS,
+    DELETE_COMPANY_FAIL,
+    ADD_COMPANY_REQUEST,
+    ADD_COMPANY_SUCCESS,
+    ADD_COMPANY_FAIL,
+    EDIT_COMPANY_REQUEST,
+    EDIT_COMPANY_SUCCESS,
+    EDIT_COMPANY_FAIL
+} from '../constants/companyConstants'
+import { Company } from "../reducers/companyReducer";
+import { Toast } from "primereact/toast";
+
+
+
+// FETCH COMPANY LIST ACTION
+export const _fetchCompanies=()=>async(dispatch:Dispatch)=>{
+    dispatch({type:FETCH_COMPANY_LIST_REQUEST})
+
+    try{
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, {
+            headers: {
+                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG `,
+            },
+        });
+        //console.log(response)
+        dispatch({type:FETCH_COMPANY_LIST_SUCCESS,payload:response.data.data.companies})
+    }catch(error:any){
+        dispatch({type:FETCH_COMPANY_LIST_FAIL,payload:error.message})
+    }
+}
+
+
+
+
+// DELETE COMPANY ACTION
+export const _deleteCompany = (companyId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+    dispatch({ type: DELETE_COMPANY_REQUEST });
+
+    try {
+        await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/${companyId}`, {
+            headers: {
+                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG`,
+            },
+        });
+
+        dispatch({ type: DELETE_COMPANY_SUCCESS, payload: companyId });
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Company Deleted',
+            life: 3000
+        });
+
+    } catch (error: any) {
+        dispatch({ type: DELETE_COMPANY_FAIL, payload: error.message });
+    }
+};
+
+// ADD COMPANY ACTION
+export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+    dispatch({ type: ADD_COMPANY_REQUEST });
+
+    const formData = new FormData();
+
+    formData.append('company_name', newCompany.company_name);
+
+    if (newCompany.company_logo && typeof newCompany.company_logo !== 'string') {
+        formData.append('company_logo', newCompany.company_logo);
+    }
+
+    formData.append('country_id', newCompany.country_id?.toString()||'');
+
+    formData.append('telegram_chat_id', newCompany._telegram_chat_id?.toString()||'');
+
+
+    try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, formData, {
+            headers: {
+                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG`,
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        //console.log(response)
+
+        dispatch({
+            type: ADD_COMPANY_SUCCESS,
+            payload: response.data.data.company, // Assuming API returns the created company.
+        });
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Company Updated',
+            life: 3000
+        });
+    } catch (error: any) {
+        console.log(error)
+        dispatch({
+            type: ADD_COMPANY_FAIL,
+            payload: error.message,
+        });
+    }
+};
+
+
+// EDIT COMPANY ACTION
+export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+    dispatch({ type: EDIT_COMPANY_REQUEST });
+
+    const formData = new FormData();
+
+    formData.append('company_name', updatedCompany.company_name);
+
+    if (updatedCompany.company_logo && typeof updatedCompany.company_logo !== 'string') {
+        formData.append('company_logo', updatedCompany.company_logo);
+    }
+
+    formData.append('country_id', updatedCompany.country_id?.toString() || '');
+    formData.append('telegram_chat_id', updatedCompany._telegram_chat_id?.toString() || '');
+
+    try {
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/companies/${updatedCompany.id}`,
+            formData,
+            {
+                headers: {
+                    Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+
+        dispatch({
+            type: EDIT_COMPANY_SUCCESS,
+            payload: response.data.data.company, // Assuming API returns the updated company.
+        });
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Company Updated',
+            life: 3000
+        });
+    } catch (error: any) {
+        //console.log(error);
+        dispatch({
+            type: EDIT_COMPANY_FAIL,
+            payload: error.message,
+        });
+    }
+};
