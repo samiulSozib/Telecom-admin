@@ -18,16 +18,19 @@ import {
 import { Company } from "../reducers/companyReducer";
 import { Toast } from "primereact/toast";
 
-
+const getAuthToken = () => {
+    return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
+  };
 
 // FETCH COMPANY LIST ACTION
 export const _fetchCompanies=()=>async(dispatch:Dispatch)=>{
     dispatch({type:FETCH_COMPANY_LIST_REQUEST})
 
     try{
+        const token = getAuthToken();
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, {
             headers: {
-                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG `,
+                Authorization: `Bearer ${token}`,
             },
         });
         //console.log(response)
@@ -45,9 +48,10 @@ export const _deleteCompany = (companyId: number,toast: React.RefObject<Toast>) 
     dispatch({ type: DELETE_COMPANY_REQUEST });
 
     try {
+        const token = getAuthToken();
         await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/${companyId}`, {
             headers: {
-                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG`,
+                Authorization: `Bearer ${token}`,
             },
         });
 
@@ -82,9 +86,10 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
 
 
     try {
+        const token = getAuthToken();
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, formData, {
             headers: {
-                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
         });
@@ -126,12 +131,13 @@ export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toas
     formData.append('telegram_chat_id', updatedCompany._telegram_chat_id?.toString() || '');
 
     try {
+        const token = getAuthToken();
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/companies/${updatedCompany.id}`,
             formData,
             {
                 headers: {
-                    Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             }

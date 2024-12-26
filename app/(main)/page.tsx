@@ -22,6 +22,7 @@ import { _fetchTelegramList } from '../redux/actions/telegramActions';
 import { telegramReducer } from '../redux/reducers/telegramReducer';
 import { _fetchCompanies } from '../redux/actions/companyActions';
 import { companyReducer } from '../redux/reducers/companyReducer';
+import { authReducer, Currency } from '../redux/reducers/authReducer';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -52,21 +53,16 @@ const Dashboard = () => {
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
-    const {countries}=useSelector((state:any)=>state.countriesReducer)
-    const {telegramChatIds}=useSelector((state:any)=>state.telegramReducer)
-    const {companies}=useSelector((state:any)=>state.companyReducer)
+    const {userInfo}=useSelector((state:any)=>state.authReducer)
 
     const dispatch=useDispatch()
     useEffect(()=>{
         dispatch(_fetchDashboardData())
-        dispatch(_fetchCountries())
-        dispatch(_fetchTelegramList())
-        dispatch(_fetchCompanies())
     },[dispatch])
 
     useEffect(()=>{
-        console.log(companies)
-    },[dispatch,companies])
+        console.log(userInfo)
+    },[dispatch,userInfo])
 
     const applyLightTheme = () => {
         const lineOptions: ChartOptions = {
@@ -233,7 +229,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Today Sale</span>
-                            <div className="text-900 font-medium text-xl">{data?.today_sale}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.today_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-yellow-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-dollar text-yellow-500 text-xl" />
@@ -248,7 +244,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Today Profit</span>
-                            <div className="text-900 font-medium text-xl">{data?.today_profit}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.today_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-cyan-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-chart-line text-cyan-500 text-xl" />
@@ -263,7 +259,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Total Sale</span>
-                            <div className="text-900 font-medium text-xl">{data?.total_sale}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.total_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-blue-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-wallet text-blue-500 text-xl" />
@@ -278,7 +274,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Total Profit</span>
-                            <div className="text-900 font-medium text-xl">{data?.total_profit}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.total_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-thumbs-up text-green-500 text-xl" />

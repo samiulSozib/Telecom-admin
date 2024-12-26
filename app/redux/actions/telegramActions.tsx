@@ -7,14 +7,19 @@ import {
     FETCH_TELEGRAM_LIST_FAIL
 } from '../constants/telegramConstants'
 
+const getAuthToken = () => {
+    return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
+  };
+
 
 export const _fetchTelegramList=()=>async(dispatch:Dispatch)=>{
     dispatch({type:FETCH_TELEGRAM_LIST_REQUEST})
 
     try{
+        const token = getAuthToken();
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/telegram-chat-ids`, {
             headers: {
-                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG `,
+                Authorization: `Bearer ${token}`,
             },
         });
         //console.log(response)

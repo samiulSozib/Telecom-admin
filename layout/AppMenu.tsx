@@ -33,7 +33,7 @@ const AppMenu = () => {
                         {
                             label: 'Company Code',
                             icon: 'pi pi-fw pi-key', // Code or identifier icon
-                            to: '/pages/product-category',
+                            to: '/pages/company-code',
                         },
                         {
                             label: 'Service Sub Type',
@@ -43,17 +43,17 @@ const AppMenu = () => {
                         {
                             label: 'Service Category',
                             icon: 'pi pi-fw pi-tags', // Tags or categorization icon
-                            to: '/pages/brands',
+                            to: '/pages/service-category',
                         },
                         {
                             label: 'Service',
                             icon: 'pi pi-fw pi-box', // Service or package icon
-                            to: '/pages/units',
+                            to: '/pages/services',
                         },
                         {
                             label: 'Bundle',
-                            icon: 'pi pi-fw pi-layer-group', // Layers or bundles icon
-                            to: '/pages/base-units',
+                            icon: 'pi pi-fw pi-database', // Layers or bundles icon
+                            to: '/pages/bundle',
                         },
                     ],
                 },

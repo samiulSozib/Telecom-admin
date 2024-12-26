@@ -5,6 +5,10 @@ import { dashboardDataReducer } from './dashboardReducer';
 import { countriesReducer } from './countriesReducer';
 import { telegramReducer } from './telegramReducer';
 import { companyReducer } from './companyReducer';
+import { companyCodeReducer } from './companyCodeReducer';
+import serviceCategoryReducer from './serviceCategoryReducer';
+import serviceReducer from './serviceReducer';
+import bundleReducer from './bundleReducer';
 
 const rootReducer=combineReducers({
     currenciesReducer,
@@ -12,7 +16,11 @@ const rootReducer=combineReducers({
     dashboardDataReducer,
     countriesReducer,
     telegramReducer,
-    companyReducer
+    companyReducer,
+    companyCodeReducer,
+    serviceCategoryReducer,
+    serviceReducer,
+    bundleReducer
 })
 
 

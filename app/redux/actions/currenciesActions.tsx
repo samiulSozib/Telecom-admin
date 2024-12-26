@@ -7,18 +7,22 @@ import {
     FETCH_CURRENCIES_FAILURE
 } from '../constants/currenciesConstants'
 
-import { Currency } from "../reducers/currenciesReducer";
+const getAuthToken = () => {
+    return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
+  };
 
 export const _fetchCurrencies=()=>async(dispatch:Dispatch)=>{
     dispatch({type:FETCH_CURRENCIES_REQUEST})
 
     try{
-        const response = await axios.get<Currency[]>(`${process.env.NEXT_PUBLIC_BASE_URL}/currencies`, {
+        const token = getAuthToken();
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/currencies`, {
             headers: {
-                Authorization: `Bearer 553|BneW90obh1oiTN17e3mqtxJzgG61UdTDUged1XQG `,
+                Authorization: `Bearer ${token}`,
             },
         });
-        dispatch({type:FETCH_CURRENCIES_SUCCESS,payload:response.data})
+
+        dispatch({type:FETCH_CURRENCIES_SUCCESS,payload:response.data.data.currencies})
     }catch(error:any){
         dispatch({type:FETCH_CURRENCIES_FAILURE,payload:error.message})
     }
