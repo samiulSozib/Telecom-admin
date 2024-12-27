@@ -230,7 +230,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Today Sale</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.today_sale.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.today_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-yellow-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-dollar text-yellow-500 text-xl" />
@@ -245,7 +245,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Today Profit</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.today_profit.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.today_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-cyan-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-chart-line text-cyan-500 text-xl" />
@@ -260,7 +260,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Total Sale</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.total_sale.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.total_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-blue-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-wallet text-blue-500 text-xl" />
@@ -275,7 +275,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Total Profit</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency.symbol} {data?.total_profit.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.total_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-thumbs-up text-green-500 text-xl" />
