@@ -26,7 +26,7 @@ export const _fetchServiceList = () => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_SERVICE_LIST_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/services`,{
+    const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/services`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +54,7 @@ export const _addService = (newServiceData: Service,toast: React.RefObject<Toast
     }
     const token = getAuthToken();
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/services`,
+      `https://app-api-bt-v1-24.watantelecom.com/api/admin/services`,
       body,
       {
         headers: {
@@ -97,7 +97,7 @@ export const _editService = (serviceId: number, updatedServiceData: Service,toas
     }
     const token = getAuthToken();
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/services/${serviceId}`,
+      `https://app-api-bt-v1-24.watantelecom.com/api/admin/services/${serviceId}`,
       body,
       {
         headers: {
@@ -134,7 +134,7 @@ export const _deleteService = (serviceId: number,toast: React.RefObject<Toast>) 
   dispatch({ type: DELETE_SERVICE_REQUEST });
   try {
     const token = getAuthToken();
-    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/services/${serviceId}`, {
+    await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/services/${serviceId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

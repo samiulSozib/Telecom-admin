@@ -18,7 +18,7 @@ export const fetchDashboardData=()=>async(dispatch:AppDispatch)=>{
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`, {
+        const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/dashboard`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

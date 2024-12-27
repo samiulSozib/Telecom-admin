@@ -26,7 +26,7 @@ export const _fetchBundleList = (page: number = 1) => async (dispatch: Dispatch)
   dispatch({ type: FETCH_BUNDLE_LIST_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/bundles?page=${page}`, {
+    const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/bundles?page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -64,7 +64,7 @@ export const _addBundle = (newBundleData: Bundle, toast: React.RefObject<Toast>)
     };
     const token = getAuthToken();
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/bundles`,
+      `https://app-api-bt-v1-24.watantelecom.com/api/admin/bundles`,
       body,
       {
         headers: {
@@ -115,7 +115,7 @@ export const _editBundle = (bundleId: number, updatedBundleData: Bundle, toast: 
     };
     const token = getAuthToken();
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/bundles/${bundleId}`,
+      `https://app-api-bt-v1-24.watantelecom.com/api/admin/bundles/${bundleId}`,
       body,
       {
         headers: {
@@ -154,7 +154,7 @@ export const _deleteBundle = (bundleId: number, toast: React.RefObject<Toast>) =
   dispatch({ type: DELETE_BUNDLE_REQUEST });
   try {
     const token = getAuthToken();
-    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/bundles/${bundleId}`, {
+    await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/bundles/${bundleId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

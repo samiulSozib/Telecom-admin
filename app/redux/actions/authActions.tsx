@@ -11,7 +11,7 @@ export const _login = (username: string, password: string) => async (dispatch: D
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/login`, { username, password });
+        const response = await axios.post(`https://app-api-bt-v1-24.watantelecom.com/api/admin/login`, { username, password });
 
         localStorage.setItem('api_token', response.data.data.api_token);
         localStorage.setItem('user_info', JSON.stringify(response.data.data.user_info));

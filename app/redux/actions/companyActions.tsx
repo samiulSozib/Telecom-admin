@@ -28,7 +28,7 @@ export const _fetchCompanies=()=>async(dispatch:Dispatch)=>{
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, {
+        const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companies`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -49,7 +49,7 @@ export const _deleteCompany = (companyId: number,toast: React.RefObject<Toast>) 
 
     try {
         const token = getAuthToken();
-        await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/${companyId}`, {
+        await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companies/${companyId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -87,7 +87,7 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
 
     try {
         const token = getAuthToken();
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, formData, {
+        const response = await axios.post(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companies`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -133,7 +133,7 @@ export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toas
     try {
         const token = getAuthToken();
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/companies/${updatedCompany.id}`,
+            `https://app-api-bt-v1-24.watantelecom.com/api/admin/companies/${updatedCompany.id}`,
             formData,
             {
                 headers: {
