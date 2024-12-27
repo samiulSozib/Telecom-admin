@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk, { ThunkMiddleware } from 'redux-thunk';
-import rootReducer from './reducers/rootReducer';
-import  {RootState}  from './reducers/rootReducer';
+import rootReducer, { RootState } from './reducers/rootReducer';
 
+// Create the store
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk as ThunkMiddleware<RootState,any>)
+  applyMiddleware(thunk as ThunkMiddleware<RootState, any>)
 );
 
 export type AppDispatch = typeof store.dispatch;
