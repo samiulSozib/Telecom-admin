@@ -11,20 +11,20 @@ import serviceReducer from './serviceReducer';
 import bundleReducer from './bundleReducer';
 
 const rootReducer=combineReducers({
-    currenciesReducer,
-    authReducer,
-    dashboardDataReducer,
-    countriesReducer,
-    telegramReducer,
-    companyReducer,
-    companyCodeReducer,
-    serviceCategoryReducer,
-    serviceReducer,
-    bundleReducer
+    currenciesReducer:currenciesReducer,
+    authReducer:authReducer,
+    dashboardDataReducer:dashboardDataReducer,
+    countriesReducer:countriesReducer,
+    telegramReducer:telegramReducer,
+    companyReducer:companyReducer,
+    companyCodeReducer:companyCodeReducer,
+    serviceCategoryReducer:serviceCategoryReducer,
+    serviceReducer:serviceReducer,
+    bundleReducer:bundleReducer
 })
 
 
 
-export type RootState = ReturnType<typeof rootReducer>;
+// export type RootState = ReturnType<typeof rootReducer>;
 
 export default rootReducer
