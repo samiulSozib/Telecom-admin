@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { useDispatch } from 'react-redux';
-import { _fetchDashboardData } from '../redux/actions/dashboardActions';
+import { _fetchDashboardData, fetchDashboardData } from '../redux/actions/dashboardActions';
 import { useSelector } from 'react-redux';
 import { dashboardDataReducer } from '../redux/reducers/dashboardReducer';
 import { Divider } from 'primereact/divider';
@@ -23,6 +23,7 @@ import { telegramReducer } from '../redux/reducers/telegramReducer';
 import { _fetchCompanies } from '../redux/actions/companyActions';
 import { companyReducer } from '../redux/reducers/companyReducer';
 import { authReducer, Currency } from '../redux/reducers/authReducer';
+import { AppDispatch, RootState } from '../redux/store';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -53,15 +54,15 @@ const Dashboard = () => {
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
-    const {userInfo}=useSelector((state:any)=>state.authReducer)
+    const {userInfo}=useSelector((state:RootState)=>state.authReducer)
 
-    const dispatch=useDispatch()
+    const dispatch=useDispatch<AppDispatch>()
     useEffect(()=>{
-        dispatch(_fetchDashboardData())
+        dispatch(fetchDashboardData())
     },[dispatch])
 
     useEffect(()=>{
-        console.log(userInfo)
+        //console.log(userInfo)
     },[dispatch,userInfo])
 
     const applyLightTheme = () => {

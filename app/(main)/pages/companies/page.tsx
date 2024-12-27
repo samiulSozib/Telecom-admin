@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
+import { AppDispatch } from '@/app/redux/store';
 
 const CompanyPage = () => {
 
@@ -43,7 +44,7 @@ const CompanyPage = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const dispatch=useDispatch()
+    const dispatch=useDispatch<AppDispatch>()
     const {companies}=useSelector((state:any)=>state.companyReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
     const {telegramChatIds}=useSelector((state:any)=>state.telegramReducer)

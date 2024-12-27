@@ -16,6 +16,7 @@ import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { _addServiceCategory, _deleteServiceCategory, _editServiceCategory, _fetchServiceCategories } from '@/app/redux/actions/serviceCategoryActions';
 import { ServiceCategory } from '@/app/redux/reducers/serviceCategoryReducer';
+import { AppDispatch } from '@/app/redux/store';
 
 const Category = () => {
 
@@ -40,7 +41,7 @@ const Category = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const dispatch=useDispatch()
+    const dispatch=useDispatch<AppDispatch>()
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
 
 

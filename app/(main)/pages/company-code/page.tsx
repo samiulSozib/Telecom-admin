@@ -17,6 +17,7 @@ import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { _addCompanyCode, _deleteCompanyCode, _editCompanyCode, _fetchCompanyCodes } from '@/app/redux/actions/companyCodeActions';
 import { CompanyCode } from '../../../redux/reducers/companyCodeReducer';
+import { AppDispatch } from '@/app/redux/store';
 
 const CompanyCodePage = () => {
 
@@ -40,7 +41,7 @@ const CompanyCodePage = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const dispatch=useDispatch()
+    const dispatch=useDispatch<AppDispatch>()
     const {companyCodes}=useSelector((state:any)=>state.companyCodeReducer)
     const {companies}=useSelector((state:any)=>state.companyReducer)
 

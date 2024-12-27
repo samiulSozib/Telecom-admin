@@ -6,13 +6,14 @@ import {
     FETCH_DASHBOARD_DATA_SUCCESS,
     FETCH_DASHBOARD_DATA_FAIL
 } from '../constants/dashboardConstants'
+import { AppDispatch } from "../store";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
   };
 
 
-export const _fetchDashboardData=()=>async(dispatch:Dispatch)=>{
+export const fetchDashboardData=()=>async(dispatch:AppDispatch)=>{
     dispatch({type:FETCH_DASHBOARD_DATA_REQUEST})
 
     try{

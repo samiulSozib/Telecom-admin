@@ -16,6 +16,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { _addService, _deleteService, _editService, _fetchServiceList } from '@/app/redux/actions/serviceActions';
 import { _fetchServiceCategories } from '@/app/redux/actions/serviceCategoryActions';
 import { Service } from '@/app/redux/reducers/serviceReducer';
+import { AppDispatch } from '@/app/redux/store';
 
 const Services = () => {
     let emptyService={
@@ -39,7 +40,7 @@ const Services = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const dispatch=useDispatch()
+    const dispatch=useDispatch<AppDispatch>()
     const {companies}=useSelector((state:any)=>state.companyReducer)
     const {services}=useSelector((state:any)=>state.serviceReducer)
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)

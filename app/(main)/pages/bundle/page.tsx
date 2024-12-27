@@ -21,6 +21,7 @@ import { Paginator } from 'primereact/paginator';
 import { Bundle } from '@/app/redux/reducers/bundleReducer';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
+import { AppDispatch } from '@/app/redux/store';
 
 const BundlePage = () => {
 
@@ -57,7 +58,7 @@ const BundlePage = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const dispatch=useDispatch()
+    const dispatch=useDispatch<AppDispatch>()
     const {companies}=useSelector((state:any)=>state.companyReducer)
     const {services}=useSelector((state:any)=>state.serviceReducer)
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
