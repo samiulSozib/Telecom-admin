@@ -54,7 +54,7 @@ const Dashboard = () => {
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
-    const {userInfo}=useSelector((state:RootState)=>state.authReducer)
+    const {userInfo}=useSelector((state:any)=>state.authReducer)
 
     const dispatch=useDispatch<AppDispatch>()
     useEffect(()=>{
