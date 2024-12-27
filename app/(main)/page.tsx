@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { useDispatch } from 'react-redux';
-import { _fetchDashboardData, fetchDashboardData } from '../redux/actions/dashboardActions';
+import { fetchDashboardData } from '../redux/actions/dashboardActions';
 import { useSelector } from 'react-redux';
 import { dashboardDataReducer } from '../redux/reducers/dashboardReducer';
 import { Divider } from 'primereact/divider';
