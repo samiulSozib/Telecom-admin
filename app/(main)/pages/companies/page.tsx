@@ -10,7 +10,6 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { Company } from '@/app/redux/reducers/companyReducer';
 import { useDispatch } from 'react-redux';
 import { _fetchCompanies,_deleteCompany, _addCompany,_editCompany } from '@/app/redux/actions/companyActions';
 import { useSelector } from 'react-redux';
@@ -18,6 +17,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
+import { Company } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
 
 const CompanyPage = () => {
 
@@ -45,7 +46,7 @@ const CompanyPage = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
-    const {companies}=useSelector((state:any)=>state.companyReducer)
+    const {companies,loading}=useSelector((state:any)=>state.companyReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
     const {telegramChatIds}=useSelector((state:any)=>state.telegramReducer)
 
@@ -236,6 +237,7 @@ const CompanyPage = () => {
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 

@@ -15,8 +15,8 @@ import {
     EDIT_COMPANY_SUCCESS,
     EDIT_COMPANY_FAIL
 } from '../constants/companyConstants'
-import { Company } from "../reducers/companyReducer";
 import { Toast } from "primereact/toast";
+import { Company } from "@/types/interface";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
@@ -28,7 +28,7 @@ export const _fetchCompanies=()=>async(dispatch:Dispatch)=>{
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companies`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -49,7 +49,7 @@ export const _deleteCompany = (companyId: number,toast: React.RefObject<Toast>) 
 
     try {
         const token = getAuthToken();
-        await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companies/${companyId}`, {
+        await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/${companyId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -87,7 +87,7 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
 
     try {
         const token = getAuthToken();
-        const response = await axios.post(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companies`, formData, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -133,7 +133,7 @@ export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toas
     try {
         const token = getAuthToken();
         const response = await axios.post(
-            `https://app-api-bt-v1-24.watantelecom.com/api/admin/companies/${updatedCompany.id}`,
+            `${process.env.NEXT_PUBLIC_BASE_URL}/companies/${updatedCompany.id}`,
             formData,
             {
                 headers: {

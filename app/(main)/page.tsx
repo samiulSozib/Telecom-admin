@@ -1,64 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Button } from 'primereact/button';
-import { Chart } from 'primereact/chart';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
 import { Menu } from 'primereact/menu';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../demo/service/ProductService';
 import { LayoutContext } from '../../layout/context/layoutcontext';
-import Link from 'next/link';
 import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { useDispatch } from 'react-redux';
 import { fetchDashboardData } from '../redux/actions/dashboardActions';
 import { useSelector } from 'react-redux';
-import { dashboardDataReducer } from '../redux/reducers/dashboardReducer';
 import { Divider } from 'primereact/divider';
-import { countriesReducer } from '../redux/reducers/countriesReducer';
 import { _fetchCountries } from '../redux/actions/countriesActions';
 import { _fetchTelegramList } from '../redux/actions/telegramActions';
-import { telegramReducer } from '../redux/reducers/telegramReducer';
 import { _fetchCompanies } from '../redux/actions/companyActions';
-import { companyReducer } from '../redux/reducers/companyReducer';
-import { authReducer, Currency } from '../redux/reducers/authReducer';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch } from '../redux/store';
+import { _fetchPurchasedProducts } from '../redux/actions/purchasedProductsActions';
 
-const lineData: ChartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
-            tension: 0.4
-        },
-        {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.4
-        }
-    ]
-};
+
 
 const Dashboard = () => {
-    const [products, setProducts] = useState<Demo.Product[]>([]);
-    const menu1 = useRef<Menu>(null);
-    const menu2 = useRef<Menu>(null);
-    const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
     const {userInfo}=useSelector((state:any)=>state.authReducer)
+    const [lineOptions, setLineOptions] = useState<ChartOptions>({});
 
     const dispatch=useDispatch<AppDispatch>()
     useEffect(()=>{
         dispatch(fetchDashboardData())
+        dispatch(_fetchPurchasedProducts())
     },[dispatch])
 
     useEffect(()=>{
@@ -129,9 +98,7 @@ const Dashboard = () => {
         setLineOptions(lineOptions);
     };
 
-    useEffect(() => {
-        ProductService.getProductsSmall().then((data) => setProducts(data));
-    }, []);
+
 
     useEffect(() => {
         if (layoutConfig.colorScheme === 'light') {
@@ -230,7 +197,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Today Sale</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.today_sale.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.today_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-yellow-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-dollar text-yellow-500 text-xl" />
@@ -245,7 +212,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Today Profit</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.today_profit.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.today_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-cyan-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-chart-line text-cyan-500 text-xl" />
@@ -260,7 +227,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Total Sale</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.total_sale.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.total_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-blue-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-wallet text-blue-500 text-xl" />
@@ -275,7 +242,7 @@ const Dashboard = () => {
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Total Profit</span>
-                            <div className="text-900 font-medium text-xl">{userInfo.currency?.symbol} {data?.total_profit.toFixed(2)}</div>
+                            <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.total_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-thumbs-up text-green-500 text-xl" />

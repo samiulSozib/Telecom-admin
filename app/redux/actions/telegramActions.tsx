@@ -17,7 +17,7 @@ export const _fetchTelegramList=()=>async(dispatch:Dispatch)=>{
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/telegram-chat-ids`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/telegram-chat-ids`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

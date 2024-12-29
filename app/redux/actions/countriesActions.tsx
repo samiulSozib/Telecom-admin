@@ -17,7 +17,7 @@ export const _fetchCountries=()=>async(dispatch:Dispatch)=>{
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/countries`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/countries`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

@@ -1,16 +1,11 @@
+import { TelegramChat } from '@/types/interface';
 import {
     FETCH_TELEGRAM_LIST_REQUEST,
     FETCH_TELEGRAM_LIST_SUCCESS,
     FETCH_TELEGRAM_LIST_FAIL
 } from '../constants/telegramConstants'
 
-interface TelegramChat {
-    id: number;
-    chat_id: number;
-    group_name: string;
-    created_at: string;
-    updated_at: string;
-}
+
 
 interface TelegramState {
     loading: boolean;

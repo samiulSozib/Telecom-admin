@@ -1,31 +1,12 @@
 // store/countryReducer.ts
+import { Country } from '@/types/interface';
 import {
     FETCH_COUNTRIES_REQUEST,
     FETCH_COUNTRIES_SUCCESS,
     FETCH_COUNTRIES_FAIL
 } from '../constants/countriesConstants'
 
-interface Country {
-    id: number;
-    country_name: string;
-    country_flag_image_url: string | null;
-    language_id: number | null;
-    country_telecom_code: string;
-    phone_number_length: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    currency: string | null;
-    language: {
-        id: number;
-        language_name: string;
-        language_code: string;
-        direction: 'rtl' | 'ltr';
-        deleted_at: string | null;
-        created_at: string;
-        updated_at: string;
-    } | null;
-}
+
 
 interface CountryState {
     loading: boolean;

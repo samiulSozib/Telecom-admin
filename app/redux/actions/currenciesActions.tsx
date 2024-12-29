@@ -16,7 +16,7 @@ export const _fetchCurrencies=()=>async(dispatch:Dispatch)=>{
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/currencies`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/currencies`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

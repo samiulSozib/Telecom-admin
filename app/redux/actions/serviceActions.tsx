@@ -15,7 +15,7 @@ import {
   EDIT_SERVICE_FAIL,
 } from "../constants/serviceConstants";
 import { Toast } from "primereact/toast";
-import { Service } from "../reducers/serviceReducer";
+import { Service } from "@/types/interface";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
@@ -26,7 +26,7 @@ export const _fetchServiceList = () => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_SERVICE_LIST_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/services`,{
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/services`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +54,7 @@ export const _addService = (newServiceData: Service,toast: React.RefObject<Toast
     }
     const token = getAuthToken();
     const response = await axios.post(
-      `https://app-api-bt-v1-24.watantelecom.com/api/admin/services`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/services`,
       body,
       {
         headers: {
@@ -97,7 +97,7 @@ export const _editService = (serviceId: number, updatedServiceData: Service,toas
     }
     const token = getAuthToken();
     const response = await axios.put(
-      `https://app-api-bt-v1-24.watantelecom.com/api/admin/services/${serviceId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/services/${serviceId}`,
       body,
       {
         headers: {
@@ -134,7 +134,7 @@ export const _deleteService = (serviceId: number,toast: React.RefObject<Toast>) 
   dispatch({ type: DELETE_SERVICE_REQUEST });
   try {
     const token = getAuthToken();
-    await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/services/${serviceId}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/services/${serviceId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

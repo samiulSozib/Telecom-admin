@@ -15,11 +15,12 @@ import { useSelector } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import { _addService, _deleteService, _editService, _fetchServiceList } from '@/app/redux/actions/serviceActions';
 import { _fetchServiceCategories } from '@/app/redux/actions/serviceCategoryActions';
-import { Service } from '@/app/redux/reducers/serviceReducer';
 import { AppDispatch } from '@/app/redux/store';
+import { Service } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
 
 const Services = () => {
-    let emptyService={
+    let emptyService:Service={
         id: 0,
         service_category_id: 0,
         service_name:'',
@@ -42,7 +43,7 @@ const Services = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {companies}=useSelector((state:any)=>state.companyReducer)
-    const {services}=useSelector((state:any)=>state.serviceReducer)
+    const {services,loading}=useSelector((state:any)=>state.serviceReducer)
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
 
 
@@ -223,6 +224,7 @@ const Services = () => {
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 

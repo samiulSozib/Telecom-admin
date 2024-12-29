@@ -9,6 +9,7 @@ import { companyCodeReducer } from './companyCodeReducer';
 import serviceCategoryReducer from './serviceCategoryReducer';
 import serviceReducer from './serviceReducer';
 import bundleReducer from './bundleReducer';
+import { moneyTransactionReducer } from './moneyTransactionsReducer';
 
 const rootReducer=combineReducers({
     currenciesReducer:currenciesReducer,
@@ -20,7 +21,8 @@ const rootReducer=combineReducers({
     companyCodeReducer:companyCodeReducer,
     serviceCategoryReducer:serviceCategoryReducer,
     serviceReducer:serviceReducer,
-    bundleReducer:bundleReducer
+    bundleReducer:bundleReducer,
+    moneyTransactionReducer:moneyTransactionReducer
 })
 
 

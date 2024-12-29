@@ -1,3 +1,4 @@
+import { ServiceCategory } from "@/types/interface";
 import {
     FETCH_SERVICE_CATEGORY_LIST_REQUEST,
     FETCH_SERVICE_CATEGORY_LIST_SUCCESS,
@@ -13,16 +14,7 @@ import {
     EDIT_SERVICE_CATEGORY_FAIL,
   } from "../constants/serviceCategoryConstants";
 
-  export interface ServiceCategory {
-    id: number;
-    category_name: string;
-    type: string;
-    service_category_sub_type_id: number | null;
-    category_image_url: string | null;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-  }
+
 
   interface State {
     loading: boolean;

@@ -64,32 +64,32 @@ const AppMenu = () => {
                         {
                             label: 'Money Transactions',
                             icon: 'pi pi-fw pi-wallet', // Wallet for transactions
-                            to: '/pages/dictionary',
+                            to: '/pages/money-transactions',
                         },
                         {
                             label: 'Payment Method',
                             icon: 'pi pi-fw pi-credit-card', // Credit card for payments
-                            to: '/pages/product-category',
+                            to: '/pages/payment-method',
                         },
                         {
                             label: 'Suppliers',
                             icon: 'pi pi-fw pi-truck', // Truck or supplier icon
-                            to: '/pages/variations',
+                            to: '/pages/suppliers',
                         },
                         {
                             label: 'Purchase Products',
                             icon: 'pi pi-fw pi-shopping-cart', // Shopping cart for purchases
-                            to: '/pages/brands',
+                            to: '/pages/purchase-products',
                         },
                         {
                             label: 'Payments',
                             icon: 'pi pi-fw pi-money-bill', // Money bill for payments
-                            to: '/pages/units',
+                            to: '/pages/payments',
                         },
                         {
                             label: 'Balance',
                             icon: 'pi pi-fw pi-chart-line', // Line chart for balance
-                            to: '/pages/units',
+                            to: '/pages/balance',
                         },
                     ],
                 },
@@ -100,34 +100,34 @@ const AppMenu = () => {
                         {
                             label: 'Country',
                             icon: 'pi pi-fw pi-flag', // Flag for country
-                            to: '/pages/dictionary',
+                            to: '/pages/country',
                         },
                         {
                             label: 'Province',
                             icon: 'pi pi-fw pi-map', // Map for provinces
-                            to: '/pages/product-category',
+                            to: '/pages/province',
                         },
                         {
                             label: 'District',
                             icon: 'pi pi-fw pi-compass', // Compass for district
-                            to: '/pages/variations',
+                            to: '/pages/district',
                         },
                     ],
                 },
                 {
                     label: 'Reseller',
                     icon: 'pi pi-fw pi-users', // Group or reseller icon
-                    to: '',
+                    to: '/pages/reseller',
                 },
                 {
                     label: 'Order',
                     icon: 'pi pi-fw pi-shopping-bag', // Bag for orders
-                    to: '',
+                    to: '/pages/order',
                 },
                 {
                     label: 'Language',
                     icon: 'pi pi-fw pi-globe', // Globe for languages
-                    to: '',
+                    to: '/pages/language',
                 },
                 {
                     label: 'Currency',
@@ -137,12 +137,12 @@ const AppMenu = () => {
                 {
                     label: 'Advertisement',
                     icon: 'pi pi-fw pi-bullhorn', // Bullhorn for advertisements
-                    to: '',
+                    to: '/pages/advertisement',
                 },
                 {
                     label: 'General Settings',
                     icon: 'pi pi-fw pi-cog', // Cogwheel for settings
-                    to: '',
+                    to: '/pages/general-settings',
                 },
             ],
         },

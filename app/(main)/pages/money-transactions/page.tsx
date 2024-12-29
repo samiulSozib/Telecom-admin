@@ -20,10 +20,11 @@ import { Paginator } from 'primereact/paginator';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
 import { AppDispatch } from '@/app/redux/store';
-import { Bundle } from '@/types/interface';
+import { Bundle, MoneyTransaction } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
+import { _fetchMoneyTransactionsList } from '@/app/redux/actions/moneyTransactionsActions';
 
-const BundlePage = () => {
+const TransactionPage = () => {
 
 
 
@@ -49,6 +50,9 @@ const BundlePage = () => {
         currency: null,
     };
 
+
+
+
     const [serviceDialog, setServiceDialog] = useState(false);
     const [deleteServiceDialog, setDeleteServiceDialog] = useState(false);
     const [deleteServicesDialog, setDeleteServicesDialog] = useState(false);
@@ -59,15 +63,12 @@ const BundlePage = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
-    const {companies}=useSelector((state:any)=>state.companyReducer)
-    const {services}=useSelector((state:any)=>state.serviceReducer)
-    const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
-    const {bundles,pagination,loading}=useSelector((state:any)=>state.bundleReducer)
-    const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {transactions,loading,pagination}=useSelector((state:any)=>state.moneyTransactionReducer)
 
 
 
     useEffect(()=>{
+        dispatch(_fetchMoneyTransactionsList())
         dispatch(_fetchBundleList())
         dispatch(_fetchCurrencies())
         dispatch(_fetchServiceList())
@@ -76,8 +77,8 @@ const BundlePage = () => {
     },[dispatch])
 
     useEffect(()=>{
-        //console.log(bundles)
-    },[dispatch,bundles])
+        console.log(transactions)
+    },[dispatch,transactions])
 
 
     const openNew = () => {
@@ -164,106 +165,62 @@ const BundlePage = () => {
         );
     };
 
-    const bundleTitleBodyTemplate = (rowData: Bundle) => {
+    const resellerBodyTemplate = (rowData: MoneyTransaction) => {
         return (
             <>
-                <span className="p-column-title">Bundle Title</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.bundle_title}
+                <span className="p-column-title">Reseller</span>
+                <span style={{fontSize: '0.9rem'}}>
+                    {rowData.reseller?.reseller_name}
                 </span>
             </>
         );
     };
 
-    const descriptionBodyTemplate = (rowData: Bundle) => {
+    const amountBodyTemplate = (rowData: MoneyTransaction) => {
         return (
             <>
-                <span className="p-column-title">Description</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.bundle_description}
+                <span className="p-column-title">Amount</span>
+                <span style={{fontSize: '0.9rem'}}>
+                    {parseInt(rowData.amount).toFixed(2)}
                 </span>
             </>
         );
     };
 
-    const validityTypeBodyTemplate = (rowData: Bundle) => {
-        return (
-            <>
-                <span className="p-column-title">Validity Type</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.validity_type}
-                </span>
-            </>
-        );
-    };
-
-    const adminBuyingPriceBodyTemplate = (rowData: Bundle) => {
-        return (
-            <>
-                <span className="p-column-title">Admin Buying Price</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.admin_buying_price}
-                </span>
-            </>
-        );
-    };
-
-    const buyingPriceBodyTemplate = (rowData: Bundle) => {
-        return (
-            <>
-                <span className="p-column-title">Buying Price</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.buying_price}
-                </span>
-            </>
-        );
-    };
-
-    const sellingPriceBodyTemplate = (rowData: Bundle) => {
-        return (
-            <>
-                <span className="p-column-title">Selling Price</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.selling_price}
-                </span>
-            </>
-        );
-    };
-
-    const currencyBodyTemplate = (rowData: Bundle) => {
+    const currencyBodyTemplate = (rowData: MoneyTransaction) => {
         return (
             <>
                 <span className="p-column-title">Currency</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
+                <span style={{fontSize: '0.9rem'}}>
                     {rowData.currency?.name}
                 </span>
             </>
         );
     };
 
-    const serviceNameBodyTemplate = (rowData: Bundle) => {
+    const remainingBalanceBodyTemplate = (rowData: MoneyTransaction) => {
         return (
             <>
-                <span className="p-column-title">Service Name</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.service?.company?.company_name}
+                <span className="p-column-title">Remaining Balance</span>
+                <span style={{fontSize: '0.9rem'}}>
+                    {rowData.remaining_balance}
                 </span>
             </>
         );
     };
 
-    const serviceCategoryBodyTemplate = (rowData: Bundle) => {
+    const bundleTitleBodyTemplate = (rowData: MoneyTransaction) => {
         return (
             <>
-                <span className="p-column-title">Service Category</span>
-                <span style={{ fontSize: '0.8rem', color: '#666' }}>
-                    {rowData.service?.service_category?.category_name}
+                <span className="p-column-title">Bundle Title</span>
+                <span style={{fontSize: '0.9rem'}}>
+                    {"X"}
                 </span>
             </>
         );
     };
 
-    const createdAtBodyTemplate = (rowData: Bundle) => {
+    const transactionDateBodyTemplate = (rowData: MoneyTransaction) => {
         const formatDate = (dateString: string) => {
             const date = new Date(dateString);
             const optionsDate: Intl.DateTimeFormatOptions = {
@@ -294,20 +251,87 @@ const BundlePage = () => {
         );
     };
 
+    const statusBodyTemplate = (rowData: MoneyTransaction) => {
+    // Define background color based on transaction type
+    const getBackgroundColor = (type: string | null) => {
+        switch (type) {
+            case 'credit':
+                return 'bg-green-500'; // Tailwind CSS class for green background
+            case 'debit':
+                return 'bg-red-500'; // Tailwind CSS class for red background
+            default:
+                return 'bg-gray-500'; // Default gray background for other or null types
+        }
+    };
+
+    // Define message based on transaction type
+    const getTransactionMessage = (type: string | null) => {
+        switch (type) {
+            case 'credit':
+                return 'Amount Credited To Reseller';
+            case 'debit':
+                return 'Amount Debited From Reseller';
+            default:
+                return 'Unknown Transaction';
+        }
+    };
+
+    return (
+        <>
+            <span className="p-column-title">Status (Type)</span>
+            <span style={{fontSize: '0.7rem', borderRadius:'5px'}}
+                className={`inline-block p-1 text-white ${getBackgroundColor(rowData.status)}`}
+            >
+                {getTransactionMessage(rowData.status)}
+            </span>
+        </>
+    );
+};
 
 
 
 
+const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
+    // Function to capitalize the first letter
+    const capitalizeFirstLetter = (text: string | null) => {
+        if (!text) return ''; // Handle null or empty string
+        if(text=='App\\Models\\User') return "Reseller"
+        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    };
+
+    return (
+        <>
+            <span className="p-column-title">Initiator Type</span>
+            <span style={{fontSize: '0.9rem'}}>
+                {capitalizeFirstLetter(rowData.initiator_type)}
+            </span>
+        </>
+    );
+};
 
 
-    const actionBodyTemplate = (rowData: Bundle) => {
+    const descriptionBodyTemplate = (rowData: MoneyTransaction) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editService(rowData)}/>
-                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteService(rowData)} />
+                <span className="p-column-title">Description</span>
+                <span style={{fontSize: '0.9rem'}}>
+                    {rowData.transaction_reason}
+                </span>
             </>
         );
     };
+
+
+
+
+    // const actionBodyTemplate = (rowData: Bundle) => {
+    //     return (
+    //         <>
+    //             <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editService(rowData)}/>
+    //             <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteService(rowData)} />
+    //         </>
+    //     );
+    // };
 
     // const header = (
     //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -319,28 +343,28 @@ const BundlePage = () => {
     //     </div>
     // );
 
-    const companyDialogFooter = (
-        <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveService} />
-        </>
-    );
-    const deleteCompanyDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteService} />
-        </>
-    );
-    const deleteCompaniesDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
-        </>
-    );
+    // const companyDialogFooter = (
+    //     <>
+    //         <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+    //         <Button label="Save" icon="pi pi-check" text onClick={saveService} />
+    //     </>
+    // );
+    // const deleteCompanyDialogFooter = (
+    //     <>
+    //         <Button label="No" icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
+    //         <Button label="Yes" icon="pi pi-check" text onClick={deleteService} />
+    //     </>
+    // );
+    // const deleteCompaniesDialogFooter = (
+    //     <>
+    //         <Button label="No" icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
+    //         <Button label="Yes" icon="pi pi-check" text  />
+    //     </>
+    // );
 
     const onPageChange = (event: any) => {
         const page = event.page + 1;
-        dispatch(_fetchBundleList(page));
+        dispatch(_fetchMoneyTransactionsList(page));
     };
 
 
@@ -354,7 +378,7 @@ const BundlePage = () => {
 
                     <DataTable
                         ref={dt}
-                        value={bundles}
+                        value={transactions}
                         selection={selectedCompanies}
                         onSelectionChange={(e) => setSelectedCompanyCode(e.value as any)}
                         dataKey="id"
@@ -369,17 +393,16 @@ const BundlePage = () => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Bundle Title" header="Bundle Title" sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Description" header="Description" sortable body={descriptionBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Validity Type" header="Validity Type" sortable body={validityTypeBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Admin Buying" header="Admin Buying" sortable body={adminBuyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Buying Price" header="Buying Price" sortable body={buyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Selling Price" header="Selling Price" sortable body={sellingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Currency" header="Currency" sortable body={currencyBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Service" header="Service" sortable body={serviceNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Category" header="Category" sortable body={serviceCategoryBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Created" header="Created" body={createdAtBodyTemplate} headerStyle={{ minWidth:'4rem', fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="Reseller" header="Reseller" sortable body={resellerBodyTemplate} ></Column>
+                        <Column field="Amount" header="Amount" sortable body={amountBodyTemplate} ></Column>
+                        <Column field="Currency" header="Currency" sortable body={currencyBodyTemplate} ></Column>
+                        <Column field="Remaining Balance" header="Remaining Balance" sortable body={remainingBalanceBodyTemplate} ></Column>
+                        <Column field="Bundle Title" header="Bundle Title" sortable body={bundleTitleBodyTemplate} ></Column>
+                        <Column field="Transaction Date" header="Transaction Date" sortable body={transactionDateBodyTemplate} ></Column>
+                        <Column field="Status" header="Status" sortable body={statusBodyTemplate} ></Column>
+                        <Column field="Initiator" header="Initiator" sortable body={initiatorTypeBodyTemplate} ></Column>
+                        <Column field="Description" header="Description" sortable body={descriptionBodyTemplate} ></Column>
+                        {/* <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
                     </DataTable>
                     <Paginator
                         first={(pagination?.page - 1) * pagination?.items_per_page}
@@ -390,7 +413,7 @@ const BundlePage = () => {
                     />
 
 
-                    <Dialog visible={serviceDialog}  style={{ width: '700px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                    {/* <Dialog visible={serviceDialog}  style={{ width: '700px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="name">Bundle Title</label>
@@ -586,11 +609,11 @@ const BundlePage = () => {
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {bundle && <span>Are you sure you want to delete the selected companies?</span>}
                         </div>
-                    </Dialog>
+                    </Dialog> */}
                 </div>
             </div>
         </div>
     );
 };
 
-export default BundlePage;
+export default TransactionPage;

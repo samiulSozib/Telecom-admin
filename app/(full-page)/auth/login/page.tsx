@@ -18,6 +18,7 @@ const LoginPage = () => {
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
 
+
     const { layoutConfig } = useContext(LayoutContext);
     const router = useRouter();
 
@@ -29,9 +30,14 @@ const LoginPage = () => {
     // Load saved email from localStorage when component mounts
     useEffect(() => {
         const savedEmail = localStorage.getItem('rememberedEmail');
+        const savePassword=localStorage.getItem('rememberedPassword')
         if (savedEmail) {
             setEmail(savedEmail);
             setChecked(true);
+        }
+        if(savePassword){
+            setPassword(savePassword)
+            setChecked(true)
         }
     }, []);
 
@@ -44,6 +50,7 @@ const LoginPage = () => {
             if (result.success) {
                 if (checked) {
                     localStorage.setItem('rememberedEmail', email);
+                    localStorage.setItem('rememberedPassword',password)
                 } else {
                     localStorage.removeItem('rememberedEmail');
                 }

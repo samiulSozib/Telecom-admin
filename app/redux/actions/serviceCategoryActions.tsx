@@ -16,7 +16,7 @@ import {
   EDIT_SERVICE_CATEGORY_FAIL,
 } from "../constants/serviceCategoryConstants";
 import { Toast } from "primereact/toast";
-import { ServiceCategory } from "../reducers/serviceCategoryReducer";
+import { ServiceCategory } from "@/types/interface";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
@@ -28,7 +28,7 @@ export const _fetchServiceCategories = () => async (dispatch: Dispatch) => {
 
   try {
     const token = getAuthToken();
-    const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/service_categories`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/service_categories`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -45,7 +45,7 @@ export const _deleteServiceCategory = (categoryId: number, toast: React.RefObjec
 
   try {
     const token = getAuthToken();
-    await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/service_categories/${categoryId}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/service_categories/${categoryId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -80,7 +80,7 @@ export const _addServiceCategory = (newCategory: Partial<ServiceCategory>, toast
         type:newCategory.type
     }
     const token = getAuthToken();
-    const response = await axios.post(`https://app-api-bt-v1-24.watantelecom.com/api/admin/service_categories`, body, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/service_categories`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export const _editServiceCategory = (updatedCategory: ServiceCategory, toast: Re
         type:updatedCategory.type
     }
     const token = getAuthToken();
-    const response = await axios.put(`https://app-api-bt-v1-24.watantelecom.com/api/admin/service_categories/${updatedCategory.id}`, body, {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/service_categories/${updatedCategory.id}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

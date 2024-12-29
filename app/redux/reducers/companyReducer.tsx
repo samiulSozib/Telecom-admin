@@ -1,3 +1,4 @@
+import { Company } from '@/types/interface';
 import {
     FETCH_COMPANY_LIST_REQUEST,
     FETCH_COMPANY_LIST_SUCCESS,
@@ -14,35 +15,6 @@ import {
 } from '../constants/companyConstants';
 
 
-interface Country {
-    id: number;
-    country_name: string;
-    country_flag_image_url: string;
-    language_id: number;
-    country_telecom_code: string;
-    phone_number_length: string;
-}
-
-interface Telegram_Chat_Id{
-    id:number,
-    chat_id:number,
-    group_name:string,
-    created_at:string,
-    updated_at:string
-}
-
-export interface Company {
-    id: number;
-    company_name: string;
-    company_logo: File |string;
-    country_id: number;
-    telegram_chat_id: Telegram_Chat_Id | null ;
-    _telegram_chat_id:number|null,
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    country: Country | null;
-}
 
 interface CompanyState {
     loading: boolean;

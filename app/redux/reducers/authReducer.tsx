@@ -1,50 +1,7 @@
 import { AnyAction } from "redux";
 import { LOGIN_FAIL, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT } from "../constants/authConstants";
+import { UserInfo } from "@/types/interface";
 
-export interface Admin {
-    id: number;
-    user_id: number;
-    name: string;
-    email: string;
-    phone: string;
-    user_type: string;
-    email_verified_at: string | null;
-    profile_image_url: string;
-    status: number;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-}
-
-export interface Currency {
-    id: number;
-    name: string;
-    code: string;
-    symbol: string;
-    ignore_digits_count: string | null;
-    exchange_rate_per_usd: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-}
-
-export interface UserInfo {
-    id: number;
-    uuid: string;
-    name: string;
-    email: string;
-    phone: string;
-    user_type: string;
-    email_verified_at: string | null;
-    currency_preference_code: string;
-    currency_preference_id: number;
-    fcm_token: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    admin: Admin | null;
-    currency: Currency | null;
-}
 
 export interface AuthState {
     isAuthenticated: boolean;
@@ -62,7 +19,7 @@ const initialState: AuthState = {
     userInfo: null,
 };
 
-export const authReducer = (state = initialState, action: AnyAction): AuthState => {
+export const authReducer = (state = initialState, action: any): AuthState => {
     switch (action.type) {
         case LOGIN_REQUEST:
             return {

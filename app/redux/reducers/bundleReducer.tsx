@@ -1,3 +1,4 @@
+import { Bundle, Pagination } from '@/types/interface';
 import {
     FETCH_BUNDLE_LIST_REQUEST,
     FETCH_BUNDLE_LIST_SUCCESS,
@@ -12,91 +13,6 @@ import {
     EDIT_BUNDLE_SUCCESS,
     EDIT_BUNDLE_FAIL,
   } from '../constants/bundleConstants';
-
-interface Currency {
-    id: number;
-    name: string;
-    code: string;
-    symbol: string;
-    ignore_digits_count: string;
-    exchange_rate_per_usd: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-  }
-
-  interface Company {
-    id: number;
-    company_name: string;
-    company_logo: string;
-    country_id: number;
-    telegram_chat_id: number;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-  }
-
-  interface ServiceCategory {
-    id: number;
-    category_name: string;
-    type: string;
-    service_category_sub_type_id: number | null;
-    category_image_url: string | null;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-  }
-
-  interface Service {
-    id: number;
-    service_category_id: number;
-    company_id: number;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    company: Company;
-    service_category: ServiceCategory;
-  }
-
-  export interface Bundle {
-    id: number;
-    bundle_code: string;
-    service_id: number;
-    bundle_title: string;
-    bundle_description: string;
-    bundle_type: string | null;
-    validity_type: string;
-    admin_buying_price: string;
-    buying_price: string;
-    selling_price: string;
-    amount: string | null;
-    bundle_image_url: string | null;
-    currency_id: number;
-    expired_date: string | null;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    service: Service|null;
-    currency: Currency|null;
-  }
-
-  interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-    page: number | null;
-  }
-
-  interface Pagination {
-    page: number;
-    first_page_url: string;
-    from: number;
-    last_page: number;
-    links: PaginationLink[];
-    items_per_page: number;
-    total: number;
-  }
-
 
   interface BundleState {
     bundles: Bundle[];

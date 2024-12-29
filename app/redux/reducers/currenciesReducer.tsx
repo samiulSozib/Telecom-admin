@@ -4,18 +4,9 @@ import {
     FETCH_CURRENCIES_SUCCESS,
     FETCH_CURRENCIES_FAILURE
 } from '../constants/currenciesConstants';
+import { Currency } from "@/types/interface";
 
-export interface Currency {
-    id: number;
-    name: string;
-    code: string;
-    symbol: string;
-    ignore_digits_count: string | null;
-    exchange_rate_per_usd: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-}
+
 
 export interface CurrencyState {
     currencies: Currency[];

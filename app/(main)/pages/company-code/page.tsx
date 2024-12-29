@@ -16,13 +16,14 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { _addCompanyCode, _deleteCompanyCode, _editCompanyCode, _fetchCompanyCodes } from '@/app/redux/actions/companyCodeActions';
-import { CompanyCode } from '../../../redux/reducers/companyCodeReducer';
 import { AppDispatch } from '@/app/redux/store';
+import { CompanyCode } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
 
 const CompanyCodePage = () => {
 
 
-    let emptyCompanyCode={
+    let emptyCompanyCode:CompanyCode={
         id: 0,
         company_id: 0,
         reserved_digit: '',
@@ -42,7 +43,7 @@ const CompanyCodePage = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
-    const {companyCodes}=useSelector((state:any)=>state.companyCodeReducer)
+    const {companyCodes,loading}=useSelector((state:any)=>state.companyCodeReducer)
     const {companies}=useSelector((state:any)=>state.companyReducer)
 
 
@@ -223,6 +224,7 @@ const CompanyCodePage = () => {
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 

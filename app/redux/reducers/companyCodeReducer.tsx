@@ -1,3 +1,4 @@
+import { CompanyCode } from '@/types/interface';
 import {
     FETCH_COMPANY_CODE_LIST_REQUEST,
     FETCH_COMPANY_CODE_LIST_SUCCESS,
@@ -13,36 +14,7 @@ import {
     EDIT_COMPANY_CODE_FAIL,
 } from '../constants/companyCodeConstants';
 
-interface Company {
-    id: number;
-    company_name: string;
-    company_logo: string;
-    country_id: number;
-    telegram_chat_id: number | null;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    country: Country | null;
-}
 
-interface Country {
-    id: number;
-    country_name: string;
-    country_flag_image_url: string;
-    language_id: number;
-    country_telecom_code: string;
-    phone_number_length: string;
-}
-
-export interface CompanyCode {
-    id: number;
-    company_id: number;
-    reserved_digit: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    company: Company | null;
-}
 
 interface CompanyCodeState {
     loading: boolean;

@@ -1,3 +1,4 @@
+import { Service } from "@/types/interface";
 import {
     FETCH_SERVICE_LIST_REQUEST,
     FETCH_SERVICE_LIST_SUCCESS,
@@ -14,42 +15,7 @@ import {
   } from "../constants/serviceConstants";
 
   // Define service and company types
-interface ServiceCategory {
-    id: number;
-    category_name: string;
-    type: string;
-    service_category_sub_type_id: number | null;
-    category_image_url: string | null;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-  }
 
-interface Company {
-    id: number;
-    company_name: string;
-    company_logo: string;
-    country_id: number;
-    telegram_chat_id: number;
-    country: {
-      country_name: string;
-      country_flag_image_url: string;
-      country_telecom_code: string;
-      phone_number_length: string;
-    };
-  }
-
-  export interface Service {
-    id: number;
-    service_category_id: number;
-    service_name:string,
-    company_id: number;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string;
-    service_category: ServiceCategory|null;
-    company: Company | null;
-  }
 
   interface State {
     loading: boolean;

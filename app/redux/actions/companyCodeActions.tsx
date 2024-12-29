@@ -16,7 +16,7 @@ import {
   EDIT_COMPANY_CODE_FAIL,
 } from '../constants/companyCodeConstants';
 import { Toast } from "primereact/toast";
-import { CompanyCode } from "../reducers/companyCodeReducer";
+import { CompanyCode } from "@/types/interface";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
@@ -28,7 +28,7 @@ export const _fetchCompanyCodes = () => async (dispatch: Dispatch) => {
 
   try {
     const token = getAuthToken();
-    const response = await axios.get(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companycodes`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companycodes`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -47,7 +47,7 @@ export const _deleteCompanyCode = (codeId: number, toast: React.RefObject<Toast>
 
   try {
     const token = getAuthToken();
-    await axios.delete(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companycodes/${codeId}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/companycodes/${codeId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -81,7 +81,7 @@ export const _addCompanyCode = (newCode: CompanyCode, toast: React.RefObject<Toa
     }
   try {
     const token = getAuthToken();
-    const response = await axios.post(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companycodes`, body, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/companycodes`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export const _editCompanyCode = (updatedCode: CompanyCode, toast: React.RefObjec
 }
   try {
     const token = getAuthToken();
-    const response = await axios.put(`https://app-api-bt-v1-24.watantelecom.com/api/admin/companycodes/${updatedCode.id}`, body, {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/companycodes/${updatedCode.id}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

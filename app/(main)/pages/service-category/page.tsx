@@ -15,13 +15,14 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { _addServiceCategory, _deleteServiceCategory, _editServiceCategory, _fetchServiceCategories } from '@/app/redux/actions/serviceCategoryActions';
-import { ServiceCategory } from '@/app/redux/reducers/serviceCategoryReducer';
 import { AppDispatch } from '@/app/redux/store';
+import { ServiceCategory } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
 
 const Category = () => {
 
 
-    let emptyServiceCategory={
+    let emptyServiceCategory:ServiceCategory={
         id: 0,
         category_name: '',
         type: '',
@@ -42,7 +43,7 @@ const Category = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
-    const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
+    const {serviceCategories,loading}=useSelector((state:any)=>state.serviceCategoryReducer)
 
 
     useEffect(()=>{
@@ -206,6 +207,7 @@ const Category = () => {
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 

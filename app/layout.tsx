@@ -6,11 +6,28 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store from './redux/store';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface RootLayoutProps {
     children: React.ReactNode;
+}
+
+function AuthGuard({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
+    const { isAuthenticated } = useSelector((state: any) => state.authReducer);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.replace('/auth/login'); // Redirect to login if not authenticated
+        }
+    }, [isAuthenticated, router]);
+
+    // Show children only if authenticated
+    //if (!isAuthenticated) return null // Optional: Add a loading spinner or message
+    return <>{children}</>;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -22,7 +39,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <body>
                 <Provider store={store}>
                 <PrimeReactProvider>
-                    <LayoutProvider>{children}</LayoutProvider>
+                    <LayoutProvider>
+                        <AuthGuard>{children}</AuthGuard>
+                    </LayoutProvider>
                 </PrimeReactProvider>
                 </Provider>
 
