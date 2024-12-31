@@ -1,0 +1,382 @@
+/* eslint-disable @next/next/no-img-element */
+'use client';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
+import { FileUpload } from 'primereact/fileupload';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import { classNames } from 'primereact/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Dropdown } from 'primereact/dropdown';
+import { _fetchCountries } from '@/app/redux/actions/countriesActions';
+import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
+import { AppDispatch } from '@/app/redux/store';
+import {PaymentMethod } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
+import { _addPaymentMethod, _deletePaymentMethod, _editPaymentMethod, _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
+
+const PaymentMethodPage = () => {
+
+
+
+    let emptyPaymentMethod:PaymentMethod={
+        id: 0,
+        method_name: '',
+        account_details: '',
+        account_image: '',
+        status: 1,
+        created_at: '',
+        updated_at: '',
+    }
+
+    const [methodDialog, setMethodDialog] = useState(false);
+    const [deleteMethodDialog, setDeleteMethodDialog] = useState(false);
+    const [deleteMethodsDialog, setDeleteMethodsDialog] = useState(false);
+    const [paymentMethod,setPaymentMethod]=useState<PaymentMethod>(emptyPaymentMethod)
+    const [selectedCompanies, setSelectedCompanies] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const toast = useRef<Toast>(null);
+    const dt = useRef<DataTable<any>>(null);
+    const dispatch=useDispatch<AppDispatch>()
+    const {paymentMethods,loading}=useSelector((state:any)=>state.paymentMethodsReducer)
+
+    useEffect(()=>{
+        dispatch(_fetchPaymentMethods())
+    },[dispatch])
+
+
+
+    const openNew = () => {
+        setPaymentMethod(emptyPaymentMethod)
+        setSubmitted(false);
+        setMethodDialog(true);
+    };
+
+    const hideDialog = () => {
+        setSubmitted(false);
+        setMethodDialog(false);
+    };
+
+    const hideDeleteMethodDialog = () => {
+        setDeleteMethodDialog(false);
+    };
+
+    const hideDeleteMethodsDialog = () => {
+        setDeleteMethodsDialog(false);
+    };
+
+
+
+    const saveMethod = () => {
+        setSubmitted(true);
+        if (paymentMethod.id && paymentMethod.id !== 0) {
+            dispatch(_editPaymentMethod(paymentMethod.id,paymentMethod,toast));
+
+        } else {
+            dispatch(_addPaymentMethod(paymentMethod,toast));
+        }
+
+        setMethodDialog(false);
+        setPaymentMethod(emptyPaymentMethod);
+    };
+
+    const editMethod = (paymentMethod: PaymentMethod) => {
+        setPaymentMethod({ ...paymentMethod});
+
+        setMethodDialog(true);
+    };
+
+    const confirmDeleteMethod = (paymentMethod: PaymentMethod) => {
+        setPaymentMethod(paymentMethod);
+        setDeleteMethodDialog(true);
+    };
+
+    const deleteMethod = () => {
+        if (!paymentMethod?.id) {
+            console.error("Method ID is undefined.");
+            return;
+        }
+        dispatch(_deletePaymentMethod(paymentMethod?.id,toast))
+        setDeleteMethodDialog(false);
+
+    };
+
+
+    const confirmDeleteSelected = () => {
+        setDeleteMethodsDialog(true);
+    };
+
+
+
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <span className="block mt-2 md:mt-0 p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+            </span>
+            </React.Fragment>
+        );
+    };
+
+
+    const nameBodyTemplate = (rowData: PaymentMethod) => {
+        return (
+            <>
+                <span className="p-column-title">Method Name</span>
+                {rowData.method_name}
+            </>
+        );
+    };
+
+    const accountDetailsBodyTemplate = (rowData: PaymentMethod) => {
+        return (
+            <>
+                <span className="p-column-title">Account Details</span>
+                {rowData.account_details}
+            </>
+        );
+    };
+
+    const imageBodyTemplate = (rowData: PaymentMethod) => {
+        return (
+            <>
+                <span className="p-column-title">Image</span>
+                <img src={`${rowData.account_image}`} alt={rowData.account_image.toString()} className="shadow-2" width="60" />
+            </>
+        );
+    };
+
+
+    const statusBodyTemplate = (rowData: PaymentMethod) => {
+        // Define the text and background color based on the status value
+        const getStatusText = (status: number) => {
+            return status === 1 ? 'Active' : 'Deactivated';
+        };
+
+        const getStatusClasses = (status: number) => {
+            return status === 1
+                ? 'bg-green-500 text-white'
+                : 'bg-red-500 text-white';
+        };
+
+        return (
+            <>
+                <span className="p-column-title">Status</span>
+                <span style={{borderRadius:"5px"}}
+                    className={`inline-block px-2 py-1 rounded text-sm font-semibold ${getStatusClasses(
+                        rowData.status
+                    )}`}
+                >
+                    {getStatusText(rowData.status)}
+                </span>
+            </>
+        );
+    };
+
+
+
+
+
+
+
+    const actionBodyTemplate = (rowData: PaymentMethod) => {
+        return (
+            <>
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editMethod(rowData)}/>
+                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteMethod(rowData)} />
+            </>
+        );
+    };
+
+    // const header = (
+    //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+    //         <h5 className="m-0">Manage Products</h5>
+    //         <span className="block mt-2 md:mt-0 p-input-icon-left">
+    //             <i className="pi pi-search" />
+    //             <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+    //         </span>
+    //     </div>
+    // );
+
+    const methodDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveMethod} />
+        </>
+    );
+    const deleteMethodDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteMethodDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteMethod} />
+        </>
+    );
+    const deleteMethodsDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteMethodsDialog} />
+            <Button label="Yes" icon="pi pi-check" text  />
+        </>
+    );
+
+
+
+
+    return (
+        <div className="grid crud-demo">
+            <div className="col-12">
+                <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
+                    <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+                    <DataTable
+                        ref={dt}
+                        value={paymentMethods}
+                        selection={selectedCompanies}
+                        onSelectionChange={(e) => setSelectedCompanies(e.value as any)}
+                        dataKey="id"
+                        paginator
+                        rows={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="datatable-responsive"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} companies"
+                        globalFilter={globalFilter}
+                        emptyMessage="No Companies found."
+                        // header={header}
+                        responsiveLayout="scroll"
+                    >
+                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
+                        <Column field="Account Details" header="Account Details" body={accountDetailsBodyTemplate} sortable></Column>
+                        <Column header="Image" body={imageBodyTemplate}></Column>
+                        <Column header="Status" body={statusBodyTemplate}></Column>
+                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                    </DataTable>
+
+                    <Dialog visible={methodDialog}  style={{ width: '550px' }} header="Method Details" modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>
+                        {paymentMethod.account_image && (
+                            <img
+                                src={
+                                    paymentMethod.account_image instanceof File
+                                        ? URL.createObjectURL(paymentMethod.account_image) // Temporary preview for file
+                                        : paymentMethod.account_image // Direct URL for existing logo
+                                }
+                                alt="Uploaded Preview"
+                                width="150"
+                                className="mt-0 mx-auto mb-5 block shadow-2"
+                            />
+                        )}
+                        <FileUpload
+                            name="account_image"
+                            accept="image/*"
+                            customUpload
+                            onSelect={(e) => setPaymentMethod((prev) => ({
+                                ...prev,
+                                account_image: e.files[0],
+                            }))}
+                        />
+                        <div className="field">
+                            <label htmlFor="name">Name</label>
+                            <InputText
+                                id="method_name"
+                                value={paymentMethod?.method_name}
+                                onChange={(e) =>
+                                    setPaymentMethod((prev) => ({
+                                        ...prev,
+                                        method_name: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !paymentMethod.method_name
+                                })}
+                            />
+                            {submitted && !paymentMethod.method_name && <small className="p-invalid">Name is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="status">Status</label>
+                            <Dropdown
+                                id="status"
+                                value={paymentMethod.status}
+                                options={[
+                                    { label: 'Active', value: 1 },
+                                    { label: 'Inactive', value: 0 },
+                                ]}
+                                onChange={(e) =>
+                                    setPaymentMethod((prev) => ({
+                                        ...prev,
+                                        status: e.value,
+                                    }))
+                                }
+                                optionLabel="label"
+                                optionValue="value"
+                                placeholder="Choose a status"
+                                className="w-full"
+                            />
+                        </div>
+
+
+                        <div className="field">
+                            <label htmlFor="telegram_chat_id">Account Details</label>
+                            <textarea
+                                id="account_details"
+                                value={paymentMethod.account_details || ''}
+                                onChange={(e) =>
+                                    setPaymentMethod((prev) => ({
+                                        ...prev,
+                                        account_details: e.target.value,
+                                    }))
+                                }
+                                placeholder="Enter Account details"
+                                className="w-full p-2 border rounded"
+                                rows={4} // Adjust the number of visible rows as needed
+                            />
+                        </div>
+
+
+                    </Dialog>
+
+                    <Dialog visible={deleteMethodDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteMethodDialogFooter} onHide={hideDeleteMethodDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {paymentMethod && (
+                                <span>
+                                    Are you sure you want to delete <b>{paymentMethod.method_name}</b>?
+                                </span>
+                            )}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteMethodsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteMethodsDialogFooter} onHide={hideDeleteMethodsDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {paymentMethod && <span>Are you sure you want to delete the selected companies?</span>}
+                        </div>
+                    </Dialog>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default PaymentMethodPage;

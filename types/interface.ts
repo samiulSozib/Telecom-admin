@@ -63,6 +63,7 @@ export interface Bundle {
     updated_at: string;
     service: Service | null;
     currency: Currency | null;
+
 }
 
 export interface PaginationLink {
@@ -201,7 +202,7 @@ export interface Reseller {
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
-    user: User;
+    user: User|null;
 }
 
 export interface User {
@@ -225,7 +226,7 @@ export interface PaymentMethod {
     id: number;
     method_name: string;
     account_details: string;
-    account_image: string;
+    account_image: File|string;
     status: number;
     created_at: string;
     updated_at: string;
@@ -295,4 +296,73 @@ export interface TelegramChat {
     group_name: string;
     created_at: string;
     updated_at: string;
+}
+
+
+export interface Province{
+    id:number,
+    province_name:string,
+    country_id:number,
+    deleted_at:string,
+    created_at:string,
+    updated_at:string,
+    country:Country|null
+}
+
+export interface District{
+    id:number,
+    district_name:string,
+    province_id:number,
+    delete_at:string,
+    created_at:string,
+    updated_at:string,
+    province:Province|null
+}
+
+
+export interface Order{
+    id: number;
+    reseller_id: number;
+    rechargeble_account: string;
+    bundle: Bundle|null;
+    is_custom_recharge: number;
+    order_type: string;
+    transaction_id: string | null;
+    is_paid: number;
+    status: number;
+    reject_reason: string | null;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+    vpn_activation_qr_code_image: string | null;
+    vpn_activation_link: string | null;
+    reseller: Reseller|null;
+
+}
+
+
+export interface Advertisement{
+    id:number,
+    advertisement_title:string,
+    ad_slider_image_url:string|null,
+    status:number,
+    deleted_at:string|null,
+    created_at:string|null,
+    updated_at:string|null
+}
+
+
+export interface Balance{
+    id:number,
+    reseller_id:number,
+    transaction_type:string,
+    payment_id:number|null,
+    amount:string,
+    remaining_balance:string,
+    currency_id:number|null,
+    description:string,
+    created_at:string,
+    updated_at:string,
+    reseller:Reseller|null,
+    currency:Currency|null
 }

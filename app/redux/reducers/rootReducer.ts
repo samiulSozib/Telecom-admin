@@ -10,6 +10,15 @@ import serviceCategoryReducer from './serviceCategoryReducer';
 import serviceReducer from './serviceReducer';
 import bundleReducer from './bundleReducer';
 import { moneyTransactionReducer } from './moneyTransactionsReducer';
+import { paymentMethodsReducer } from './paymentMethodReducer';
+import { suppliersReducer } from './supplierReducer';
+import { provinceReducer } from './provinceReducer';
+import { districtReducer } from './districtReducer';
+import { resellerReducer } from './resellerReducer';
+import { orderReducer } from './orderReducer';
+import { languageReducer } from './languageReducer';
+import { advertisementsReducer } from './advertisementReducer';
+import { balanceReducer } from './balanceReducer';
 
 const rootReducer=combineReducers({
     currenciesReducer:currenciesReducer,
@@ -22,7 +31,16 @@ const rootReducer=combineReducers({
     serviceCategoryReducer:serviceCategoryReducer,
     serviceReducer:serviceReducer,
     bundleReducer:bundleReducer,
-    moneyTransactionReducer:moneyTransactionReducer
+    moneyTransactionReducer:moneyTransactionReducer,
+    paymentMethodsReducer:paymentMethodsReducer,
+    suppliersReducer:suppliersReducer,
+    provinceReducer:provinceReducer,
+    districtReducer:districtReducer,
+    resellerReducer:resellerReducer,
+    orderReducer:orderReducer,
+    languageReducer:languageReducer,
+    advertisementsReducer:advertisementsReducer,
+    balanceReducer:balanceReducer
 })
 
 

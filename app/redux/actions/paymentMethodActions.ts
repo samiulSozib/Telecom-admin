@@ -26,7 +26,7 @@ export const _fetchPaymentMethods = () => async (dispatch: Dispatch) => {
   try {
     const token = getAuthToken();
     const response = await axios.get(
-      "${process.env.NEXT_PUBLIC_BASE_URL}/paymentmethods",
+      `${process.env.NEXT_PUBLIC_BASE_URL}/paymentmethods`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,20 +52,30 @@ export const _addPaymentMethod = (
   toast: React.RefObject<any>
 ) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_PAYMENT_METHOD_REQUEST });
+  const formData=new FormData()
+  formData.append('method_name',newMethod.method_name)
+  formData.append('account_details',newMethod.account_details)
+  formData.append('status',newMethod.status.toString())
+  if(newMethod.account_image && typeof newMethod.account_image!=='string'){
+    formData.append('account_image',newMethod.account_image)
+  }
+
+
   try {
     const token = getAuthToken();
     const response = await axios.post(
-      "${process.env.NEXT_PUBLIC_BASE_URL}/paymentmethods",
-      newMethod,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/paymentmethods`,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       }
     );
     dispatch({
       type: ADD_PAYMENT_METHOD_SUCCESS,
-      payload: response.data.data.paymentMethod,
+      payload: response.data.data.payment_method,
     });
     toast.current?.show({
       severity: "success",
@@ -91,20 +101,29 @@ export const _editPaymentMethod = (
   toast: React.RefObject<any>
 ) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_PAYMENT_METHOD_REQUEST });
+  const formData=new FormData()
+  formData.append('method_name',updatedMethod.method_name)
+  formData.append('account_details',updatedMethod.account_details)
+  formData.append('status',updatedMethod.status.toString())
+  if(updatedMethod.account_image && typeof updatedMethod.account_image!=='string'){
+    formData.append('account_image',updatedMethod.account_image)
+  }
   try {
     const token = getAuthToken();
-    const response = await axios.put(
+    const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/paymentmethods/${methodId}`,
       updatedMethod,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       }
     );
+
     dispatch({
       type: EDIT_PAYMENT_METHOD_SUCCESS,
-      payload: response.data.data.paymentMethod,
+      payload: response.data.data.payment_method,
     });
     toast.current?.show({
       severity: "success",

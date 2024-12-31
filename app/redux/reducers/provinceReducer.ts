@@ -1,120 +1,115 @@
-import { AnyAction } from "redux";
+// store/provinceReducer.ts
 import {
-    FETCH_CURRENCIES_REQUEST,
-    FETCH_CURRENCIES_SUCCESS,
-    FETCH_CURRENCIES_FAILURE,
-    ADD_CURRENCY_REQUEST,
-    ADD_CURRENCY_SUCCESS,
-    ADD_CURRENCY_FAIL,
-    EDIT_CURRENCY_REQUEST,
-    EDIT_CURRENCY_SUCCESS,
-    EDIT_CURRENCY_FAIL,
-    DELETE_CURRENCY_REQUEST,
-    DELETE_CURRENCY_SUCCESS,
-    DELETE_CURRENCY_FAIL,
-} from "../constants/currenciesConstants";
-import { Currency } from "@/types/interface";
+    FETCH_PROVINCES_REQUEST,
+    FETCH_PROVINCES_SUCCESS,
+    FETCH_PROVINCES_FAIL,
+    ADD_PROVINCE_REQUEST,
+    ADD_PROVINCE_SUCCESS,
+    ADD_PROVINCE_FAIL,
+    EDIT_PROVINCE_REQUEST,
+    EDIT_PROVINCE_SUCCESS,
+    EDIT_PROVINCE_FAIL,
+    DELETE_PROVINCE_REQUEST,
+    DELETE_PROVINCE_SUCCESS,
+    DELETE_PROVINCE_FAIL,
+} from '../constants/provinceConstants';
 
-export interface CurrencyState {
-    currencies: Currency[];
+import { Province } from '@/types/interface';
+
+interface ProvinceState {
     loading: boolean;
+    provinces: Province[];
     error: string | null;
 }
 
-const initialState: CurrencyState = {
-    currencies: [],
+const initialState: ProvinceState = {
     loading: false,
+    provinces: [],
     error: null,
 };
 
-export const currenciesReducer = (state = initialState, action: AnyAction): CurrencyState => {
+export const provinceReducer = (state = initialState, action: any): ProvinceState => {
     switch (action.type) {
-        case FETCH_CURRENCIES_REQUEST:
+        // Fetch Provinces
+        case FETCH_PROVINCES_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-
-        case FETCH_CURRENCIES_SUCCESS:
+        case FETCH_PROVINCES_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                currencies: action.payload,
+                provinces: action.payload,
                 error: null,
             };
-
-        case FETCH_CURRENCIES_FAILURE:
+        case FETCH_PROVINCES_FAIL:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             };
 
-        case ADD_CURRENCY_REQUEST:
+        // Add Province
+        case ADD_PROVINCE_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-
-        case ADD_CURRENCY_SUCCESS:
+        case ADD_PROVINCE_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                currencies: [...state.currencies, action.payload],
+                provinces: [...state.provinces, action.payload],
                 error: null,
             };
-
-        case ADD_CURRENCY_FAIL:
+        case ADD_PROVINCE_FAIL:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             };
 
-        case EDIT_CURRENCY_REQUEST:
+        // Edit Province
+        case EDIT_PROVINCE_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-
-        case EDIT_CURRENCY_SUCCESS:
+        case EDIT_PROVINCE_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                currencies: state.currencies.map((currency) =>
-                    currency.id === action.payload.id ? action.payload : currency
+                provinces: state.provinces.map((province) =>
+                    province.id === action.payload.id ? action.payload : province
                 ),
                 error: null,
             };
-
-        case EDIT_CURRENCY_FAIL:
+        case EDIT_PROVINCE_FAIL:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             };
 
-        case DELETE_CURRENCY_REQUEST:
+        // Delete Province
+        case DELETE_PROVINCE_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-
-        case DELETE_CURRENCY_SUCCESS:
+        case DELETE_PROVINCE_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                currencies: state.currencies.filter(
-                    (currency) => currency.id !== action.payload
-                ),
+                provinces: state.provinces.filter((province) => province.id !== action.payload),
                 error: null,
             };
-
-        case DELETE_CURRENCY_FAIL:
+        case DELETE_PROVINCE_FAIL:
             return {
                 ...state,
                 loading: false,

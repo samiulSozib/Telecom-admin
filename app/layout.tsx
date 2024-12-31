@@ -40,7 +40,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <Provider store={store}>
                 <PrimeReactProvider>
                     <LayoutProvider>
-                        <AuthGuard>{children}</AuthGuard>
+                        {/* <AuthGuard> */}
+                            {children}
+                        {/* </AuthGuard> */}
                     </LayoutProvider>
                 </PrimeReactProvider>
                 </Provider>

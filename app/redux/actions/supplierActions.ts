@@ -47,12 +47,12 @@ export const _fetchSuppliers = () => async (dispatch: Dispatch) => {
 };
 
 // Add Supplier
-export const _addSupplier = (newSupplier: Supplier) => async (dispatch: Dispatch) => {
+export const _addSupplier = (newSupplier: Supplier,toast: React.RefObject<any>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_SUPPLIER_REQUEST });
   try {
     const token = getAuthToken();
     const response = await axios.post(
-      '${process.env.NEXT_PUBLIC_BASE_URL}/suppliers',
+      `${process.env.NEXT_PUBLIC_BASE_URL}/suppliers`,
       newSupplier,
       {
         headers: {
@@ -60,18 +60,31 @@ export const _addSupplier = (newSupplier: Supplier) => async (dispatch: Dispatch
         },
       }
     );
+
     dispatch({ type: ADD_SUPPLIER_SUCCESS, payload: response.data.data.supplier });
+    toast.current?.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Supplier Added successfully!",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: ADD_SUPPLIER_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Supplier Added fail!",
+        life: 3000,
+      });
   }
 };
 
 // Edit Supplier
-export const _editSupplier = (supplierId: number, updatedSupplier: Supplier) => async (dispatch: Dispatch) => {
+export const _editSupplier = (supplierId: number, updatedSupplier: Supplier,toast: React.RefObject<any>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_SUPPLIER_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.put(
+    const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/suppliers/${supplierId}`,
       updatedSupplier,
       {
@@ -81,13 +94,25 @@ export const _editSupplier = (supplierId: number, updatedSupplier: Supplier) => 
       }
     );
     dispatch({ type: EDIT_SUPPLIER_SUCCESS, payload: response.data.data.supplier });
+    toast.current?.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Supplier edited successfully!",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: EDIT_SUPPLIER_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Supplier edited fail!",
+        life: 3000,
+      });
   }
 };
 
 // Delete Supplier
-export const _deleteSupplier = (supplierId: number) => async (dispatch: Dispatch) => {
+export const _deleteSupplier = (supplierId: number,toast: React.RefObject<any>) => async (dispatch: Dispatch) => {
   dispatch({ type: DELETE_SUPPLIER_REQUEST });
   try {
     const token = getAuthToken();
@@ -97,7 +122,19 @@ export const _deleteSupplier = (supplierId: number) => async (dispatch: Dispatch
       },
     });
     dispatch({ type: DELETE_SUPPLIER_SUCCESS, payload: supplierId });
+    toast.current?.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Supplier deleted successfully!",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: DELETE_SUPPLIER_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Supplier deleted fail!",
+        life: 3000,
+      });
   }
 };
