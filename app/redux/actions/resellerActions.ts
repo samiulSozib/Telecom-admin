@@ -15,6 +15,8 @@ import {
     DELETE_RESELLER_SUCCESS,
     DELETE_RESELLER_FAIL,
 } from "../constants/resellerConstants";
+import { Toast } from "primereact/toast";
+import { Reseller } from "@/types/interface";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Fetch token from localStorage
@@ -38,49 +40,111 @@ export const _fetchResellers = () => async (dispatch: Dispatch) => {
 };
 
 // Add Reseller
-export const _addReseller = (resellerData: any) => async (dispatch: Dispatch) => {
+export const _addReseller = (resellerData: Reseller,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_RESELLER_REQUEST });
 
     try {
         const token = getAuthToken();
+        const formData = new FormData();
+
+        formData.append('reseller_name', resellerData.reseller_name);
+        formData.append('contact_name', resellerData.contact_name);
+        formData.append('email', resellerData.email);
+        formData.append('phone', resellerData.phone);
+        formData.append('account_password', resellerData.account_password);
+        formData.append('country_id', resellerData.country_id);
+        formData.append('province_id', resellerData.province_id);
+        formData.append('districts_id', resellerData.districts_id);
+        formData.append('currency_preference_id', resellerData.code);
+
+        if (resellerData.profile_image_url && typeof resellerData.profile_image_url !== 'string') {
+            formData.append('profile_image_url', resellerData.profile_image_url);
+        }
+
+
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/resellers`,
-            resellerData,
+            formData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             }
         );
         dispatch({ type: ADD_RESELLER_SUCCESS, payload: response.data.data.reseller });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Reseller added",
+            life: 3000,
+          });
     } catch (error: any) {
+        console.log(error)
         dispatch({ type: ADD_RESELLER_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Reseller added fail",
+            life: 3000,
+          });
     }
 };
 
 // Edit Reseller
-export const _editReseller = (id: string, resellerData: any) => async (dispatch: Dispatch) => {
+export const _editReseller = (id: number, resellerData: Reseller,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_RESELLER_REQUEST });
 
     try {
         const token = getAuthToken();
-        const response = await axios.put(
+        const formData = new FormData();
+
+        formData.append('reseller_name', resellerData.reseller_name);
+        formData.append('contact_name', resellerData.contact_name);
+        formData.append('email', resellerData.email);
+        formData.append('phone', resellerData.phone);
+        formData.append('account_password', resellerData.account_password);
+        formData.append('country_id', resellerData.country_id);
+        formData.append('province_id', resellerData.province_id);
+        formData.append('districts_id', resellerData.districts_id);
+        formData.append('currency_preference_id', resellerData.code);
+
+        if (resellerData.profile_image_url && typeof resellerData.profile_image_url !== 'string') {
+            formData.append('profile_image_url', resellerData.profile_image_url);
+        }
+        console.log(resellerData)
+        //return
+        const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/resellers/${id}`,
-            resellerData,
+            formData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             }
         );
         dispatch({ type: EDIT_RESELLER_SUCCESS, payload: response.data.data.reseller });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Reseller edited",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: EDIT_RESELLER_FAIL, payload: error.message });
+        console.log(error)
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Reseller edited fail",
+            life: 3000,
+          });
     }
 };
 
 // Delete Reseller
-export const _deleteReseller = (id: string) => async (dispatch: Dispatch) => {
+export const _deleteReseller = (id: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: DELETE_RESELLER_REQUEST });
 
     try {
@@ -91,7 +155,19 @@ export const _deleteReseller = (id: string) => async (dispatch: Dispatch) => {
             },
         });
         dispatch({ type: DELETE_RESELLER_SUCCESS, payload: id });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Reseller deleted",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: DELETE_RESELLER_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Reseller deleted fail",
+            life: 3000,
+          });
     }
 };

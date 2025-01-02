@@ -14,6 +14,8 @@ import {
     DELETE_BALANCE_SUCCESS,
     DELETE_BALANCE_FAIL,
 } from '../constants/balanceConstants';
+import { Balance } from "@/types/interface";
+import { Toast } from "primereact/toast";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Retrieve the token from localStorage
@@ -38,7 +40,7 @@ export const _fetchBalances = () => async (dispatch: Dispatch) => {
 };
 
 // Add a balance
-export const _addBalance = (balanceData: any) => async (dispatch: Dispatch) => {
+export const _addBalance = (balanceData: Balance,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_BALANCE_REQUEST });
 
     try {
@@ -49,14 +51,26 @@ export const _addBalance = (balanceData: any) => async (dispatch: Dispatch) => {
             },
         });
 
-        dispatch({ type: ADD_BALANCE_SUCCESS, payload: response.data.data });
+        dispatch({ type: ADD_BALANCE_SUCCESS, payload: response.data.data.balance });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Balance added",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: ADD_BALANCE_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to add balance",
+            life: 3000,
+          });
     }
 };
 
 // Edit a balance
-export const _editBalance = (balanceId: number, balanceData: any) => async (dispatch: Dispatch) => {
+export const _editBalance = (balanceId: number, balanceData: Balance,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_BALANCE_REQUEST });
 
     try {
@@ -71,14 +85,26 @@ export const _editBalance = (balanceId: number, balanceData: any) => async (disp
             }
         );
 
-        dispatch({ type: EDIT_BALANCE_SUCCESS, payload: response.data.data });
+        dispatch({ type: EDIT_BALANCE_SUCCESS, payload: response.data.data.balance });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Balance edited",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: EDIT_BALANCE_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to edit balance",
+            life: 3000,
+          });
     }
 };
 
 // Delete a balance
-export const _deleteBalance = (balanceId: number) => async (dispatch: Dispatch) => {
+export const _deleteBalance = (balanceId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: DELETE_BALANCE_REQUEST });
 
     try {
@@ -90,7 +116,20 @@ export const _deleteBalance = (balanceId: number) => async (dispatch: Dispatch) 
         });
 
         dispatch({ type: DELETE_BALANCE_SUCCESS, payload: balanceId });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Balance deleted",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: DELETE_BALANCE_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to delete balance",
+            life: 3000,
+          });
+
     }
 };

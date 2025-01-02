@@ -1,0 +1,348 @@
+/* eslint-disable @next/next/no-img-element */
+'use client';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import { classNames } from 'primereact/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Dropdown } from 'primereact/dropdown';
+import { _fetchCountries } from '@/app/redux/actions/countriesActions';
+import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
+import { AppDispatch } from '@/app/redux/store';
+import { Currency } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
+import { _addCurrency, _deleteCurrency, _editCurrency, _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
+
+const CurrencyPage = () => {
+
+
+    let emptyCurrency:Currency={
+        id: 0,
+        name: '',
+        code: '',
+        symbol: '',
+        ignore_digits_count: '' ,
+        exchange_rate_per_usd: '',
+        deleted_at: '' ,
+        created_at: '',
+        updated_at: '',
+    }
+
+    const [currencyDialog, setCurrencyDialog] = useState(false);
+    const [deleteCurrencyDialog, setDeleteCurrencyDialog] = useState(false);
+    const [deleteCurrencysDialog, setDeleteCurrencysDialog] = useState(false);
+    const [currency,setCurrency]=useState<Currency>(emptyCurrency)
+    const [selectedCompanies, setSelectedCurrency] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const toast = useRef<Toast>(null);
+    const dt = useRef<DataTable<any>>(null);
+    const dispatch=useDispatch<AppDispatch>()
+    const {currencies,loading}=useSelector((state:any)=>state.currenciesReducer)
+
+
+    useEffect(()=>{
+        dispatch(_fetchCurrencies())
+    },[dispatch])
+
+    const openNew = () => {
+        setCurrency(emptyCurrency)
+        setSubmitted(false);
+        setCurrencyDialog(true);
+    };
+
+    const hideDialog = () => {
+        setSubmitted(false);
+        setCurrencyDialog(false);
+    };
+
+    const hideDeleteCurrencyDialog = () => {
+        setDeleteCurrencyDialog(false);
+    };
+
+    const hideDeleteCurrencysDialog = () => {
+        setDeleteCurrencysDialog(false);
+    };
+
+
+
+    const saveCurrency = () => {
+        setSubmitted(true);
+        if (currency.id && currency.id !== 0) {
+            dispatch(_editCurrency(currency.id,currency,toast));
+
+        } else {
+            dispatch(_addCurrency(currency,toast));
+        }
+
+        setCurrencyDialog(false);
+        setCurrency(emptyCurrency);
+    };
+
+    const editCurrency = (currency: Currency) => {
+        setCurrency({ ...currency});
+
+        setCurrencyDialog(true);
+    };
+
+    const confirmDeleteCurrency = (currency: Currency) => {
+        setCurrency(currency);
+        setDeleteCurrencyDialog(true);
+    };
+
+    const deleteCurrency = () => {
+        if (!currency?.id) {
+            console.error("Currency  ID is undefined.");
+            return;
+        }
+        dispatch(_deleteCurrency(currency?.id,toast))
+        setDeleteCurrencyDialog(false);
+
+    };
+
+
+    const confirmDeleteSelected = () => {
+        setDeleteCurrencysDialog(true);
+    };
+
+
+
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <span className="block mt-2 md:mt-0 p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+            </span>
+            </React.Fragment>
+        );
+    };
+
+
+    const currencyCodeBodyTemplate = (rowData: Currency) => {
+        return (
+            <>
+                <span className="p-column-title">Currency Code</span>
+                {rowData.code}
+            </>
+        );
+    };
+
+    const currencyNameBodyTemplate = (rowData: Currency) => {
+        return (
+            <>
+                <span className="p-column-title">Currency Name</span>
+                {rowData.name}
+            </>
+        );
+    };
+
+    const exchangeRateBodyTemplate = (rowData: Currency) => {
+        return (
+            <>
+                <span className="p-column-title">Exchange Rate</span>
+                {rowData.exchange_rate_per_usd}
+            </>
+        );
+    };
+
+
+    const actionBodyTemplate = (rowData: Currency) => {
+        return (
+            <>
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editCurrency(rowData)}/>
+                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteCurrency(rowData)} />
+            </>
+        );
+    };
+
+    // const header = (
+    //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+    //         <h5 className="m-0">Manage Products</h5>
+    //         <span className="block mt-2 md:mt-0 p-input-icon-left">
+    //             <i className="pi pi-search" />
+    //             <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+    //         </span>
+    //     </div>
+    // );
+
+    const currencyDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveCurrency} />
+        </>
+    );
+    const deleteCurrencyDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCurrencyDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteCurrency} />
+        </>
+    );
+    const deleteCompaniesDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCurrencysDialog} />
+            <Button label="Yes" icon="pi pi-check" text  />
+        </>
+    );
+
+
+
+
+    return (
+        <div className="grid crud-demo">
+            <div className="col-12">
+                <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
+                    <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+                    <DataTable
+                        ref={dt}
+                        value={currencies}
+                        selection={selectedCompanies}
+                        onSelectionChange={(e) => setSelectedCurrency(e.value as any)}
+                        dataKey="id"
+                        paginator
+                        rows={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="datatable-responsive"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} currency code"
+                        globalFilter={globalFilter}
+                        emptyMessage="No Currency found."
+                        // header={header}
+                        responsiveLayout="scroll"
+                    >
+                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+                        <Column field="name" header="Name" sortable body={currencyNameBodyTemplate}></Column>
+                        <Column field="code" header="Code" sortable body={currencyCodeBodyTemplate}></Column>
+                        <Column field="exchange_rate" header="Exchange Rate" sortable body={exchangeRateBodyTemplate}></Column>
+                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                    </DataTable>
+
+                    <Dialog visible={currencyDialog}  style={{ width: '550px' }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
+                        <div className="field">
+                            <label htmlFor="name">Currency Name</label>
+                            <InputText
+                                id="name"
+                                value={currency.name}
+                                onChange={(e) =>
+                                    setCurrency((prevCurrency) => ({
+                                        ...prevCurrency,
+                                        name: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !currency.name
+                                })}
+                            />
+                            {submitted && !currency.name && <small className="p-invalid">Currency Name is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="code">Currency Code</label>
+                            <InputText
+                                id="code"
+                                value={currency.code}
+                                onChange={(e) =>
+                                    setCurrency((prevCurrency) => ({
+                                        ...prevCurrency,
+                                        code: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !currency.code
+                                })}
+                            />
+                            {submitted && !currency.code && <small className="p-invalid">Code is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="symbol">Symbol</label>
+                            <InputText
+                                id="symbol"
+                                value={currency.symbol}
+                                onChange={(e) =>
+                                    setCurrency((prevCurrency) => ({
+                                        ...prevCurrency,
+                                        symbol: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !currency.symbol
+                                })}
+                            />
+                            {submitted && !currency.symbol && <small className="p-invalid">Symbol is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="exchange_rate_per_usd">Exchange Rate</label>
+                            <InputText
+                                id="exchange_rate_per_usd"
+                                value={currency.exchange_rate_per_usd}
+                                onChange={(e) =>
+                                    setCurrency((prevCurrency) => ({
+                                        ...prevCurrency,
+                                        exchange_rate_per_usd: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !currency.exchange_rate_per_usd
+                                })}
+                            />
+                            {submitted && !currency.exchange_rate_per_usd && <small className="p-invalid">Exchange Rate is required.</small>}
+                        </div>
+
+
+
+                    </Dialog>
+
+                    <Dialog visible={deleteCurrencyDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCurrencyDialogFooter} onHide={hideDeleteCurrencyDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {currency && (
+                                <span>
+                                    Are you sure you want to delete <b>{currency.name}</b>?
+                                </span>
+                            )}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteCurrencysDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCurrencysDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {currency && <span>Are you sure you want to delete the selected companies?</span>}
+                        </div>
+                    </Dialog>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CurrencyPage;

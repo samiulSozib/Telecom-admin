@@ -1,4 +1,4 @@
-import { Order } from '@/types/interface';
+import { Order, Pagination } from '@/types/interface';
 import {
     FETCH_ORDERS_REQUEST,
     FETCH_ORDERS_SUCCESS,
@@ -19,12 +19,14 @@ interface OrderState {
     loading: boolean;
     orders: Order[];
     error: string | null;
+    pagination: Pagination | null;
 }
 
 const initialState: OrderState = {
     loading: false,
     orders: [],
     error: null,
+    pagination: null,
 };
 
 export const orderReducer = (state = initialState, action: any): OrderState => {
@@ -43,7 +45,8 @@ export const orderReducer = (state = initialState, action: any): OrderState => {
             return {
                 ...state,
                 loading: false,
-                orders: action.payload,
+                orders: action.payload.data,
+                pagination: action.payload.pagination,
                 error: null,
             };
 

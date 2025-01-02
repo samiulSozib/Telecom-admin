@@ -16,6 +16,8 @@ import {
   DELETE_LANGUAGE_SUCCESS,
   DELETE_LANGUAGE_FAIL,
 } from "../constants/languageConstants";
+import { Language } from "@/types/interface";
+import { Toast } from "primereact/toast";
 
 const getAuthToken = () => {
   return localStorage.getItem("api_token") || ""; // Retrieve the token from localStorage
@@ -40,7 +42,7 @@ export const _fetchLanguages = () => async (dispatch: Dispatch) => {
 };
 
 // Add a language
-export const _addLanguage = (languageData: any) => async (dispatch: Dispatch) => {
+export const _addLanguage = (languageData: Language,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_LANGUAGE_REQUEST });
 
   try {
@@ -55,14 +57,26 @@ export const _addLanguage = (languageData: any) => async (dispatch: Dispatch) =>
       }
     );
 
-    dispatch({ type: ADD_LANGUAGE_SUCCESS, payload: response.data.data });
+    dispatch({ type: ADD_LANGUAGE_SUCCESS, payload: response.data.data.language });
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Language added",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: ADD_LANGUAGE_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to add language",
+        life: 3000,
+      });
   }
 };
 
 // Edit a language
-export const _editLanguage = (languageId: number, languageData: any) => async (dispatch: Dispatch) => {
+export const _editLanguage = (languageId: number, languageData: Language,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_LANGUAGE_REQUEST });
 
   try {
@@ -77,14 +91,26 @@ export const _editLanguage = (languageId: number, languageData: any) => async (d
       }
     );
 
-    dispatch({ type: EDIT_LANGUAGE_SUCCESS, payload: response.data.data });
+    dispatch({ type: EDIT_LANGUAGE_SUCCESS, payload: response.data.data.language });
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Language edited",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: EDIT_LANGUAGE_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to edit language",
+        life: 3000,
+      });
   }
 };
 
 // Delete a language
-export const _deleteLanguage = (languageId: number) => async (dispatch: Dispatch) => {
+export const _deleteLanguage = (languageId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: DELETE_LANGUAGE_REQUEST });
 
   try {
@@ -96,7 +122,19 @@ export const _deleteLanguage = (languageId: number) => async (dispatch: Dispatch
     });
 
     dispatch({ type: DELETE_LANGUAGE_SUCCESS, payload: languageId });
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Language deleted",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: DELETE_LANGUAGE_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to delete language",
+        life: 3000,
+      });
   }
 };

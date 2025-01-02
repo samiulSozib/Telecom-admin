@@ -84,7 +84,7 @@ const AppMenu = () => {
                         {
                             label: 'Payments',
                             icon: 'pi pi-fw pi-money-bill', // Money bill for payments
-                            to: '/pages/payments',
+                            to: '/pages/payment',
                         },
                         {
                             label: 'Balance',
@@ -136,7 +136,7 @@ const AppMenu = () => {
                 },
                 {
                     label: 'Advertisement',
-                    icon: 'pi pi-fw pi-bullhorn', // Bullhorn for advertisements
+                    icon: 'pi pi-list', // Bullhorn for advertisements pi-list
                     to: '/pages/advertisement',
                 },
                 {

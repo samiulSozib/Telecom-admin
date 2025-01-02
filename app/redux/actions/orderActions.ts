@@ -16,24 +16,28 @@ import {
   DELETE_ORDER_SUCCESS,
   DELETE_ORDER_FAIL,
 } from '../constants/orderConstants';
+import { Toast } from 'primereact/toast';
 
 const getAuthToken = () => {
   return localStorage.getItem('api_token') || ''; // Retrieve the token from localStorage
 };
 
 // Fetch orders
-export const _fetchOrders = () => async (dispatch: Dispatch) => {
+export const _fetchOrders = (page: number = 1) => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_ORDERS_REQUEST });
 
   try {
     const token = getAuthToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/orders`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/orders?page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    dispatch({ type: FETCH_ORDERS_SUCCESS, payload: response.data.data.orders });
+    dispatch({ type: FETCH_ORDERS_SUCCESS, payload: {
+        data: response.data.data.orders,
+        pagination: response.data.payload.pagination,
+      } });
   } catch (error: any) {
     dispatch({ type: FETCH_ORDERS_FAIL, payload: error.message });
   }
@@ -84,7 +88,7 @@ export const _editOrder = (orderId: number, orderData: any) => async (dispatch: 
 };
 
 // Delete an order
-export const _deleteOrder = (orderId: number) => async (dispatch: Dispatch) => {
+export const _deleteOrder = (orderId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: DELETE_ORDER_REQUEST });
 
   try {
@@ -96,7 +100,19 @@ export const _deleteOrder = (orderId: number) => async (dispatch: Dispatch) => {
     });
 
     dispatch({ type: DELETE_ORDER_SUCCESS, payload: orderId });
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Order deleted",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: DELETE_ORDER_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to delete order",
+        life: 3000,
+      });
   }
 };

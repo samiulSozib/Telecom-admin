@@ -15,6 +15,8 @@ import {
     DELETE_CURRENCY_SUCCESS,
     DELETE_CURRENCY_FAIL,
 } from "../constants/currenciesConstants";
+import { Currency } from "@/types/interface";
+import { Toast } from "primereact/toast";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Get the token or return an empty string if not found
@@ -39,7 +41,7 @@ export const _fetchCurrencies = () => async (dispatch: Dispatch) => {
 };
 
 // Add a currency
-export const _addCurrency = (currencyData: any) => async (dispatch: Dispatch) => {
+export const _addCurrency = (currencyData: Currency,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_CURRENCY_REQUEST });
 
     try {
@@ -54,14 +56,26 @@ export const _addCurrency = (currencyData: any) => async (dispatch: Dispatch) =>
             }
         );
 
-        dispatch({ type: ADD_CURRENCY_SUCCESS, payload: response.data.data });
+        dispatch({ type: ADD_CURRENCY_SUCCESS, payload: response.data.data.currency });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Currency added",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: ADD_CURRENCY_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to add currency",
+            life: 3000,
+          });
     }
 };
 
 // Edit a currency
-export const _editCurrency = (currencyId: number, currencyData: any) => async (dispatch: Dispatch) => {
+export const _editCurrency = (currencyId: number, currencyData: Currency,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_CURRENCY_REQUEST });
 
     try {
@@ -76,14 +90,26 @@ export const _editCurrency = (currencyId: number, currencyData: any) => async (d
             }
         );
 
-        dispatch({ type: EDIT_CURRENCY_SUCCESS, payload: response.data.data });
+        dispatch({ type: EDIT_CURRENCY_SUCCESS, payload: response.data.data.currency });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Currency edited",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: EDIT_CURRENCY_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to edit currency",
+            life: 3000,
+          });
     }
 };
 
 // Delete a currency
-export const _deleteCurrency = (currencyId: number) => async (dispatch: Dispatch) => {
+export const _deleteCurrency = (currencyId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: DELETE_CURRENCY_REQUEST });
 
     try {
@@ -95,7 +121,19 @@ export const _deleteCurrency = (currencyId: number) => async (dispatch: Dispatch
         });
 
         dispatch({ type: DELETE_CURRENCY_SUCCESS, payload: currencyId });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Currency deleted",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: DELETE_CURRENCY_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to delete currency",
+            life: 3000,
+          });
     }
 };

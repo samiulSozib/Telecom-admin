@@ -15,6 +15,7 @@ import {
   DELETE_PURCHASED_PRODUCT_FAIL,
 } from '../constants/purchasedProductsConstants';
 import { PurchasedProduct } from '@/types/interface';
+import { Toast } from 'primereact/toast';
 
 const getAuthToken = (): string => {
   return localStorage.getItem('api_token') || '';
@@ -26,7 +27,7 @@ export const _fetchPurchasedProducts = () => async (dispatch: Dispatch) => {
   try {
     const token = getAuthToken();
     const response = await axios.get(
-      '${process.env.NEXT_PUBLIC_BASE_URL}/purchased-products',
+      `${process.env.NEXT_PUBLIC_BASE_URL}/purchased-products`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -47,7 +48,7 @@ export const _fetchPurchasedProducts = () => async (dispatch: Dispatch) => {
 };
 
 // Add Purchased Product
-export const _addPurchasedProduct = (newProduct: PurchasedProduct) => async (dispatch: Dispatch) => {
+export const _addPurchasedProduct = (newProduct: PurchasedProduct,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_PURCHASED_PRODUCT_REQUEST });
   try {
     const token = getAuthToken();
@@ -62,19 +63,33 @@ export const _addPurchasedProduct = (newProduct: PurchasedProduct) => async (dis
     );
     dispatch({
       type: ADD_PURCHASED_PRODUCT_SUCCESS,
-      payload: response.data.data.purchasedproduct,
+      payload: response.data.data.purchased_product,
     });
+    console.log(response)
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Purchased Product added",
+        life: 3000,
+      });
+
   } catch (error: any) {
     dispatch({ type: ADD_PURCHASED_PRODUCT_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Purchased Product added fail",
+        life: 3000,
+      });
   }
 };
 
 // Edit Purchased Product
-export const _editPurchasedProduct = (productId: number, updatedProduct: PurchasedProduct) => async (dispatch: Dispatch) => {
+export const _editPurchasedProduct = (productId: number, updatedProduct: PurchasedProduct,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_PURCHASED_PRODUCT_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.put(
+    const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/purchased-products/${productId}`,
       updatedProduct,
       {
@@ -83,14 +98,26 @@ export const _editPurchasedProduct = (productId: number, updatedProduct: Purchas
         },
       }
     );
-    dispatch({ type: EDIT_PURCHASED_PRODUCT_SUCCESS, payload: response.data.data.purchasedproduct });
+    dispatch({ type: EDIT_PURCHASED_PRODUCT_SUCCESS, payload: response.data.data.purchased_product });
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Purchased Product edited",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: EDIT_PURCHASED_PRODUCT_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Purchased Product edited fail",
+        life: 3000,
+      });
   }
 };
 
 // Delete Purchased Product
-export const _deletePurchasedProduct = (productId: number) => async (dispatch: Dispatch) => {
+export const _deletePurchasedProduct = (productId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: DELETE_PURCHASED_PRODUCT_REQUEST });
   try {
     const token = getAuthToken();
@@ -103,7 +130,19 @@ export const _deletePurchasedProduct = (productId: number) => async (dispatch: D
       }
     );
     dispatch({ type: DELETE_PURCHASED_PRODUCT_SUCCESS, payload: productId });
+    toast.current?.show({
+        severity: "success",
+        summary: "Successful",
+        detail: "Purchased Product deleted",
+        life: 3000,
+      });
   } catch (error: any) {
     dispatch({ type: DELETE_PURCHASED_PRODUCT_FAIL, payload: error.message });
+    toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Purchased Product deleted fail",
+        life: 3000,
+      });
   }
 };

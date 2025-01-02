@@ -117,15 +117,16 @@ export interface Company {
 export interface Country {
     id: number;
     country_name: string;
-    country_flag_image_url: string | null;
+    country_flag_image_url: string | File;
     language_id: number | null;
     country_telecom_code: string;
     phone_number_length: string;
     deleted_at: string | null;
     created_at: string;
     updated_at: string;
-    currency: string | null;
+    currency: "" | Currency;
     language: Language | null
+    currency_id:number|null
 }
 
 export interface Language {
@@ -184,7 +185,7 @@ export interface Reseller {
     account_password: string;
     personal_pin: string;
     remember_token: string | null;
-    profile_image_url: string;
+    profile_image_url: string|File;
     email: string;
     phone: string;
     country_id: string;
@@ -203,6 +204,8 @@ export interface Reseller {
     updated_at: string;
     deleted_at: string | null;
     user: User|null;
+    code:string,
+    country:string
 }
 
 export interface User {
@@ -253,8 +256,8 @@ export interface PurchasedProduct {
     status: number;
     created_at: string;
     updated_at: string;
-    supplier: Supplier;
-    service: Service;
+    supplier: Supplier|null;
+    service: Service|null;
 }
 
 export interface ServiceCategory {
@@ -337,14 +340,13 @@ export interface Order{
     vpn_activation_qr_code_image: string | null;
     vpn_activation_link: string | null;
     reseller: Reseller|null;
-
 }
 
 
 export interface Advertisement{
     id:number,
     advertisement_title:string,
-    ad_slider_image_url:string|null,
+    ad_slider_image_url:string|File,
     status:number,
     deleted_at:string|null,
     created_at:string|null,
@@ -366,3 +368,24 @@ export interface Balance{
     reseller:Reseller|null,
     currency:Currency|null
 }
+
+export interface Payment{
+    id:number,
+    reseller_id:number,
+    payment_method_id:number,
+    amount:string,
+    remaining_payment_amount:string,
+    currency_id:number,
+    transaction_id:number|null,
+    status:string,
+    notes:string,
+    payment_date:string,
+    created_at:string,
+    updated_date:string,
+    reseller:Reseller|null,
+    payment_method:PaymentMethod|null,
+    currency:Currency|null
+}
+
+
+// reseller pagination, edit

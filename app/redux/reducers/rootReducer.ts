@@ -19,6 +19,8 @@ import { orderReducer } from './orderReducer';
 import { languageReducer } from './languageReducer';
 import { advertisementsReducer } from './advertisementReducer';
 import { balanceReducer } from './balanceReducer';
+import { paymentReducer } from './paymentReducer';
+import { purchasedProductsReducer } from './purchasedProductsReducer';
 
 const rootReducer=combineReducers({
     currenciesReducer:currenciesReducer,
@@ -40,7 +42,9 @@ const rootReducer=combineReducers({
     orderReducer:orderReducer,
     languageReducer:languageReducer,
     advertisementsReducer:advertisementsReducer,
-    balanceReducer:balanceReducer
+    balanceReducer:balanceReducer,
+    paymentReducer:paymentReducer,
+    purchasedProductsReducer:purchasedProductsReducer
 })
 
 

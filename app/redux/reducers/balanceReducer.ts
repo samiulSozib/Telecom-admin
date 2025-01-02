@@ -17,13 +17,13 @@ import { Balance } from '@/types/interface';
 
 interface BalanceState {
     loading: boolean;
-    districts: Balance[];
+    balances: Balance[];
     error: string | null;
 }
 
 const initialState: BalanceState = {
     loading: false,
-    districts: [],
+    balances: [],
     error: null,
 };
 
@@ -43,7 +43,7 @@ export const balanceReducer = (state = initialState, action: AnyAction): Balance
             return {
                 ...state,
                 loading: false,
-                districts: action.payload,
+                balances: action.payload,
                 error: null,
             };
 
@@ -51,7 +51,7 @@ export const balanceReducer = (state = initialState, action: AnyAction): Balance
             return {
                 ...state,
                 loading: false,
-                districts: [...state.districts, action.payload], // Add the new balance to the existing list
+                balances: [...state.balances, action.payload], // Add the new balance to the existing list
                 error: null,
             };
 
@@ -59,7 +59,7 @@ export const balanceReducer = (state = initialState, action: AnyAction): Balance
             return {
                 ...state,
                 loading: false,
-                districts: state.districts.map((district) =>
+                balances: state.balances.map((district) =>
                     district.id === action.payload.id ? action.payload : district
                 ),
                 error: null,
@@ -69,7 +69,7 @@ export const balanceReducer = (state = initialState, action: AnyAction): Balance
             return {
                 ...state,
                 loading: false,
-                districts: state.districts.filter((district) => district.id !== action.payload),
+                balances: state.balances.filter((district) => district.id !== action.payload),
                 error: null,
             };
 

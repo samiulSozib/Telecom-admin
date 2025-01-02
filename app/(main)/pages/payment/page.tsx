@@ -1,0 +1,480 @@
+/* eslint-disable @next/next/no-img-element */
+'use client';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import { classNames } from 'primereact/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Dropdown } from 'primereact/dropdown';
+import { _fetchCountries } from '@/app/redux/actions/countriesActions';
+import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
+import { AppDispatch } from '@/app/redux/store';
+import { Payment, Currency } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
+import { _addPayment, _deletePayment, _editPayment, _fetchPayments } from '@/app/redux/actions/paymentActions';
+import { paymentReducer } from '../../../redux/reducers/paymentReducer';
+import { resellerReducer } from '../../../redux/reducers/resellerReducer';
+import { _fetchResellers } from '@/app/redux/actions/resellerActions';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { paymentMethodsReducer } from '../../../redux/reducers/paymentMethodReducer';
+import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
+import { _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
+import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
+import { Calendar } from 'primereact/calendar';
+
+const PaymentPage = () => {
+
+    let emptyPayment:Payment={
+        id:0,
+        reseller_id:0,
+        payment_method_id:0,
+        amount:'',
+        remaining_payment_amount:'',
+        currency_id:0,
+        transaction_id:0,
+        status:'',
+        notes:'',
+        payment_date:'',
+        created_at:'',
+        updated_date:'',
+        reseller:null,
+        payment_method:null,
+        currency:null
+    }
+
+
+    const [paymentDialog, setPaymentDialog] = useState(false);
+    const [deletePaymentDialog, setDeletePaymentDialog] = useState(false);
+    const [deletePaymentsDialog, setDeletePaymentsDialog] = useState(false);
+    const [payment,setPayment]=useState<Payment>(emptyPayment)
+    const [selectedCompanies, setSelectedPayment] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const toast = useRef<Toast>(null);
+    const dt = useRef<DataTable<any>>(null);
+    const dispatch=useDispatch<AppDispatch>()
+    const {payments,loading}=useSelector((state:any)=>state.paymentReducer)
+    const {resellers}=useSelector((state:any)=>state.resellerReducer)
+    const {paymentMethods}=useSelector((state:any)=>state.paymentMethodsReducer)
+    const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+
+
+    useEffect(()=>{
+        dispatch(_fetchPayments())
+        dispatch(_fetchResellers())
+        dispatch(_fetchPaymentMethods())
+        dispatch(_fetchCurrencies())
+    },[dispatch])
+
+    const openNew = () => {
+        setPayment(emptyPayment)
+        setSubmitted(false);
+        setPaymentDialog(true);
+    };
+
+    const hideDialog = () => {
+        setSubmitted(false);
+        setPaymentDialog(false);
+    };
+
+    const hideDeletePaymentDialog = () => {
+        setDeletePaymentDialog(false);
+    };
+
+    const hideDeletePaymentsDialog = () => {
+        setDeletePaymentsDialog(false);
+    };
+
+
+
+    const savePayment = () => {
+        setSubmitted(true);
+        if (payment.id && payment.id !== 0) {
+            dispatch(_editPayment(payment.id,payment,toast));
+
+        } else {
+            dispatch(_addPayment(payment,toast));
+        }
+
+        setPaymentDialog(false);
+        setPayment(emptyPayment);
+    };
+
+    const editPayment = (payment: Payment) => {
+        setPayment({ ...payment});
+
+        setPaymentDialog(true);
+    };
+
+    const confirmDeletePayment = (payment: Payment) => {
+        setPayment(payment);
+        setDeletePaymentDialog(true);
+    };
+
+    const deletePayment = () => {
+        if (!payment?.id) {
+            console.error("Payment  ID is undefined.");
+            return;
+        }
+        dispatch(_deletePayment(payment?.id,toast))
+        setDeletePaymentDialog(false);
+
+    };
+
+
+    const confirmDeleteSelected = () => {
+        setDeletePaymentsDialog(true);
+    };
+
+
+
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <span className="block mt-2 md:mt-0 p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+            </span>
+            </React.Fragment>
+        );
+    };
+
+
+    const resellerNameBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Reseller</span>
+                {rowData.reseller?.reseller_name}
+            </>
+        );
+    };
+
+    const paymentMethodBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Payment Method</span>
+                {rowData.payment_method?.method_name}
+            </>
+        );
+    };
+
+
+    const amountBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Amount</span>
+                {rowData.amount}
+            </>
+        );
+    };
+
+    const currencyBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Currency</span>
+                {rowData.currency?.code}
+            </>
+        );
+    };
+
+
+    const remainingPaymentBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Remaining Payment</span>
+                {rowData.remaining_payment_amount}
+            </>
+        );
+    };
+
+    const statusBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Status</span>
+                {rowData.status}
+            </>
+        );
+    };
+
+    const noteBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <span className="p-column-title">Note</span>
+                {rowData.notes}
+            </>
+        );
+    };
+
+    const paymentDateBodyTemplate = (rowData: Payment) => {
+            const formatDate = (dateString: string) => {
+                const date = new Date(dateString);
+                const optionsDate: Intl.DateTimeFormatOptions = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                };
+                const optionsTime: Intl.DateTimeFormatOptions = {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                };
+                const formattedDate = date.toLocaleDateString('en-US', optionsDate);
+                const formattedTime = date.toLocaleTimeString('en-US', optionsTime);
+
+                return { formattedDate, formattedTime };
+            };
+
+            const { formattedDate, formattedTime } = formatDate(rowData.payment_date);
+
+            return (
+                <>
+                    <span className="p-column-title">Created At</span>
+                    <span style={{ fontSize: '0.8rem', color: '#666' }}>{formattedDate}</span>
+                    <br />
+                    <span style={{ fontSize: '0.8rem', color: '#666' }}>{formattedTime}</span>
+                </>
+            );
+        };
+
+
+
+
+    const actionBodyTemplate = (rowData: Payment) => {
+        return (
+            <>
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editPayment(rowData)}/>
+                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeletePayment(rowData)} />
+            </>
+        );
+    };
+
+    // const header = (
+    //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+    //         <h5 className="m-0">Manage Products</h5>
+    //         <span className="block mt-2 md:mt-0 p-input-icon-left">
+    //             <i className="pi pi-search" />
+    //             <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+    //         </span>
+    //     </div>
+    // );
+
+    const paymentDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" text onClick={savePayment} />
+        </>
+    );
+    const deletePaymentDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeletePaymentDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deletePayment} />
+        </>
+    );
+    const deleteCompaniesDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeletePaymentsDialog} />
+            <Button label="Yes" icon="pi pi-check" text  />
+        </>
+    );
+
+
+
+
+    return (
+        <div className="grid crud-demo">
+            <div className="col-12">
+                <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
+                    <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+                    <DataTable
+                        ref={dt}
+                        value={payments}
+                        selection={selectedCompanies}
+                        onSelectionChange={(e) => setSelectedPayment(e.value as any)}
+                        dataKey="id"
+                        paginator
+                        rows={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="datatable-responsive"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} payment code"
+                        globalFilter={globalFilter}
+                        emptyMessage="No Payment s found."
+                        // header={header}
+                        responsiveLayout="scroll"
+                    >
+                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+                        <Column header="Reseller Name" body={resellerNameBodyTemplate} sortable></Column>
+                        <Column header="Payment Method" body={paymentMethodBodyTemplate} sortable></Column>
+                        <Column header="Amount" body={amountBodyTemplate} sortable></Column>
+                        <Column header="Currency" body={currencyBodyTemplate} sortable></Column>
+                        <Column header="Remaining Payment" body={remainingPaymentBodyTemplate} sortable></Column>
+                        <Column header="Status" body={statusBodyTemplate} sortable></Column>
+                        <Column header="Note" body={noteBodyTemplate} sortable></Column>
+                        <Column header="Payment Date" body={paymentDateBodyTemplate} sortable></Column>
+                        <Column body={actionBodyTemplate} ></Column>
+                    </DataTable>
+
+                    <Dialog visible={paymentDialog}  style={{ width: '750px' }} header="Payment Details" modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
+                    <div className="card flex flex-column md:flex-row gap-3">
+                        <div>
+                            <div className="field col flex-1">
+                                <label htmlFor="country_id">Reseller</label>
+                                <Dropdown
+                                    id="country_id"
+                                    value={payment.reseller_id}
+                                    options={resellers}
+                                    onChange={(e) =>
+                                        setPayment((prev) => ({
+
+                                            ...prev,
+                                            reseller_id: e.value,
+                                        }))
+                                    }
+                                    optionLabel='reseller_name'
+                                    optionValue='id'
+                                    placeholder="Choose a reseller"
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div className="field col flex-1">
+                                <label htmlFor="email">Amount</label>
+                                <InputText
+                                    id="amount"
+                                    value={payment.amount}
+                                    onChange={(e) =>
+                                        setPayment((prev) => ({
+                                            ...prev,
+                                            amount: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !payment.amount
+                                    })}
+                                />
+                                {submitted && !payment.amount && <small className="p-invalid">Amount is required.</small>}
+                            </div>
+                            <div className="field col flex-1">
+                                <label htmlFor="notes">Notes</label>
+                                <InputTextarea
+                                value={payment.notes}
+                                onChange={(e) =>
+                                setPayment((prev) => ({
+                                    ...prev,
+                                    notes: e.target.value,
+                                }))
+                                } rows={3} cols={30} />
+
+                            </div>
+                        </div>
+                        <br />
+                        <div>
+                            <div className="field col flex-1">
+                                <label htmlFor="country_id">Payment Method</label>
+                                <Dropdown
+                                    id="payment_method_id"
+                                    value={payment.payment_method_id}
+                                    options={paymentMethods}
+                                    onChange={(e) =>
+                                        setPayment((prev) => ({
+
+                                            ...prev,
+                                            payment_method_id: e.value,
+                                        }))
+                                    }
+                                    optionLabel='method_name'
+                                    optionValue='id'
+                                    placeholder="Choose a method"
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div className="field col flex-1">
+                                <label htmlFor="currency_id">Currency</label>
+                                <Dropdown
+                                    id="currency_id"
+                                    value={payment.currency_id}
+                                    options={currencies}
+                                    onChange={(e) =>
+                                        setPayment((prev) => ({
+
+                                            ...prev,
+                                            currency_id: e.value,
+                                        }))
+                                    }
+                                    optionLabel='name'
+                                    optionValue='id'
+                                    placeholder="Choose a currency"
+                                    className="w-full"
+                                />
+                            </div>
+                            <div className="field col flex-1">
+                                <label htmlFor="payment_date">Payment Date</label>
+                                <InputText
+                                    id="payment_date"
+                                    value={payment.payment_date}
+                                    onChange={(e) =>
+                                        setPayment((prev) => ({
+                                            ...prev,
+                                            payment_date: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !payment.payment_date
+                                    })}
+                                />
+                            </div>
+                        </div>
+
+
+                    </div>
+                    </Dialog>
+
+                    <Dialog visible={deletePaymentDialog} style={{ width: '450px' }} header="Confirm" modal footer={deletePaymentDialogFooter} onHide={hideDeletePaymentDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {payment && (
+                                <span>
+                                    Are you sure you want to delete <b></b>?
+                                </span>
+                            )}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deletePaymentsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeletePaymentsDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {payment && <span>Are you sure you want to delete the selected companies?</span>}
+                        </div>
+                    </Dialog>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default PaymentPage;

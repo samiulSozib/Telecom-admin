@@ -16,6 +16,8 @@ import {
     DELETE_PROVINCE_SUCCESS,
     DELETE_PROVINCE_FAIL,
 } from '../constants/provinceConstants';
+import { Toast } from 'primereact/toast';
+import { Province } from '@/types/interface';
 
 const getAuthToken = () => {
     return localStorage.getItem('api_token') || ''; // Retrieve the token from localStorage
@@ -40,7 +42,7 @@ export const _fetchProvinces = () => async (dispatch: Dispatch) => {
 };
 
 // Add a province
-export const _addProvince = (provinceData: any) => async (dispatch: Dispatch) => {
+export const _addProvince = (provinceData: Province,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_PROVINCE_REQUEST });
 
     try {
@@ -55,14 +57,26 @@ export const _addProvince = (provinceData: any) => async (dispatch: Dispatch) =>
             }
         );
 
-        dispatch({ type: ADD_PROVINCE_SUCCESS, payload: response.data.data });
+        dispatch({ type: ADD_PROVINCE_SUCCESS, payload: response.data.data.province });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Province added",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: ADD_PROVINCE_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to add province",
+            life: 3000,
+          });
     }
 };
 
 // Edit a province
-export const _editProvince = (provinceId: number, provinceData: any) => async (dispatch: Dispatch) => {
+export const _editProvince = (provinceId: number, provinceData: Province,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_PROVINCE_REQUEST });
 
     try {
@@ -77,14 +91,26 @@ export const _editProvince = (provinceId: number, provinceData: any) => async (d
             }
         );
 
-        dispatch({ type: EDIT_PROVINCE_SUCCESS, payload: response.data.data });
+        dispatch({ type: EDIT_PROVINCE_SUCCESS, payload: response.data.data.province });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Province edited",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: EDIT_PROVINCE_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to edit province",
+            life: 3000,
+          });
     }
 };
 
 // Delete a province
-export const _deleteProvince = (provinceId: number) => async (dispatch: Dispatch) => {
+export const _deleteProvince = (provinceId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: DELETE_PROVINCE_REQUEST });
 
     try {
@@ -96,7 +122,19 @@ export const _deleteProvince = (provinceId: number) => async (dispatch: Dispatch
         });
 
         dispatch({ type: DELETE_PROVINCE_SUCCESS, payload: provinceId });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Province deleted",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: DELETE_PROVINCE_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to delete province",
+            life: 3000,
+          });
     }
 };

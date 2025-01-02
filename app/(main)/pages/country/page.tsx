@@ -1,0 +1,421 @@
+/* eslint-disable @next/next/no-img-element */
+'use client';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import { classNames } from 'primereact/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Dropdown } from 'primereact/dropdown';
+import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
+import { AppDispatch } from '@/app/redux/store';
+import { Country } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
+import { _addCountry, _deleteCountry, _editCountry, _fetchCountries } from '@/app/redux/actions/countriesActions';
+import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
+import { _fetchLanguages } from '@/app/redux/actions/languageActions';
+import { FileUpload } from 'primereact/fileupload';
+
+const CountryPage = () => {
+
+    let emptyCountry:Country={
+        id: 0,
+        country_name: '',
+        country_flag_image_url: '' ,
+        language_id: 0,
+        country_telecom_code: '',
+        phone_number_length: '',
+        deleted_at: '' ,
+        created_at: '',
+        updated_at: '',
+        currency: '',
+        language: null,
+        currency_id:0
+    }
+
+
+
+    const [countryDialog, setCountryDialog] = useState(false);
+    const [deleteCountryDialog, setDeleteCountryDialog] = useState(false);
+    const [deleteCountrysDialog, setDeleteCountrysDialog] = useState(false);
+    const [country,setCountry]=useState<Country>(emptyCountry)
+    const [selectedCompanies, setSelectedCountry] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const toast = useRef<Toast>(null);
+    const dt = useRef<DataTable<any>>(null);
+    const dispatch=useDispatch<AppDispatch>()
+    const {countries,loading}=useSelector((state:any)=>state.countriesReducer)
+    const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {languages}=useSelector((state:any)=>state.languageReducer)
+
+
+    useEffect(()=>{
+        dispatch(_fetchCountries())
+        dispatch(_fetchCurrencies())
+        dispatch(_fetchLanguages())
+    },[dispatch])
+
+    const openNew = () => {
+        setCountry(emptyCountry)
+        setSubmitted(false);
+        setCountryDialog(true);
+    };
+
+    const hideDialog = () => {
+        setSubmitted(false);
+        setCountryDialog(false);
+    };
+
+    const hideDeleteCountryDialog = () => {
+        setDeleteCountryDialog(false);
+    };
+
+    const hideDeleteCountrysDialog = () => {
+        setDeleteCountrysDialog(false);
+    };
+
+
+
+    const saveCountry = () => {
+        setSubmitted(true);
+        if (country.id && country.id !== 0) {
+            dispatch(_editCountry(country.id,country,toast));
+
+        } else {
+            dispatch(_addCountry(country,toast));
+        }
+
+        setCountryDialog(false);
+        setCountry(emptyCountry);
+    };
+
+    const editCountry = (country: Country) => {
+        setCountry({ ...country});
+
+        setCountryDialog(true);
+    };
+
+    const confirmDeleteCountry = (country: Country) => {
+        setCountry(country);
+        setDeleteCountryDialog(true);
+    };
+
+    const deleteCountry = () => {
+        if (!country?.id) {
+            console.error("Country  ID is undefined.");
+            return;
+        }
+        dispatch(_deleteCountry(country?.id,toast))
+        setDeleteCountryDialog(false);
+
+    };
+
+
+    const confirmDeleteSelected = () => {
+        setDeleteCountrysDialog(true);
+    };
+
+
+
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <span className="block mt-2 md:mt-0 p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+            </span>
+            </React.Fragment>
+        );
+    };
+
+    const imageBodyTemplate = (rowData: Country) => {
+            return (
+                <>
+                    <span className="p-column-title">Image</span>
+                    <img src={`${rowData.country_flag_image_url}`} alt={rowData.country_name?.toString()} className="shadow-2" width="60" />
+                </>
+            );
+        };
+
+
+    const countryNameBodyTemplate = (rowData: Country) => {
+        return (
+            <>
+                <span className="p-column-title">Country</span>
+                {rowData.country_name}
+            </>
+        );
+    };
+
+    const countryCodeBodyTemplate = (rowData: Country) => {
+        return (
+            <>
+                <span className="p-column-title">Country Code</span>
+                {rowData.country_telecom_code}
+            </>
+        );
+    };
+
+    const currencyBodyTemplate = (rowData: Country) => {
+        return (
+            <>
+                <span className="p-column-title">Currency</span>
+                {rowData.currency}
+            </>
+        );
+    };
+
+    const languageBodyTemplate = (rowData: Country) => {
+        return (
+            <>
+                <span className="p-column-title">Language</span>
+                {rowData.language?.language_name}
+            </>
+        );
+    };
+
+
+
+
+
+    const actionBodyTemplate = (rowData: Country) => {
+        return (
+            <>
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editCountry(rowData)}/>
+                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteCountry(rowData)} />
+            </>
+        );
+    };
+
+    // const header = (
+    //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+    //         <h5 className="m-0">Manage Products</h5>
+    //         <span className="block mt-2 md:mt-0 p-input-icon-left">
+    //             <i className="pi pi-search" />
+    //             <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+    //         </span>
+    //     </div>
+    // );
+
+    const countryDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveCountry} />
+        </>
+    );
+    const deleteCountryDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCountryDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteCountry} />
+        </>
+    );
+    const deleteCompaniesDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCountrysDialog} />
+            <Button label="Yes" icon="pi pi-check" text  />
+        </>
+    );
+
+
+
+
+    return (
+        <div className="grid crud-demo">
+            <div className="col-12">
+                <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
+                    <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+                    <DataTable
+                        ref={dt}
+                        value={countries}
+                        selection={selectedCompanies}
+                        onSelectionChange={(e) => setSelectedCountry(e.value as any)}
+                        dataKey="id"
+                        paginator
+                        rows={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="datatable-responsive"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} country code"
+                        globalFilter={globalFilter}
+                        emptyMessage="No Country s found."
+                        // header={header}
+                        responsiveLayout="scroll"
+                    >
+                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+                        <Column field="" header="" sortable body={imageBodyTemplate}></Column>
+                        <Column field="name" header="Country" sortable body={countryNameBodyTemplate}></Column>
+                        <Column field="country_code" header="Country Code" body={countryCodeBodyTemplate} sortable></Column>
+                        <Column field="currency" header="Currency" body={currencyBodyTemplate} sortable></Column>
+                        <Column field="language" header="Language" body={languageBodyTemplate} sortable></Column>
+                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                    </DataTable>
+
+                    <Dialog visible={countryDialog}  style={{ width: '550px' }} header="Country Details" modal className="p-fluid" footer={countryDialogFooter} onHide={hideDialog}>
+                        {country.country_flag_image_url && (
+                            <img
+                                src={
+                                    country.country_flag_image_url instanceof File
+                                        ? URL.createObjectURL(country.country_flag_image_url) // Temporary preview for file
+                                        : country.country_flag_image_url // Direct URL for existing logo
+                                }
+                                alt="Uploaded Preview"
+                                width="150"
+                                className="mt-0 mx-auto mb-5 block shadow-2"
+                            />
+                        )}
+                        <FileUpload
+                            name="company_logo"
+                            accept="image/*"
+                            customUpload
+                            onSelect={(e) => setCountry((prev) => ({
+                                ...prev,
+                                country_flag_image_url: e.files[0],
+                            }))}
+                        />
+                        <div className="field">
+                            <label htmlFor="country_name">Country Name</label>
+                            <InputText
+                                id="country_name"
+                                value={country.country_name}
+                                onChange={(e) =>
+                                    setCountry((prevCountry) => ({
+                                        ...prevCountry,
+                                        country_name: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !country.country_name
+                                })}
+                            />
+                            {submitted && !country.country_name && <small className="p-invalid">Country Name is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="country_telecom_code">Country Code</label>
+                            <InputText
+                                id="country_telecom_code"
+                                value={country.country_telecom_code}
+                                onChange={(e) =>
+                                    setCountry((prevCountry) => ({
+                                        ...prevCountry,
+                                        country_telecom_code: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !country.country_telecom_code
+                                })}
+                            />
+                            {submitted && !country.country_telecom_code && <small className="p-invalid">Country Code is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="phone_number_length">Phone Number Length</label>
+                            <InputText
+                                id="phone_number_length"
+                                value={country.phone_number_length}
+                                onChange={(e) =>
+                                    setCountry((prevCountry) => ({
+                                        ...prevCountry,
+                                        phone_number_length: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !country.phone_number_length
+                                })}
+                            />
+                            {submitted && !country.phone_number_length && <small className="p-invalid">Phone Number Length is required.</small>}
+                        </div>
+
+                        <div className="field col">
+                                <label htmlFor="currency">Currency</label>
+                                <Dropdown
+                                    id="currency"
+                                    value={country.currency}
+                                    options={currencies}
+                                    onChange={(e) =>
+                                        setCountry((perv) => ({
+
+                                            ...perv,
+                                            currency: e.value,
+                                        }))
+                                    }
+                                    optionLabel='name'
+                                    optionValue='id'
+                                    placeholder="Choose a currency"
+                                    className="w-full"
+                                />
+
+                            </div>
+
+                            <div className="field col">
+                                <label htmlFor="language">Language</label>
+                                <Dropdown
+                                    id="language"
+                                    value={country.language_id}
+                                    options={languages}
+                                    onChange={(e) =>
+                                        setCountry((perv) => ({
+
+                                            ...perv,
+                                            language_id: e.value,
+                                        }))
+                                    }
+                                    optionLabel='language_name'
+                                    optionValue='id'
+                                    placeholder="Choose a language"
+                                    className="w-full"
+                                />
+
+                            </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteCountryDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCountryDialogFooter} onHide={hideDeleteCountryDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {country && (
+                                <span>
+                                    Are you sure you want to delete <b>{country.country_name}</b>?
+                                </span>
+                            )}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteCountrysDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCountrysDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {country && <span>Are you sure you want to delete the selected companies?</span>}
+                        </div>
+                    </Dialog>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CountryPage;

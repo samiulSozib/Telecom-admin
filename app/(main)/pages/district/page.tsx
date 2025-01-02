@@ -1,0 +1,309 @@
+/* eslint-disable @next/next/no-img-element */
+'use client';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import { classNames } from 'primereact/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Dropdown } from 'primereact/dropdown';
+import { _fetchCountries } from '@/app/redux/actions/countriesActions';
+import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
+import { AppDispatch } from '@/app/redux/store';
+import { District } from '@/types/interface';
+import { ProgressBar } from 'primereact/progressbar';
+import { _addDistrict, _deleteDistrict, _editDistrict, _fetchDistricts } from '@/app/redux/actions/districtActions';
+import { provinceReducer } from '../../../redux/reducers/provinceReducer';
+import { _fetchProvinces } from '@/app/redux/actions/provinceActions';
+
+const DistrictPage = () => {
+
+
+    let emptyDistrict:District={
+        id:0,
+        district_name:'',
+        province_id:0,
+        delete_at:'',
+        created_at:'',
+        updated_at:'',
+        province:null
+    }
+
+
+
+    const [districtDialog, setDistrictDialog] = useState(false);
+    const [deleteDistrictDialog, setDeleteDistrictDialog] = useState(false);
+    const [deleteDistrictsDialog, setDeleteDistrictsDialog] = useState(false);
+    const [district,setDistrict]=useState<District>(emptyDistrict)
+    const [selectedCompanies, setSelectedDistrict] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const toast = useRef<Toast>(null);
+    const dt = useRef<DataTable<any>>(null);
+    const dispatch=useDispatch<AppDispatch>()
+    const {districts,loading}=useSelector((state:any)=>state.districtReducer)
+    const {provinces}=useSelector((state:any)=>state.provinceReducer)
+
+
+    useEffect(()=>{
+        dispatch(_fetchDistricts())
+        dispatch(_fetchProvinces())
+    },[dispatch])
+
+    const openNew = () => {
+        setDistrict(emptyDistrict)
+        setSubmitted(false);
+        setDistrictDialog(true);
+    };
+
+    const hideDialog = () => {
+        setSubmitted(false);
+        setDistrictDialog(false);
+    };
+
+    const hideDeleteDistrictDialog = () => {
+        setDeleteDistrictDialog(false);
+    };
+
+    const hideDeleteDistrictsDialog = () => {
+        setDeleteDistrictsDialog(false);
+    };
+
+
+
+    const saveDistrict = () => {
+        setSubmitted(true);
+        if (district.id && district.id !== 0) {
+            dispatch(_editDistrict(district.id,district,toast));
+
+        } else {
+            dispatch(_addDistrict(district,toast));
+        }
+
+        setDistrictDialog(false);
+        setDistrict(emptyDistrict);
+    };
+
+    const editDistrict = (district: District) => {
+        setDistrict({ ...district});
+
+        setDistrictDialog(true);
+    };
+
+    const confirmDeleteDistrict = (district: District) => {
+        setDistrict(district);
+        setDeleteDistrictDialog(true);
+    };
+
+    const deleteDistrict = () => {
+        if (!district?.id) {
+            console.error("District  ID is undefined.");
+            return;
+        }
+        dispatch(_deleteDistrict(district?.id,toast))
+        setDeleteDistrictDialog(false);
+
+    };
+
+
+    const confirmDeleteSelected = () => {
+        setDeleteDistrictsDialog(true);
+    };
+
+
+
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <span className="block mt-2 md:mt-0 p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+            </span>
+            </React.Fragment>
+        );
+    };
+
+
+    const districtNameBodyTemplate = (rowData: District) => {
+        return (
+            <>
+                <span className="p-column-title">District Name</span>
+                {rowData.district_name}
+            </>
+        );
+    };
+
+
+    const provinceNameBodyTemplate = (rowData: District) => {
+        return (
+            <>
+                <span className="p-column-title">Province Name</span>
+                {rowData.province?.province_name}
+            </>
+        );
+    };
+
+
+
+
+
+
+
+
+    const actionBodyTemplate = (rowData: District) => {
+        return (
+            <>
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editDistrict(rowData)}/>
+                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteDistrict(rowData)} />
+            </>
+        );
+    };
+
+    // const header = (
+    //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+    //         <h5 className="m-0">Manage Products</h5>
+    //         <span className="block mt-2 md:mt-0 p-input-icon-left">
+    //             <i className="pi pi-search" />
+    //             <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+    //         </span>
+    //     </div>
+    // );
+
+    const districtDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveDistrict} />
+        </>
+    );
+    const deleteDistrictDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteDistrictDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteDistrict} />
+        </>
+    );
+    const deleteCompaniesDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteDistrictsDialog} />
+            <Button label="Yes" icon="pi pi-check" text  />
+        </>
+    );
+
+
+
+
+    return (
+        <div className="grid crud-demo">
+            <div className="col-12">
+                <div className="card">
+                    {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
+                    <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+                    <DataTable
+                        ref={dt}
+                        value={districts}
+                        selection={selectedCompanies}
+                        onSelectionChange={(e) => setSelectedDistrict(e.value as any)}
+                        dataKey="id"
+                        paginator
+                        rows={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        className="datatable-responsive"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} district code"
+                        globalFilter={globalFilter}
+                        emptyMessage="No District s found."
+                        // header={header}
+                        responsiveLayout="scroll"
+                    >
+                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+                        <Column field="district_name" header="District Name" body={districtNameBodyTemplate} sortable></Column>
+                        <Column field="province_name" header="Province Name" body={provinceNameBodyTemplate} sortable></Column>
+                        <Column body={actionBodyTemplate} ></Column>
+                    </DataTable>
+
+                    <Dialog visible={districtDialog}  style={{ width: '550px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
+                        <div className="field">
+                            <label htmlFor="district_name">District Name</label>
+                            <InputText
+                                id="district_name"
+                                value={district.district_name}
+                                onChange={(e) =>
+                                    setDistrict((prevDistrict) => ({
+                                        ...prevDistrict,
+                                        district_name: e.target.value,
+                                    }))
+                                }
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !district.district_name
+                                })}
+                            />
+                            {submitted && !district.district_name && <small className="p-invalid">District Name is required.</small>}
+                        </div>
+
+
+
+                        <div className="field col">
+                                <label htmlFor="province_id">Province</label>
+                                <Dropdown
+                                    id="country_id"
+                                    value={district.province_id}
+                                    options={provinces}
+                                    onChange={(e) =>
+                                        setDistrict((prev) => ({
+
+                                            ...prev,
+                                            province_id: e.value,
+                                        }))
+                                    }
+                                    optionLabel='province_name'
+                                    optionValue='id'
+                                    placeholder="Choose a country"
+                                    className="w-full"
+                                />
+
+                            </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteDistrictDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteDistrictDialogFooter} onHide={hideDeleteDistrictDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {district && (
+                                <span>
+                                    Are you sure you want to delete <b>{district.district_name}</b>?
+                                </span>
+                            )}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteDistrictsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteDistrictsDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {district && <span>Are you sure you want to delete the selected companies?</span>}
+                        </div>
+                    </Dialog>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default DistrictPage;

@@ -15,6 +15,8 @@ import {
     DELETE_ADVERTISEMENT_SUCCESS,
     DELETE_ADVERTISEMENT_FAIL,
 } from '../constants/advertisementConstants';
+import { Toast } from 'primereact/toast';
+import { Advertisement } from '@/types/interface';
 
 // Get Auth Token from Local Storage
 const getAuthToken = () => {
@@ -40,51 +42,90 @@ export const _fetchAdvertisements = () => async (dispatch: Dispatch) => {
 };
 
 // Add an advertisement
-export const _addAdvertisement = (advertisementData: any) => async (dispatch: Dispatch) => {
+export const _addAdvertisement = (advertisementData: Advertisement,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_ADVERTISEMENT_REQUEST });
 
     try {
         const token = getAuthToken();
+        const formData=new FormData()
+        formData.append('advertisement_title',advertisementData.advertisement_title)
+        formData.append('status',advertisementData.status.toString())
+        if (advertisementData.ad_slider_image_url && typeof advertisementData.ad_slider_image_url !== 'string') {
+            formData.append('ad_slider_image_url', advertisementData.ad_slider_image_url);
+        }
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/advertisements`,
-            advertisementData,
+            formData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             }
         );
+        console.log(response)
+        dispatch({ type: ADD_ADVERTISEMENT_SUCCESS, payload: response.data.data.advertisement });
 
-        dispatch({ type: ADD_ADVERTISEMENT_SUCCESS, payload: response.data.data });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Advertisement added",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: ADD_ADVERTISEMENT_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to add advertisement",
+            life: 3000,
+          });
     }
 };
 
 // Edit an advertisement
-export const _editAdvertisement = (advertisementId: number, advertisementData: any) => async (dispatch: Dispatch) => {
+export const _editAdvertisement = (advertisementId: number, advertisementData: Advertisement,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_ADVERTISEMENT_REQUEST });
 
     try {
         const token = getAuthToken();
-        const response = await axios.put(
+        const formData=new FormData()
+        formData.append('advertisement_title',advertisementData.advertisement_title)
+        formData.append('status',advertisementData.status.toString())
+        if (advertisementData.ad_slider_image_url && typeof advertisementData.ad_slider_image_url !== 'string') {
+            formData.append('ad_slider_image_url', advertisementData.ad_slider_image_url);
+        }
+        const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/advertisements/${advertisementId}`,
-            advertisementData,
+            formData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             }
         );
 
-        dispatch({ type: EDIT_ADVERTISEMENT_SUCCESS, payload: response.data.data });
+        dispatch({ type: EDIT_ADVERTISEMENT_SUCCESS, payload: response.data.data.advertisement });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Advertisement edited",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: EDIT_ADVERTISEMENT_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to edit advertisement",
+            life: 3000,
+          });
     }
 };
 
 // Delete an advertisement
-export const _deleteAdvertisement = (advertisementId: number) => async (dispatch: Dispatch) => {
+export const _deleteAdvertisement = (advertisementId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: DELETE_ADVERTISEMENT_REQUEST });
 
     try {
@@ -96,7 +137,19 @@ export const _deleteAdvertisement = (advertisementId: number) => async (dispatch
         });
 
         dispatch({ type: DELETE_ADVERTISEMENT_SUCCESS, payload: advertisementId });
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: "Advertisement deleted",
+            life: 3000,
+          });
     } catch (error: any) {
         dispatch({ type: DELETE_ADVERTISEMENT_FAIL, payload: error.message });
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to delete advertisement",
+            life: 3000,
+          });
     }
 };
