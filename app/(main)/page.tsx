@@ -15,6 +15,8 @@ import { _fetchTelegramList } from '../redux/actions/telegramActions';
 import { _fetchCompanies } from '../redux/actions/companyActions';
 import { AppDispatch } from '../redux/store';
 import { _fetchPurchasedProducts } from '../redux/actions/purchasedProductsActions';
+import withAuth from './authGuard';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -23,6 +25,7 @@ const Dashboard = () => {
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
     const {userInfo}=useSelector((state:any)=>state.authReducer)
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
+    const { t } = useTranslation();
 
     const dispatch=useDispatch<AppDispatch>()
     useEffect(()=>{
@@ -118,10 +121,10 @@ const Dashboard = () => {
     return (
         <div className="grid">
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"130px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Todays Orders</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TODAYORDER')}</span>
                             <div className="text-900 font-medium text-xl">{data?.today_orders}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-blue-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -133,10 +136,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Total Orders</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALORDER')}</span>
                             <div className="text-900 font-medium text-xl">{data?.total_orders}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-orange-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -147,26 +150,26 @@ const Dashboard = () => {
                     <span className="text-500">since last week</span> */}
                 </div>
             </div>
+
             <div className="col-12 lg:col-6 xl:col-2">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3" style={{fontSize:"12px"}}>
                         <div>
-                            <span className="block text-500 font-medium mb-3">Pending Orders</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.PENDINGORDERS')}</span>
                             <div className="text-900 font-medium text-xl">{data?.pending_orders??0}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-cyan-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
                             <i className="pi pi-clock text-cyan-500 text-xl" />
                         </div>
                     </div>
-                    {/* <span className="text-green-500 font-medium">520 </span>
-                    <span className="text-500">newly registered</span> */}
                 </div>
             </div>
+
             <div className="col-12 lg:col-6 xl:col-2">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3" style={{fontSize:"12px"}}>
                         <div>
-                            <span className="block text-500 font-medium mb-3">Success Orders</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.SUCCESSORDERS')}</span>
                             <div className="text-900 font-medium text-xl">{data?.success_orders??0}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -178,10 +181,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-2">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3" style={{fontSize:"12px"}}>
                         <div>
-                            <span className="block text-500 font-medium mb-3">Rejected Orders</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.REJECTEDORDERS')}</span>
                             <div className="text-900 font-medium text-xl">{data?.rejected_orders??0}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-red-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -193,10 +196,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Today Sale</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TODAYSALE')}</span>
                             <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.today_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-yellow-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -208,10 +211,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Today Profit</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TODAYPROFIT')}</span>
                             <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.today_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-cyan-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -223,10 +226,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Total Sale</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALSALE')}</span>
                             <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.total_sale.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-blue-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -238,10 +241,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Total Profit</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALPROFIT')}</span>
                             <div className="text-900 font-medium text-xl">{userInfo?.currency?.symbol} {data?.total_profit.toFixed(2)}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -253,10 +256,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0"style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Total Reseller</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALRESELLER')}</span>
                             <div className="text-900 font-medium text-xl">{data?.total_resellers}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-purple-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -268,10 +271,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Total Registered Company</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALCOMPANY')}</span>
                             <div className="text-900 font-medium text-xl">{data?.total_companies}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-orange-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -283,10 +286,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Available Service</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALSERVICE')}</span>
                             <div className="text-900 font-medium text-xl">{data?.total_services}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-yellow-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -298,10 +301,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Total Bundle</span>
+                            <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TOTALBUNDLE')}</span>
                             <div className="text-900 font-medium text-xl">{data?.total_bundles}</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-purple-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -315,14 +318,14 @@ const Dashboard = () => {
 
             <div className='col-12'>
                 <Divider/>
-                    <span className="block text-900 text-xl mb-3">Total of the balance</span>
-                    <span className='block text-700 text-medium'>The Total Resellers Balance from Different Currencies shown here</span>
+                    <span className="block text-900 text-xl mb-3">{t('DASHBOARD.BALANCES')}</span>
+                    <span className='block text-700 text-medium'>{t('DASHBOARD.BALANCES.HINT')}</span>
                 <Divider/>
             </div>
 
             {data?.balances_by_currency?.map((balance:any, index:number) => (
             <div key={index} className="col-12 lg:col-6 xl:col-4">
-                <div className="card mb-0">
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">{balance.currency_code}</span>
@@ -343,4 +346,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

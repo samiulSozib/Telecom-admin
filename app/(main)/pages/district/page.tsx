@@ -20,6 +20,8 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _addDistrict, _deleteDistrict, _editDistrict, _fetchDistricts } from '@/app/redux/actions/districtActions';
 import { provinceReducer } from '../../../redux/reducers/provinceReducer';
 import { _fetchProvinces } from '@/app/redux/actions/provinceActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const DistrictPage = () => {
 
@@ -48,6 +50,7 @@ const DistrictPage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {districts,loading}=useSelector((state:any)=>state.districtReducer)
     const {provinces}=useSelector((state:any)=>state.provinceReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -121,7 +124,7 @@ const DistrictPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('DISTRICT.TABLE.CREATEDISTRICT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -133,7 +136,7 @@ const DistrictPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -187,20 +190,20 @@ const DistrictPage = () => {
 
     const districtDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveDistrict} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveDistrict} />
         </>
     );
     const deleteDistrictDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteDistrictDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteDistrict} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteDistrictDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteDistrict} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteDistrictsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteDistrictsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -233,14 +236,14 @@ const DistrictPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="district_name" header="District Name" body={districtNameBodyTemplate} sortable></Column>
-                        <Column field="province_name" header="Province Name" body={provinceNameBodyTemplate} sortable></Column>
+                        <Column field="district_name" header={t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')} body={districtNameBodyTemplate} sortable></Column>
+                        <Column field="province_name" header={t('DISTRICT.TABLE.COLUMN.PROVINCE')} body={provinceNameBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={districtDialog}  style={{ width: '550px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="district_name">District Name</label>
+                            <label htmlFor="district_name">{t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')}</label>
                             <InputText
                                 id="district_name"
                                 value={district.district_name}
@@ -252,6 +255,7 @@ const DistrictPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('DISTRICT.FORM.PLACEHOLDER.DISTRICTNAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !district.district_name
                                 })}
@@ -262,28 +266,28 @@ const DistrictPage = () => {
 
 
                         <div className="field col">
-                                <label htmlFor="province_id">Province</label>
+                                <label htmlFor="province_id">{t('DISTRICT.FORM.INPUT.PROVINCE')}</label>
                                 <Dropdown
-                                    id="country_id"
-                                    value={district.province_id}
+                                    id="province"
+                                    value={district.province}
                                     options={provinces}
                                     onChange={(e) =>
                                         setDistrict((prev) => ({
 
                                             ...prev,
-                                            province_id: e.value,
+                                            province: e.value,
                                         }))
                                     }
                                     optionLabel='province_name'
-                                    optionValue='id'
-                                    placeholder="Choose a country"
+                                    // optionValue='id'
+                                    placeholder={t('DISTRICT.FORM.PLACEHOLDER.PROVINCE')}
                                     className="w-full"
                                 />
 
                             </div>
                     </Dialog>
 
-                    <Dialog visible={deleteDistrictDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteDistrictDialogFooter} onHide={hideDeleteDistrictDialog}>
+                    <Dialog visible={deleteDistrictDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteDistrictDialogFooter} onHide={hideDeleteDistrictDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {district && (
@@ -294,7 +298,7 @@ const DistrictPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteDistrictsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteDistrictsDialog}>
+                    <Dialog visible={deleteDistrictsDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteDistrictsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {district && <span>Are you sure you want to delete the selected companies?</span>}
@@ -306,4 +310,4 @@ const DistrictPage = () => {
     );
 };
 
-export default DistrictPage;
+export default withAuth(DistrictPage);

@@ -41,14 +41,16 @@ export const _addDistrict = (district: District,toast: React.RefObject<Toast>) =
     dispatch({ type: ADD_DISTRICT_REQUEST });
     try {
         const token = getAuthToken();
+        const body={...district,province_id:district.province?.id}
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/districts`,
-            district,
+            body,
             {
                 headers: { Authorization: `Bearer ${token}` },
             }
         );
-        dispatch({ type: ADD_DISTRICT_SUCCESS, payload: response.data.data.district });
+        const newData={...district,id:response.data.data.district.id}
+        dispatch({ type: ADD_DISTRICT_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",
@@ -71,6 +73,7 @@ export const _editDistrict = (id: number, updatedData: District,toast: React.Ref
     dispatch({ type: EDIT_DISTRICT_REQUEST });
     try {
         const token = getAuthToken();
+        const body={...updatedData,province_id:updatedData.province?.id}
         const response = await axios.put(
             `${process.env.NEXT_PUBLIC_BASE_URL}/districts/${id}`,
             updatedData,
@@ -78,7 +81,8 @@ export const _editDistrict = (id: number, updatedData: District,toast: React.Ref
                 headers: { Authorization: `Bearer ${token}` },
             }
         );
-        dispatch({ type: EDIT_DISTRICT_SUCCESS, payload: response.data.data.district });
+        const newData={...updatedData,id:response.data.data.district.id}
+        dispatch({ type: EDIT_DISTRICT_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",

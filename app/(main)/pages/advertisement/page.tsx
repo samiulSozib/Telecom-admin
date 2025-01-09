@@ -21,6 +21,8 @@ import { _fetchLanguages } from '@/app/redux/actions/languageActions';
 import { FileUpload } from 'primereact/fileupload';
 import { _addAdvertisement, _deleteAdvertisement, _editAdvertisement, _fetchAdvertisements } from '@/app/redux/actions/advertisementActions';
 import { advertisementsReducer } from '../../../redux/reducers/advertisementReducer';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const AdvertisementPage = () => {
 
@@ -47,6 +49,7 @@ const AdvertisementPage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {advertisements,loading}=useSelector((state:any)=>state.advertisementsReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -119,7 +122,7 @@ const AdvertisementPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('ADVERTISEMENT.TABLE.CREATEADVERTISEMENT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -131,7 +134,7 @@ const AdvertisementPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -209,20 +212,20 @@ const AdvertisementPage = () => {
 
     const advertisementDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveAdvertisement} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveAdvertisement} />
         </>
     );
     const deleteAdvertisementDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteAdvertisementDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteAdvertisement} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteAdvertisementDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteAdvertisement} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteAdvertisementsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteAdvertisementsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -255,9 +258,9 @@ const AdvertisementPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="" header="" sortable body={imageBodyTemplate}></Column>
-                        <Column field="name" header="Advertisement Title" sortable body={advertisementTitleBodyTemplate}></Column>
-                        <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
+                        <Column field="" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTIMAGE')} sortable body={imageBodyTemplate}></Column>
+                        <Column field="name" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTTITLE')}  sortable body={advertisementTitleBodyTemplate}></Column>
+                        <Column field="status" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTSTATUS')}  body={statusBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
@@ -284,7 +287,7 @@ const AdvertisementPage = () => {
                             }))}
                         />
                         <div className="field">
-                            <label htmlFor="advertisement_title">Advertisement Title</label>
+                            <label htmlFor="advertisement_title">{t('ADVERTISEMENT.FORM.INPUT.ADVERTISEMENTTITLE')}</label>
                             <InputText
                                 id="advertisement_title"
                                 value={advertisement.advertisement_title}
@@ -296,6 +299,7 @@ const AdvertisementPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('ADVERTISEMENT.FORM.PLACEHOLDER.ADVERTISEMENTTITLE')}
                                 className={classNames({
                                     'p-invalid': submitted && !advertisement.advertisement_title
                                 })}
@@ -304,7 +308,7 @@ const AdvertisementPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="status">Status</label>
+                            <label htmlFor="status">{t('ADVERTISEMENT.FORM.INPUT.ADVERTISEMENTSTATUS')}</label>
                             <Dropdown
                                 id="status"
                                 value={advertisement.status}
@@ -320,7 +324,7 @@ const AdvertisementPage = () => {
                                 }
                                 optionLabel="label"
                                 optionValue="value"
-                                placeholder="Choose a status"
+                                placeholder={t('ADVERTISEMENT.FORM.PLACEHOLDER.ADVERTISEMENTSTATUS')}
                                 className="w-full"
                             />
                         </div>
@@ -328,7 +332,7 @@ const AdvertisementPage = () => {
 
                     </Dialog>
 
-                    <Dialog visible={deleteAdvertisementDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteAdvertisementDialogFooter} onHide={hideDeleteAdvertisementDialog}>
+                    <Dialog visible={deleteAdvertisementDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteAdvertisementDialogFooter} onHide={hideDeleteAdvertisementDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {advertisement && (
@@ -339,7 +343,7 @@ const AdvertisementPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteAdvertisementsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteAdvertisementsDialog}>
+                    <Dialog visible={deleteAdvertisementsDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteAdvertisementsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {advertisement && <span>Are you sure you want to delete the selected companies?</span>}
@@ -351,4 +355,4 @@ const AdvertisementPage = () => {
     );
 };
 
-export default AdvertisementPage;
+export default withAuth(AdvertisementPage);

@@ -49,8 +49,8 @@ export const _addService = (newServiceData: Service,toast: React.RefObject<Toast
   try {
     const body={
         service_name:newServiceData.service_name,
-        service_category_id:newServiceData.service_category_id,
-        company_id:newServiceData.company_id
+        service_category_id:newServiceData.service_category?.id,
+        company_id:newServiceData.company?.id
     }
     const token = getAuthToken();
     const response = await axios.post(
@@ -62,9 +62,10 @@ export const _addService = (newServiceData: Service,toast: React.RefObject<Toast
         },
       }
     );
+    const newData={...newServiceData,id:response.data.data.service.id}
     dispatch({
       type: ADD_SERVICE_SUCCESS,
-      payload: response.data.data.service,
+      payload: newData,
     });
     toast.current?.show({
         severity: "success",
@@ -92,8 +93,8 @@ export const _editService = (serviceId: number, updatedServiceData: Service,toas
   try {
     const body={
         service_name:updatedServiceData.service_name,
-        service_category_id:updatedServiceData.service_category_id,
-        company_id:updatedServiceData.company_id
+        service_category_id:updatedServiceData?.service_category?.id,
+        company_id:updatedServiceData.company?.id
     }
     const token = getAuthToken();
     const response = await axios.put(
@@ -105,9 +106,10 @@ export const _editService = (serviceId: number, updatedServiceData: Service,toas
         },
       }
     );
+    const newData={...updatedServiceData,id:response.data.data.service.id}
     dispatch({
       type: EDIT_SERVICE_SUCCESS,
-      payload: response.data.data.service,
+      payload: newData,
     });
     toast.current?.show({
         severity: "success",

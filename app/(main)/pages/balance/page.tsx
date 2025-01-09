@@ -18,6 +18,8 @@ import { AppDispatch } from '@/app/redux/store';
 import { Balance, Currency } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addBalance, _deleteBalance, _editBalance, _fetchBalances } from '@/app/redux/actions/balanceActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const BalancePage = () => {
 
@@ -49,6 +51,7 @@ const BalancePage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {balances,loading}=useSelector((state:any)=>state.balanceReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -122,7 +125,7 @@ const BalancePage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('RESELLER.BALANCETRANSACTION.ADDBALANCE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -134,7 +137,7 @@ const BalancePage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -252,20 +255,20 @@ const BalancePage = () => {
 
     const balanceDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveBalance} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveBalance} />
         </>
     );
     const deleteBalanceDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteBalanceDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteBalance} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteBalanceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteBalance} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteBalancesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteBalancesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -298,17 +301,17 @@ const BalancePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column header="Reseller Name" body={resellerNameBodyTemplate} sortable></Column>
-                        <Column header="Amount" body={amountBodyTemplate} sortable></Column>
-                        <Column header="Currency" body={currencyBodyTemplate} sortable></Column>
-                        <Column header="Remaining Balance" body={remainingBalanceBodyTemplate} sortable></Column>
-                        <Column header="Status" body={statusBodyTemplate} sortable></Column>
-                        <Column header="Description" body={descriptionBodyTemplate} sortable></Column>
-                        <Column header="Balance Date" body={createdAtBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.REMAINING_BALANCE')} body={remainingBalanceBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.DESCRIPTIONS')} body={descriptionBodyTemplate} sortable></Column>
+                        <Column header={t('BALANCE.TABLE.COLUMN.BALANCEDATE')} body={createdAtBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={balanceDialog}  style={{ width: '550px' }} header="Balance Details" modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={balanceDialog}  style={{ width: '550px' }} header={t('BALANCE.DETAILS.TITLE')} modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>
                         {/* <div className="field">
                             <label htmlFor="balance_name">Reseller</label>
                             <InputText
@@ -353,7 +356,7 @@ const BalancePage = () => {
                         </div> */}
                     </Dialog>
 
-                    <Dialog visible={deleteBalanceDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteBalanceDialogFooter} onHide={hideDeleteBalanceDialog}>
+                    <Dialog visible={deleteBalanceDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteBalanceDialogFooter} onHide={hideDeleteBalanceDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {balance && (
@@ -364,7 +367,7 @@ const BalancePage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteBalancesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteBalancesDialog}>
+                    <Dialog visible={deleteBalancesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteBalancesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {balance && <span>Are you sure you want to delete the selected companies?</span>}
@@ -376,4 +379,4 @@ const BalancePage = () => {
     );
 };
 
-export default BalancePage;
+export default withAuth(BalancePage);

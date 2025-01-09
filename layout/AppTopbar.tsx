@@ -1,12 +1,57 @@
-/* eslint-disable @next/next/no-img-element */
-
+import React, {useImperativeHandle,forwardRef, useEffect, useRef, useState, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { AppDispatch } from '@/app/redux/store';
+import { signOut } from '@/app/redux/actions/authActions';
+import { _fetchLanguages } from '@/app/redux/actions/languageActions';
 import Link from 'next/link';
-import { classNames } from 'primereact/utils';
-import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
+import i18n from 'i18next';
+import { Language } from '@/types/interface';
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
+import { classNames } from 'primereact/utils';
+import Swal from 'sweetalert2';
+
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
+    const [profileMenuVisible, setProfileMenuVisible] = useState(false);
+    const [languageDropdownVisible, setLanguageDropdownVisible] = useState(false);
+    const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
+    const { languages } = useSelector((state: any) => state.languageReducer);
+
+    const [currentLanguage, setCurrentLanguage] = useState(i18n.language); // Track current language
+
+    const toggleProfileMenu = () => {
+        setProfileMenuVisible((prevVisible) => !prevVisible);
+    };
+
+    useEffect(() => {
+        dispatch(_fetchLanguages());
+    }, [dispatch]);
+
+    const logout = () => {
+        dispatch(signOut());
+        Swal.fire({
+            title: "Logout Success!",
+            icon: "success",
+            draggable: true
+            });
+        router.push('/auth/login');
+    };
+
+    const handleLanguageClick = (language: Language) => {
+        i18n.changeLanguage(language.language_code) // Change language dynamically
+            .then(() => {
+                setCurrentLanguage(language.language_code); // Update state
+                console.log(`Language changed to: ${language.language_code}`);
+                router.refresh()
+            })
+            .catch((err) => {
+                console.error('Error changing language:', err);
+            });
+    };
+
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
@@ -19,7 +64,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     }));
 
     return (
-        <div className="layout-topbar">
+        <div className="layout-topbar" >
+            {/* Logo Section */}
             <Link href="/" className="layout-topbar-logo">
                 <img src={`/layout/images/logo-${layoutConfig.colorScheme !== 'light' ? 'white' : 'dark'}.svg`} width="47.22px" height={'35px'} alt="logo" />
                 <span>Telecom</span>
@@ -33,21 +79,152 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 <i className="pi pi-ellipsis-v" />
             </button>
 
+            {/* Profile Button */}
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-calendar"></i>
-                    <span>Calendar</span>
+                <button
+                    type="button"
+                    className="p-link layout-topbar-button"
+                    onClick={toggleProfileMenu}
+                    style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                    <i className="pi pi-user" style={{ fontSize: '24px', marginRight: '8px' }}></i>
+                    <span>Admin User</span>
                 </button>
-                <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-user"></i>
-                    <span>Profile</span>
-                </button>
-                <Link href="/documentation">
-                    <button type="button" className="p-link layout-topbar-button">
-                        <i className="pi pi-cog"></i>
-                        <span>Settings</span>
-                    </button>
-                </Link>
+
+                {/* Profile Dropdown Menu */}
+                {profileMenuVisible && (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '100%',
+                            right: '0',
+                            backgroundColor: 'white',
+                            border: '1px solid #ccc',
+                            borderRadius: '8px',
+                            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                            zIndex: 1000,
+                            width: '300px',
+                            padding: '16px',
+                        }}
+                    >
+                        {/* User Info */}
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '' }}>
+                            <div
+                                style={{
+                                    width: '75px',
+                                    height: '50px',
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    color: 'white',
+                                    fontSize: '24px',
+                                    marginRight: '12px',
+                                }}
+                            >
+                                <i className="pi pi-user"></i>
+                            </div>
+                            <div>
+                                <div style={{ fontWeight: 'bold', fontSize: '16px' }}>Admin User</div>
+                                <div style={{ fontSize: '14px', color: '#666' }}>admin@bakhtertelecom.com</div>
+                            </div>
+                        </div>
+
+                        <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '12px 0' }} />
+
+                        {/* Menu Options */}
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                            {/* Language Section */}
+                            <li
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '8px 0',
+                                    cursor: 'pointer',
+                                    color: '#333',
+                                    fontSize: '14px',
+                                    position: 'relative',
+                                    marginBottom: '8px',
+                                }}
+                                onMouseEnter={() => setLanguageDropdownVisible(true)}
+                                onMouseLeave={() => setLanguageDropdownVisible(false)}
+                            >
+                                <span style={{ flex: '1' }}>Language</span>
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        background: '#f7f7f7',
+                                        borderRadius: '12px',
+                                        padding: '4px 8px',
+                                        fontSize: '12px',
+                                    }}
+                                >
+                                    {currentLanguage}
+
+                                </span>
+
+                                {/* Language Dropdown */}
+                                {languageDropdownVisible && (
+                                    <ul
+                                        style={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            left: '0',
+                                            background: '#fff',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '8px',
+                                            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                                            listStyle: 'none',
+                                            margin: 0,
+                                            padding: '8px',
+                                            zIndex: 1000,
+                                        }}
+                                    >
+                                        {languages.map((language: Language) => (
+                                            <li
+                                                key={language.id}
+                                                style={{
+                                                    padding: '8px',
+                                                    cursor: 'pointer',
+                                                    fontSize: '14px',
+                                                    color: '#333',
+                                                }}
+                                                onClick={() => handleLanguageClick(language)}
+                                            >
+                                                {language.language_name}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </li>
+
+                            <li
+                                style={{
+                                    padding: '8px 0',
+                                    cursor: 'pointer',
+                                    color: '#333',
+                                    fontSize: '14px',
+                                    marginBottom: '8px',
+                                }}
+                            >
+                                Account Setting
+                            </li>
+                            <li
+                                style={{
+                                    padding: '8px 0',
+                                    cursor: 'pointer',
+                                    color: '#333',
+                                    fontSize: '14px',
+                                }}
+                                onClick={logout}
+                            >
+                                Signout
+                            </li>
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );

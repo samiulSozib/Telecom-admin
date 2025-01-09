@@ -71,7 +71,8 @@ export const _deleteCompany = (companyId: number,toast: React.RefObject<Toast>) 
 // ADD COMPANY ACTION
 export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_COMPANY_REQUEST });
-
+    console.log(newCompany)
+    //return
     const formData = new FormData();
 
     formData.append('company_name', newCompany.company_name);
@@ -80,9 +81,9 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
         formData.append('company_logo', newCompany.company_logo);
     }
 
-    formData.append('country_id', newCompany.country_id?.toString()||'');
+    formData.append('country_id', newCompany.country?.id?.toString()||'');
 
-    formData.append('telegram_chat_id', newCompany._telegram_chat_id?.toString()||'');
+    formData.append('telegram_chat_id', newCompany.telegram_chat_id?.id?.toString()||'');
 
 
     try {
@@ -95,9 +96,12 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
         });
         //console.log(response)
 
+        const newData = { ...newCompany, id: response.data.data.company.id };
+
+
         dispatch({
             type: ADD_COMPANY_SUCCESS,
-            payload: response.data.data.company, // Assuming API returns the created company.
+            payload: newData, // Assuming API returns the created company.
         });
         toast.current?.show({
             severity: 'success',
@@ -118,6 +122,8 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
 // EDIT COMPANY ACTION
 export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_COMPANY_REQUEST });
+    console.log(updatedCompany)
+
 
     const formData = new FormData();
 
@@ -127,8 +133,8 @@ export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toas
         formData.append('company_logo', updatedCompany.company_logo);
     }
 
-    formData.append('country_id', updatedCompany.country_id?.toString() || '');
-    formData.append('telegram_chat_id', updatedCompany._telegram_chat_id?.toString() || '');
+    formData.append('country_id', updatedCompany.country?.id?.toString() || '');
+    formData.append('telegram_chat_id', updatedCompany.telegram_chat_id?.id?.toString() || '');
 
     try {
         const token = getAuthToken();
@@ -143,9 +149,10 @@ export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toas
             }
         );
 
+        const newData = { ...updatedCompany, id: response.data.data.company.id };
         dispatch({
             type: EDIT_COMPANY_SUCCESS,
-            payload: response.data.data.company, // Assuming API returns the updated company.
+            payload: newData, // Assuming API returns the updated company.
         });
         toast.current?.show({
             severity: 'success',

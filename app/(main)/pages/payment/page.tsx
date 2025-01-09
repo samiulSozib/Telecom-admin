@@ -27,6 +27,8 @@ import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
 import { _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { Calendar } from 'primereact/calendar';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const PaymentPage = () => {
 
@@ -63,6 +65,7 @@ const PaymentPage = () => {
     const {resellers}=useSelector((state:any)=>state.resellerReducer)
     const {paymentMethods}=useSelector((state:any)=>state.paymentMethodsReducer)
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -138,7 +141,7 @@ const PaymentPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label="Add Payment" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -150,7 +153,7 @@ const PaymentPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -277,20 +280,20 @@ const PaymentPage = () => {
 
     const paymentDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={savePayment} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={savePayment} />
         </>
     );
     const deletePaymentDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeletePaymentDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deletePayment} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePaymentDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deletePayment} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeletePaymentsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePaymentsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -323,42 +326,42 @@ const PaymentPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column header="Reseller Name" body={resellerNameBodyTemplate} sortable></Column>
-                        <Column header="Payment Method" body={paymentMethodBodyTemplate} sortable></Column>
-                        <Column header="Amount" body={amountBodyTemplate} sortable></Column>
-                        <Column header="Currency" body={currencyBodyTemplate} sortable></Column>
-                        <Column header="Remaining Payment" body={remainingPaymentBodyTemplate} sortable></Column>
-                        <Column header="Status" body={statusBodyTemplate} sortable></Column>
-                        <Column header="Note" body={noteBodyTemplate} sortable></Column>
-                        <Column header="Payment Date" body={paymentDateBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.PAYMENTMETHOD')} body={paymentMethodBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.REMAININGPAYMENTAMOUNT')} body={remainingPaymentBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.NOTES')} body={noteBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENT.TABLE.COLUMN.PAYMENTDATE')} body={paymentDateBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={paymentDialog}  style={{ width: '750px' }} header="Payment Details" modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={paymentDialog}  style={{ width: '750px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
                     <div className="card flex flex-column md:flex-row gap-3">
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="country_id">Reseller</label>
+                                <label htmlFor="reseller">{t('PAYMENT.FORM.INPUT.RESELLER')}</label>
                                 <Dropdown
-                                    id="country_id"
-                                    value={payment.reseller_id}
+                                    id="reseller"
+                                    value={payment.reseller}
                                     options={resellers}
                                     onChange={(e) =>
                                         setPayment((prev) => ({
 
                                             ...prev,
-                                            reseller_id: e.value,
+                                            reseller: e.value,
                                         }))
                                     }
                                     optionLabel='reseller_name'
-                                    optionValue='id'
-                                    placeholder="Choose a reseller"
+                                    //optionValue='id'
+                                    placeholder={t('PAYMENT.FORM.INPUT.RESELLER')}
                                     className="w-full"
                                 />
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="email">Amount</label>
+                                <label htmlFor="email">{t('PAYMENT.FORM.INPUT.AMOUNT')}</label>
                                 <InputText
                                     id="amount"
                                     value={payment.amount}
@@ -370,6 +373,7 @@ const PaymentPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('PAYMENT.FORM.INPUT.AMOUNT')}
                                     className={classNames({
                                         'p-invalid': submitted && !payment.amount
                                     })}
@@ -377,7 +381,7 @@ const PaymentPage = () => {
                                 {submitted && !payment.amount && <small className="p-invalid">Amount is required.</small>}
                             </div>
                             <div className="field col flex-1">
-                                <label htmlFor="notes">Notes</label>
+                                <label htmlFor="notes">{t('PAYMENT.FORM.INPUT.NOTES')}</label>
                                 <InputTextarea
                                 value={payment.notes}
                                 onChange={(e) =>
@@ -385,53 +389,55 @@ const PaymentPage = () => {
                                     ...prev,
                                     notes: e.target.value,
                                 }))
-                                } rows={3} cols={30} />
+                                } rows={3} cols={30}
+                                placeholder={t('PAYMENT.FORM.INPUT.NOTES')}
+                                />
 
                             </div>
                         </div>
                         <br />
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="country_id">Payment Method</label>
+                                <label htmlFor="payment_method">{t('PAYMENT.FORM.INPUT.PAYMENTMETHOD')}</label>
                                 <Dropdown
-                                    id="payment_method_id"
-                                    value={payment.payment_method_id}
+                                    id="payment_method"
+                                    value={payment.payment_method}
                                     options={paymentMethods}
                                     onChange={(e) =>
                                         setPayment((prev) => ({
 
                                             ...prev,
-                                            payment_method_id: e.value,
+                                            payment_method: e.value,
                                         }))
                                     }
                                     optionLabel='method_name'
-                                    optionValue='id'
-                                    placeholder="Choose a method"
+                                    // optionValue='id'
+                                    placeholder={t('PAYMENT.FORM.INPUT.PAYMENTMETHOD')}
                                     className="w-full"
                                 />
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="currency_id">Currency</label>
+                                <label htmlFor="currency">{t('PAYMENT.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
-                                    id="currency_id"
-                                    value={payment.currency_id}
+                                    id="currency"
+                                    value={payment.currency}
                                     options={currencies}
                                     onChange={(e) =>
                                         setPayment((prev) => ({
 
                                             ...prev,
-                                            currency_id: e.value,
+                                            currency: e.value,
                                         }))
                                     }
                                     optionLabel='name'
-                                    optionValue='id'
-                                    placeholder="Choose a currency"
+                                    // optionValue='id'
+                                    placeholder={t('PAYMENT.FORM.INPUT.CURRENCY')}
                                     className="w-full"
                                 />
                             </div>
                             <div className="field col flex-1">
-                                <label htmlFor="payment_date">Payment Date</label>
+                                <label htmlFor="payment_date">{t('PAYMENT.FORM.INPUT.PAYMENTDATE')}</label>
                                 <InputText
                                     id="payment_date"
                                     value={payment.payment_date}
@@ -443,6 +449,7 @@ const PaymentPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('PAYMENT.FORM.INPUT.PAYMENTDATE')}
                                     className={classNames({
                                         'p-invalid': submitted && !payment.payment_date
                                     })}
@@ -454,7 +461,7 @@ const PaymentPage = () => {
                     </div>
                     </Dialog>
 
-                    <Dialog visible={deletePaymentDialog} style={{ width: '450px' }} header="Confirm" modal footer={deletePaymentDialogFooter} onHide={hideDeletePaymentDialog}>
+                    <Dialog visible={deletePaymentDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deletePaymentDialogFooter} onHide={hideDeletePaymentDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {payment && (
@@ -465,7 +472,7 @@ const PaymentPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deletePaymentsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeletePaymentsDialog}>
+                    <Dialog visible={deletePaymentsDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeletePaymentsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {payment && <span>Are you sure you want to delete the selected companies?</span>}
@@ -477,4 +484,4 @@ const PaymentPage = () => {
     );
 };
 
-export default PaymentPage;
+export default withAuth(PaymentPage);

@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
@@ -9,6 +9,8 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { useDispatch } from 'react-redux';
 import { _login } from '../../../../app/redux/actions/authActions';
+import { Toast } from 'primereact/toast';
+import Swal from 'sweetalert2';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -17,6 +19,7 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
+    const toast = useRef<Toast>(null);
 
 
     const { layoutConfig } = useContext(LayoutContext);
@@ -46,7 +49,7 @@ const LoginPage = () => {
         setLoading(true);
 
         try {
-            const result = await dispatch<any>(_login(email, password)); // Use the return value
+            const result = await dispatch<any>(_login(email, password,toast)); // Use the return value
             if (result.success) {
                 if (checked) {
                     localStorage.setItem('rememberedEmail', email);
@@ -54,11 +57,28 @@ const LoginPage = () => {
                 } else {
                     localStorage.removeItem('rememberedEmail');
                 }
+                Swal.fire({
+                    title: "Login Success!",
+                    icon: "success",
+                    draggable: true
+                  });
                 router.push('/'); // Navigate only on success
+
+
             } else {
+                Swal.fire({
+                    title: "Login Fail!",
+                    icon: "error",
+                    draggable: true
+                  });
                 setError(result.error || 'Login failed. Please try again.');
             }
         } catch (err) {
+            Swal.fire({
+                title: "Login Fail!",
+                icon: "error",
+                draggable: true
+              });
             setError('An unexpected error occurred. Please try again.');
         } finally {
             setLoading(false);

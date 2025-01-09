@@ -18,6 +18,8 @@ import { _addServiceCategory, _deleteServiceCategory, _editServiceCategory, _fet
 import { AppDispatch } from '@/app/redux/store';
 import { ServiceCategory } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const Category = () => {
 
@@ -44,6 +46,7 @@ const Category = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {serviceCategories,loading}=useSelector((state:any)=>state.serviceCategoryReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -117,7 +120,7 @@ const Category = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('SERVICECATEGORY.TABLE.CREATESERVICECATEGORY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -129,7 +132,7 @@ const Category = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -183,20 +186,20 @@ const Category = () => {
 
     const serviceCategoryDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveServiceCategory} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveServiceCategory} />
         </>
     );
     const deleteServiceCategoryDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServiceCategoryDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteServiceCategory} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceCategoryDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteServiceCategory} />
         </>
     );
     const deleteServiceCategoriesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServiceCategoriesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceCategoriesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -229,14 +232,14 @@ const Category = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Service Category Name" sortable body={serviceCategoryNameBodyTemplate}></Column>
-                        <Column field="Country" header="Service Category Body" body={serviceCategoryTypeBodyTemplate} sortable></Column>
+                        <Column field="name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
+                        <Column field="Country" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={serviceCategoryDialog}  style={{ width: '550px' }} header="Category Details" modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Service Category Name</label>
+                            <label htmlFor="name">{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYNAME')}</label>
                             <InputText
                                 id="category_name"
                                 value={serviceCategory.category_name}
@@ -257,7 +260,7 @@ const Category = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="type">Category Type</label>
+                                <label htmlFor="type">{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYTYPE')}</label>
                                 <Dropdown
                                     id="type"
                                     value={serviceCategory.type}
@@ -278,7 +281,7 @@ const Category = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteServiceCategoryDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteServiceCategoryDialogFooter} onHide={hideDeleteServiceCategoryDialog}>
+                    <Dialog visible={deleteServiceCategoryDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteServiceCategoryDialogFooter} onHide={hideDeleteServiceCategoryDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {serviceCategory && (
@@ -289,7 +292,7 @@ const Category = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteServiceCategoriesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteServiceCategoriesDialogFooter} onHide={hideDeleteServiceCategoriesDialog}>
+                    <Dialog visible={deleteServiceCategoriesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteServiceCategoriesDialogFooter} onHide={hideDeleteServiceCategoriesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {serviceCategory && <span>Are you sure you want to delete the selected categories?</span>}
@@ -301,4 +304,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default withAuth(Category);

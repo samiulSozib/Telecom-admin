@@ -17,8 +17,10 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
-import { Company } from '@/types/interface';
+import { Company, Country } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
+import { useTranslation } from 'react-i18next';
+import withAuth from '../../authGuard';
 
 const CompanyPage = () => {
 
@@ -26,9 +28,8 @@ const CompanyPage = () => {
         id: 0,
         company_name: '',
         company_logo:  '',
-        country_id: 0,
+        country_id:null,
         telegram_chat_id: null,
-        _telegram_chat_id:null,
         deleted_at: '' ,
         created_at: '',
         updated_at: '',
@@ -49,12 +50,17 @@ const CompanyPage = () => {
     const {companies,loading}=useSelector((state:any)=>state.companyReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
     const {telegramChatIds}=useSelector((state:any)=>state.telegramReducer)
+    const { t } = useTranslation();
 
     useEffect(()=>{
         dispatch(_fetchCompanies())
         dispatch(_fetchCountries())
         dispatch(_fetchTelegramList())
     },[dispatch])
+
+    useEffect(()=>{
+        console.log(company)
+    },[company])
 
     const openNew = () => {
         setCompany(emptyCompany)
@@ -79,7 +85,7 @@ const CompanyPage = () => {
 
     const saveCompany = () => {
         setSubmitted(true);
-        console.log(company)
+        //console.log(company)
         if (company.id && company.id !== 0) {
             dispatch(_editCompany(company,toast));
 
@@ -92,8 +98,8 @@ const CompanyPage = () => {
     };
 
     const editCompany = (company: Company) => {
-        console.log(company)
-        setCompany({ ...company,_telegram_chat_id:company.telegram_chat_id?.id||null});
+        //console.log(company)
+        setCompany({ ...company,country:company.country});
 
         setCompanyDialog(true);
     };
@@ -124,7 +130,7 @@ const CompanyPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('COMPANY.TABLE.CREATECOMPANY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -136,7 +142,7 @@ const CompanyPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -156,12 +162,19 @@ const CompanyPage = () => {
         return (
             <>
                 <span className="p-column-title">Image</span>
-                <img src={`${rowData.company_logo}`} alt={rowData.company_logo.toString()} className="shadow-2" width="60" />
+                <img src={`${rowData.company_logo}`} alt={rowData.company_name.toString()} className="shadow-2 border-round"
+                style={{
+                    padding:"5px",
+                    height: '50px',
+                    width: '65px',
+                    objectFit: 'fill',
+                }}/>
             </>
         );
     };
 
     const countryBodyTemplate = (rowData: Company) => {
+
         return (
             <>
                 <span className="p-column-title">Country</span>
@@ -213,20 +226,20 @@ const CompanyPage = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveCompany} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCompany} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCompanyDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteCompany} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompanyDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCompany} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCompaniesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompaniesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -259,11 +272,11 @@ const CompanyPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                        <Column header="Image" body={imageBodyTemplate}></Column>
-                        <Column field="Country" header="Country" body={countryBodyTemplate} sortable></Column>
-                        <Column field="Chat Id" header="Chat ID" sortable body={chatIdBodyTemplate} ></Column>
-                        <Column field="Group Name" header="Telegram Group Name" sortable body={telegramGroupNameBodyTemplate} ></Column>
+                        <Column field="company_name" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={imageBodyTemplate}></Column>
+                        <Column field="country_name" header={t('COMPANY.TABLE.COLUMN.COUNTRYNAME')} body={countryBodyTemplate}></Column>
+                        <Column field="Chat Id" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={chatIdBodyTemplate} ></Column>
+                        <Column field="Group Name" header={t('COMPANY.TABLE.COLUMN.CHATGROUPNAME')} body={telegramGroupNameBodyTemplate} ></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
@@ -280,7 +293,7 @@ const CompanyPage = () => {
                                 className="mt-0 mx-auto mb-5 block shadow-2"
                             />
                         )}
-                        <FileUpload
+                        {/* <FileUpload
                             name="company_logo"
                             accept="image/*"
                             customUpload
@@ -288,9 +301,18 @@ const CompanyPage = () => {
                                 ...prevCompany,
                                 company_logo: e.files[0],
                             }))}
+                        /> */}
+                        <FileUpload mode="basic"
+                        accept="image/*"
+                        onSelect={(e) => setCompany((prevCompany) => ({
+                            ...prevCompany,
+                            company_logo: e.files[0],
+                        }))}
+                        style={{textAlign:'center'}}
                         />
+
                         <div className="field">
-                            <label htmlFor="name">Name</label>
+                            <label htmlFor="name">{t('COMPANY.FORM.INPUT.COMPANYNAME')}</label>
                             <InputText
                                 id="company_name"
                                 value={company?.company_name}
@@ -302,6 +324,7 @@ const CompanyPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('COMPANY.FORM.PLACEHOLDER.COMPANYNAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !company.company_name
                                 })}
@@ -311,40 +334,38 @@ const CompanyPage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country_id">Country</label>
+                                <label htmlFor="country">{t('COMPANY.FORM.INPUT.COUNTRYNAME')}</label>
                                 <Dropdown
-                                    id="country_id"
-                                    value={company.country_id}
+                                    id="country"
+                                    value={company.country}
                                     options={countries}
                                     onChange={(e) =>
                                         setCompany((prevCompany) => ({
 
                                             ...prevCompany,
-                                            country_id: e.value,
+                                            country:e.value
                                         }))
                                     }
                                     optionLabel='country_name'
-                                    optionValue='id'
-                                    placeholder="Choose a country"
+                                    placeholder={t('COMPANY.FORM.PLACEHOLDER.COUNTRY')}
                                     className="w-full"
                                 />
 
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="telegram_chat_id">Telegram Group</label>
+                                <label htmlFor="telegram_chat_id">{t('COMPANY.FORM.INPUT.TELEGRAMID')}</label>
                                 <Dropdown
                                     id="telegram_chat_id"
-                                    value={company._telegram_chat_id}
+                                    value={company.telegram_chat_id}
                                     options={telegramChatIds}
                                     onChange={(e) =>
                                         setCompany((prevCompany) => ({
                                             ...prevCompany,
-                                            _telegram_chat_id: e.value,
+                                            telegram_chat_id: e.value,
                                         }))
                                     }
                                     optionLabel="group_name"
-                                    optionValue='id'
                                     placeholder="Choose a group"
                                     className="w-full"
                                 />
@@ -354,7 +375,7 @@ const CompanyPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCompanyDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompanyDialogFooter} onHide={hideDeleteCompanyDialog}>
+                    <Dialog visible={deleteCompanyDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompanyDialogFooter} onHide={hideDeleteCompanyDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {company && (
@@ -365,7 +386,7 @@ const CompanyPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCompaniesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCompaniesDialog}>
+                    <Dialog visible={deleteCompaniesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCompaniesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {company && <span>Are you sure you want to delete the selected companies?</span>}
@@ -377,4 +398,4 @@ const CompanyPage = () => {
     );
 };
 
-export default CompanyPage;
+export default withAuth(CompanyPage);

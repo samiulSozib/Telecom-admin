@@ -23,6 +23,8 @@ import { AppDispatch } from '@/app/redux/store';
 import { Bundle, MoneyTransaction } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _fetchMoneyTransactionsList } from '@/app/redux/actions/moneyTransactionsActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const TransactionPage = () => {
 
@@ -64,6 +66,7 @@ const TransactionPage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {transactions,loading,pagination}=useSelector((state:any)=>state.moneyTransactionReducer)
+    const {t}=useTranslation()
 
 
 
@@ -147,7 +150,7 @@ const TransactionPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    {/* <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} /> */}
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -159,7 +162,7 @@ const TransactionPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -393,15 +396,15 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Reseller" header="Reseller" sortable body={resellerBodyTemplate} ></Column>
-                        <Column field="Amount" header="Amount" sortable body={amountBodyTemplate} ></Column>
-                        <Column field="Currency" header="Currency" sortable body={currencyBodyTemplate} ></Column>
-                        <Column field="Remaining Balance" header="Remaining Balance" sortable body={remainingBalanceBodyTemplate} ></Column>
-                        <Column field="Bundle Title" header="Bundle Title" sortable body={bundleTitleBodyTemplate} ></Column>
-                        <Column field="Transaction Date" header="Transaction Date" sortable body={transactionDateBodyTemplate} ></Column>
-                        <Column field="Status" header="Status" sortable body={statusBodyTemplate} ></Column>
-                        <Column field="Initiator" header="Initiator" sortable body={initiatorTypeBodyTemplate} ></Column>
-                        <Column field="Description" header="Description" sortable body={descriptionBodyTemplate} ></Column>
+                        <Column field="Reseller" header={t('TRANSACTION.TABLE.COLUMN.RESELLERNAME')} sortable body={resellerBodyTemplate} ></Column>
+                        <Column field="Amount" header={t('TRANSACTION.TABLE.COLUMN.AMOUNT')} sortable body={amountBodyTemplate} ></Column>
+                        <Column field="Currency" header={t('TRANSACTION.TABLE.COLUMN.CURRENCY')} sortable body={currencyBodyTemplate} ></Column>
+                        <Column field="Remaining Balance" header={t('TRANSACTION.TABLE.COLUMN.REMAININGBALANCE')} sortable body={remainingBalanceBodyTemplate} ></Column>
+                        <Column field="Bundle Title" header={t('TRANSACTION.TABLE.COLUMN.BUNDLETITLE')} sortable body={bundleTitleBodyTemplate} ></Column>
+                        <Column field="Transaction Date" header={t('TRANSACTION.TABLE.COLUMN.TRANSACTIONEDDATE')} sortable body={transactionDateBodyTemplate} ></Column>
+                        <Column field="Status" header={t('TRANSACTION.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} ></Column>
+                        <Column field="Initiator" header={t('TRANSACTION.TABLE.COLUMN.INITIATORTYPE')} sortable body={initiatorTypeBodyTemplate} ></Column>
+                        <Column field="Description" header={t('TRANSACTION.TABLE.COLUMN.DESCRIPTION')} sortable body={descriptionBodyTemplate} ></Column>
                         {/* <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
                     </DataTable>
                     <Paginator
@@ -616,4 +619,4 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
     );
 };
 
-export default TransactionPage;
+export default withAuth(TransactionPage);

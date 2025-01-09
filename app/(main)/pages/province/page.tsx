@@ -19,6 +19,8 @@ import { Province } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addProvince, _deleteProvince, _editProvince, _fetchProvinces } from '@/app/redux/actions/provinceActions';
 import { countriesReducer } from '../../../redux/reducers/countriesReducer';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const ProvincePage = () => {
 
@@ -45,6 +47,7 @@ const ProvincePage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {provinces,loading}=useSelector((state:any)=>state.provinceReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -118,7 +121,7 @@ const ProvincePage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('PROVINCE.TABLE.CREATEPROVINCE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -130,7 +133,7 @@ const ProvincePage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -184,20 +187,20 @@ const ProvincePage = () => {
 
     const provinceDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveProvince} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveProvince} />
         </>
     );
     const deleteProvinceDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProvinceDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteProvince} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteProvinceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteProvince} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProvincesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteProvincesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -230,14 +233,14 @@ const ProvincePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="province_name" header="Province Name" body={provinceNameBodyTemplate} sortable></Column>
-                        <Column field="country_name" header="Country Name" body={countryNameBodyTemplate} sortable></Column>
+                        <Column field="province_name" header={t('PROVINCE.TABLE.COLUMN.PROVINCENAME')} body={provinceNameBodyTemplate} sortable></Column>
+                        <Column field="country_name" header={t('PROVINCE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={provinceDialog}  style={{ width: '550px' }} header="Province Details" modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="province_name">Province Name</label>
+                            <label htmlFor="province_name">{t('PROVINCE.FORM.INPUT.PROVINCENAME')}</label>
                             <InputText
                                 id="province_name"
                                 value={province.province_name}
@@ -249,6 +252,7 @@ const ProvincePage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('PROVINCE.FORM.PLACEHOLDER.PROVINCENAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !province.province_name
                                 })}
@@ -259,28 +263,28 @@ const ProvincePage = () => {
 
 
                         <div className="field col">
-                                <label htmlFor="country_id">Country</label>
+                                <label htmlFor="country_id">{t('PROVINCE.FORM.INPUT.COUNTRY')}</label>
                                 <Dropdown
-                                    id="country_id"
-                                    value={province.country_id}
+                                    id="country"
+                                    value={province.country}
                                     options={countries}
                                     onChange={(e) =>
                                         setProvince((prev) => ({
 
                                             ...prev,
-                                            country_id: e.value,
+                                            country: e.value,
                                         }))
                                     }
                                     optionLabel='country_name'
-                                    optionValue='id'
-                                    placeholder="Choose a country"
+                                    // optionValue='id'
+                                    placeholder={t('PROVINCE.FORM.PLACEHOLDER.COUNTRY')}
                                     className="w-full"
                                 />
 
                             </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProvinceDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProvinceDialogFooter} onHide={hideDeleteProvinceDialog}>
+                    <Dialog visible={deleteProvinceDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteProvinceDialogFooter} onHide={hideDeleteProvinceDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {province && (
@@ -291,7 +295,7 @@ const ProvincePage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProvincesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteProvincesDialog}>
+                    <Dialog visible={deleteProvincesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteProvincesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {province && <span>Are you sure you want to delete the selected companies?</span>}
@@ -303,4 +307,4 @@ const ProvincePage = () => {
     );
 };
 
-export default ProvincePage;
+export default withAuth(ProvincePage);

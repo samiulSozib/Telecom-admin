@@ -25,6 +25,8 @@ import { _fetchSuppliers } from '@/app/redux/actions/supplierActions';
 import { _fetchServiceList } from '@/app/redux/actions/serviceActions';
 import { suppliersReducer } from '../../../redux/reducers/supplierReducer';
 import serviceReducer from '../../../redux/reducers/serviceReducer';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const PurchasedProductPage = () => {
 
@@ -57,6 +59,7 @@ const PurchasedProductPage = () => {
     const {purchasedProducts,loading}=useSelector((state:any)=>state.purchasedProductsReducer)
     const {suppliers}=useSelector((state:any)=>state.suppliersReducer)
     const {services}=useSelector((state:any)=>state.serviceReducer)
+    const {t}=useTranslation()
 
 
 
@@ -132,7 +135,7 @@ const PurchasedProductPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('PURCHASEDPRODUCT.TABLE.CREATEPURCHASEDPRODUCT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -144,7 +147,7 @@ const PurchasedProductPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -194,7 +197,7 @@ const PurchasedProductPage = () => {
         return (
             <>
                 <span className="p-column-title">Service</span>
-                {rowData.service?.service_name}
+                {rowData.service?.company?.company_name}
             </>
         );
     };
@@ -254,20 +257,20 @@ const PurchasedProductPage = () => {
 
     const purchasedProductDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={savePurchasedProduct} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={savePurchasedProduct} />
         </>
     );
     const deletePurchasedProductDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeletePurchasedProductDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deletePurchasedProduct} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePurchasedProductDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deletePurchasedProduct} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeletePurchasedProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePurchasedProductsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -300,12 +303,12 @@ const PurchasedProductPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column header="Supplier" body={supplierNameBodyTemplate} sortable></Column>
-                        <Column header="Product Name" body={productNameBodyTemplate} sortable></Column>
-                        <Column header="Quantity" body={quantityBodyTemplate} sortable></Column>
-                        <Column header="Purchase Price" body={purchasePriceBodyTemplate} sortable></Column>
-                        <Column header="Date" body={purchasedProductDateBodyTemplate} sortable></Column>
-                        <Column header="Service" body={serviceBodyTemplate} sortable></Column>
+                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SUPPLIER')} body={supplierNameBodyTemplate} sortable></Column>
+                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PRODUCTNAME')} body={productNameBodyTemplate} sortable></Column>
+                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.QUANTITY')} body={quantityBodyTemplate} sortable></Column>
+                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEPRICE')} body={purchasePriceBodyTemplate} sortable></Column>
+                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEDATE')} body={purchasedProductDateBodyTemplate} sortable></Column>
+                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SERVICE')} body={serviceBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
@@ -313,27 +316,27 @@ const PurchasedProductPage = () => {
                     <div className="card flex flex-column md:flex-row gap-3">
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="country_id">Supplier</label>
+                                <label htmlFor="supplier">{t('PURCHASEDPRODUCT.FORM.INPUT.SUPPLIER')}</label>
                                 <Dropdown
-                                    id="supplier_id"
-                                    value={purchasedProduct.supplier_id}
+                                    id="supplier"
+                                    value={purchasedProduct.supplier}
                                     options={suppliers}
                                     onChange={(e) =>
                                         setPurchasedProduct((prev) => ({
 
                                             ...prev,
-                                            supplier_id: e.value,
+                                            supplier: e.value,
                                         }))
                                     }
                                     optionLabel='supplier_name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a supplier"
                                     className="w-full"
                                 />
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="product_name">Product Name</label>
+                                <label htmlFor="product_name">{t('PURCHASEDPRODUCT.FORM.INPUT.PRODUCTNAME')}</label>
                                 <InputText
                                     id="product_name"
                                     value={purchasedProduct.product_name}
@@ -352,7 +355,7 @@ const PurchasedProductPage = () => {
                                 {submitted && !purchasedProduct.product_name && <small className="p-invalid">Product Name is required.</small>}
                             </div>
                             <div className="field col flex-1">
-                                <label htmlFor="purchase_price">Purchase Price</label>
+                                <label htmlFor="purchase_price">{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEPRICE')}</label>
                                 <InputText
                                     id="purchase_price"
                                     value={purchasedProduct.purchase_price}
@@ -371,7 +374,7 @@ const PurchasedProductPage = () => {
                                 {submitted && !purchasedProduct.purchase_price && <small className="p-invalid">Purchase Price is required.</small>}
                             </div>
                             <div className="field">
-                                <label htmlFor="status">Status</label>
+                                <label htmlFor="status">{t('PURCHASEDPRODUCT.FORM.INPUT.STATUS')}</label>
                                 <Dropdown
                                     id="status"
                                     value={purchasedProduct.status}
@@ -396,19 +399,19 @@ const PurchasedProductPage = () => {
                         <br />
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="country_id">Service</label>
+                                <label htmlFor="service">{t('PURCHASEDPRODUCT.FORM.INPUT.SERVICE')}</label>
                                 <Dropdown
-                                    id="service_id"
-                                    value={purchasedProduct.service_id}
+                                    id="service"
+                                    value={purchasedProduct.service}
                                     options={services}
                                     onChange={(e) =>
                                         setPurchasedProduct((prev) => ({
                                             ...prev,
-                                            service_id: e.value,
+                                            service: e.value,
                                         }))
                                     }
                                     optionLabel='company.company_name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a Type"
                                     className="w-full"
                                     itemTemplate={(option) => (
@@ -422,7 +425,7 @@ const PurchasedProductPage = () => {
 
 
                             <div className="field col flex-1">
-                                <label htmlFor="purchasedProduct_date">Quantity</label>
+                                <label htmlFor="purchasedProduct_date">{t('PURCHASEDPRODUCT.FORM.INPUT.QUANTITY')}</label>
                                 <InputText
                                     id="quantity"
                                     value={purchasedProduct.quantity.toString()}
@@ -441,7 +444,7 @@ const PurchasedProductPage = () => {
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="purchase_date">Purchase Date</label>
+                                <label htmlFor="purchase_date">{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEDATE')}</label>
                                 <InputText
                                     id="purchase_date"
                                     value={purchasedProduct.purchase_date}
@@ -464,7 +467,7 @@ const PurchasedProductPage = () => {
                     </div>
                     </Dialog>
 
-                    <Dialog visible={deletePurchasedProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deletePurchasedProductDialogFooter} onHide={hideDeletePurchasedProductDialog}>
+                    <Dialog visible={deletePurchasedProductDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deletePurchasedProductDialogFooter} onHide={hideDeletePurchasedProductDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {purchasedProduct && (
@@ -475,7 +478,7 @@ const PurchasedProductPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deletePurchasedProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeletePurchasedProductsDialog}>
+                    <Dialog visible={deletePurchasedProductsDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeletePurchasedProductsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {purchasedProduct && <span>Are you sure you want to delete the selected companies?</span>}
@@ -487,4 +490,4 @@ const PurchasedProductPage = () => {
     );
 };
 
-export default PurchasedProductPage;
+export default withAuth(PurchasedProductPage);

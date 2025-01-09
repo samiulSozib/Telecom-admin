@@ -21,6 +21,10 @@ import { advertisementsReducer } from './advertisementReducer';
 import { balanceReducer } from './balanceReducer';
 import { paymentReducer } from './paymentReducer';
 import { purchasedProductsReducer } from './purchasedProductsReducer';
+import { rolesReducer } from './rolesReducer';
+import { userReducer } from './userListReducer';
+import { resellerGroupReducer } from './resellerGroupReducer';
+import { permissionsReducer } from './permissionReducer';
 
 const rootReducer=combineReducers({
     currenciesReducer:currenciesReducer,
@@ -44,7 +48,11 @@ const rootReducer=combineReducers({
     advertisementsReducer:advertisementsReducer,
     balanceReducer:balanceReducer,
     paymentReducer:paymentReducer,
-    purchasedProductsReducer:purchasedProductsReducer
+    purchasedProductsReducer:purchasedProductsReducer,
+    rolesReducer:rolesReducer,
+    userReducer:userReducer,
+    resellerGroupReducer:resellerGroupReducer,
+    permissionsReducer:permissionsReducer
 })
 
 

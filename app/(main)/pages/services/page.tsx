@@ -18,6 +18,8 @@ import { _fetchServiceCategories } from '@/app/redux/actions/serviceCategoryActi
 import { AppDispatch } from '@/app/redux/store';
 import { Service } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const Services = () => {
     let emptyService:Service={
@@ -45,6 +47,7 @@ const Services = () => {
     const {companies}=useSelector((state:any)=>state.companyReducer)
     const {services,loading}=useSelector((state:any)=>state.serviceReducer)
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
+    const {t}=useTranslation()
 
 
 
@@ -121,7 +124,7 @@ const Services = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('SERVICE.TABLE.CREATESERVICE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -133,7 +136,7 @@ const Services = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -200,20 +203,20 @@ const Services = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveService} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteService} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -246,15 +249,15 @@ const Services = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Company Name" header="Company Name" sortable body={companyInfoBodyTemplate} ></Column>
-                        <Column field="Country" header="Country Name" body={countryNameBodyTemplate} sortable></Column>
-                        <Column field="Service Category" header="Service Category" sortable body={serviceCategoryNameBodyTemplate} ></Column>
+                        <Column field="Company Name" header={t('SERVICE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyInfoBodyTemplate} ></Column>
+                        <Column field="Country" header={t('SERVICE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column field="Service Category" header={t('SERVICE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryNameBodyTemplate} ></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={serviceDialog}  style={{ width: '550px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Service Category</label>
+                            <label htmlFor="name">{t('SERVICE.FORM.INPUT.SERVICENAME')}</label>
                             <InputText
                                 id="service"
                                 value={service.service_name}
@@ -266,6 +269,7 @@ const Services = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('SERVICE.FORM.PLACEHOLDER.SERVICENAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !service.service_name
                                 })}
@@ -275,21 +279,21 @@ const Services = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country_id">Company</label>
+                                <label htmlFor="country_id">{t('SERVICE.FORM.INPUT.COMPANY')}</label>
                                 <Dropdown
-                                    id="company_id"
-                                    value={service.company_id}
+                                    id="company"
+                                    value={service.company}
                                     options={companies}
                                     onChange={(e) =>
                                         setService((perv) => ({
 
                                             ...perv,
-                                            company_id: e.value,
+                                            company: e.value,
                                         }))
                                     }
                                     optionLabel='company_name'
-                                    optionValue='id'
-                                    placeholder="Choose a Company"
+                                    // optionValue='id'
+                                    placeholder={t('SERVICE.FORM.PLACEHOLDER.COMPANY')}
                                     className="w-full"
                                 />
 
@@ -297,21 +301,21 @@ const Services = () => {
                         </div>
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country_id">Service Category</label>
+                                <label htmlFor="country_id">{t('SERVICE.FORM.INPUT.SERVICECATEGORY')}</label>
                                 <Dropdown
-                                    id="service_category_id"
-                                    value={service.service_category_id}
+                                    id="service_category"
+                                    value={service.service_category}
                                     options={serviceCategories}
                                     onChange={(e) =>
                                         setService((perv) => ({
 
                                             ...perv,
-                                            service_category_id: e.value,
+                                            service_category: e.value,
                                         }))
                                     }
                                     optionLabel='category_name'
-                                    optionValue='id'
-                                    placeholder="Choose a Category"
+                                    // optionValue='id'
+                                    placeholder={t('SERVICE.FORM.PLACEHOLDER.ServiceCategory')}
                                     className="w-full"
                                 />
 
@@ -319,7 +323,7 @@ const Services = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteServiceDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompanyDialogFooter} onHide={hideDeleteServiceDialog}>
+                    <Dialog visible={deleteServiceDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompanyDialogFooter} onHide={hideDeleteServiceDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {service && (
@@ -330,7 +334,7 @@ const Services = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteServicesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteServicesDialog}>
+                    <Dialog visible={deleteServicesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteServicesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {service && <span>Are you sure you want to delete the selected companies?</span>}
@@ -342,4 +346,4 @@ const Services = () => {
     );
 };
 
-export default Services;
+export default withAuth(Services);

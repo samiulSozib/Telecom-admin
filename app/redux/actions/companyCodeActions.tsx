@@ -74,9 +74,11 @@ export const _deleteCompanyCode = (codeId: number, toast: React.RefObject<Toast>
 // ADD COMPANY CODE ACTION
 export const _addCompanyCode = (newCode: CompanyCode, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_COMPANY_CODE_REQUEST });
+  console.log(newCode)
+  //return
     const body={
         reserved_digit:newCode.reserved_digit,
-        company_id:newCode.company_id,
+        company_id:newCode.company?.id,
 
     }
   try {
@@ -87,8 +89,8 @@ export const _addCompanyCode = (newCode: CompanyCode, toast: React.RefObject<Toa
         'Content-Type': 'application/json',
       },
     });
-
-    dispatch({ type: ADD_COMPANY_CODE_SUCCESS, payload: response.data.data.company_code });
+    const newData={...newCode,id:response.data.data.company_code.id}
+    dispatch({ type: ADD_COMPANY_CODE_SUCCESS, payload: newData });
     toast.current?.show({
       severity: 'success',
       summary: 'Successful',
@@ -109,21 +111,24 @@ export const _addCompanyCode = (newCode: CompanyCode, toast: React.RefObject<Toa
 // EDIT COMPANY CODE ACTION
 export const _editCompanyCode = (updatedCode: CompanyCode, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_COMPANY_CODE_REQUEST });
+  console.log(updatedCode)
+  //return
   const body={
     reserved_digit:updatedCode.reserved_digit,
-    company_id:updatedCode.company_id,
+    company_id:updatedCode.company?.id,
 
 }
   try {
     const token = getAuthToken();
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/companycodes/${updatedCode.id}`, body, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/companycodes/${updatedCode.id}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
     console.log(response)
-    dispatch({ type: EDIT_COMPANY_CODE_SUCCESS, payload: response.data.data.companyCode });
+    const newData={...updatedCode,id:response.data.data.company_code.id}
+    dispatch({ type: EDIT_COMPANY_CODE_SUCCESS, payload: newData });
     toast.current?.show({
       severity: 'success',
       summary: 'Successful',

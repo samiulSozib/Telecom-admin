@@ -105,9 +105,8 @@ export interface Company {
     id: number;
     company_name: string;
     company_logo: File | string;
-    country_id: number;
+    country_id: number|null;
     telegram_chat_id: Telegram_Chat_Id | null;
-    _telegram_chat_id: number | null,
     deleted_at: string | null;
     created_at: string;
     updated_at: string;
@@ -118,15 +117,15 @@ export interface Country {
     id: number;
     country_name: string;
     country_flag_image_url: string | File;
-    language_id: number | null;
+    language_id: number;
     country_telecom_code: string;
     phone_number_length: string;
     deleted_at: string | null;
     created_at: string;
     updated_at: string;
-    currency: "" | Currency;
+    currency: Currency | null;
     language: Language | null
-    currency_id:number|null
+    currency_id:number
 }
 
 export interface Language {
@@ -205,7 +204,9 @@ export interface Reseller {
     deleted_at: string | null;
     user: User|null;
     code:string,
-    country:string
+    country:Country|null
+    province:Province|null,
+    district:District|null
 }
 
 export interface User {
@@ -222,7 +223,8 @@ export interface User {
     deleted_at: string | null;
     created_at: string;
     updated_at: string;
-    currency: Currency;
+    currency: Currency|null;
+    roles?:Roles[]|null
 }
 
 export interface PaymentMethod {
@@ -387,5 +389,57 @@ export interface Payment{
     currency:Currency|null
 }
 
+export interface Roles{
+    id:number,
+    name:string,
+    guard_name:string,
+    created_at:string,
+    updated_at:string
+}
+
+
+export interface ResellerGroup{
+    id:number,
+    name:string,
+    discount_type:string,
+    discount_value:string,
+    can_create_sub_resellers:number,
+    can_sub_reseller_create_subs:number,
+    sub_reseller_limit:number|string,
+    status:string,
+    notes:string,
+    created_at:string,
+    updated_at:string
+}
+
+export interface Permission{
+    id:number,
+    name:string,
+    guard_name:string,
+    created_at:string,
+    updated_at:string,
+    pivot:null
+}
+
+// export interface UserList {
+//     id: number;
+//     uuid: string;
+//     name: string;
+//     email: string;
+//     phone: string;
+//     user_type: string;
+//     email_verified_at: string | null;
+//     currency_preference_code: string;
+//     currency_preference_id: number;
+//     fcm_token: string | null;
+//     deleted_at: string | null;
+//     created_at: string;
+//     updated_at: string;
+//     currency: Currency|null;
+//     roles:Roles[]|null
+// }
+
 
 // reseller pagination, edit
+// reseller group delete api problem
+

@@ -52,18 +52,21 @@ export const _addPurchasedProduct = (newProduct: PurchasedProduct,toast: React.R
   dispatch({ type: ADD_PURCHASED_PRODUCT_REQUEST });
   try {
     const token = getAuthToken();
+
+    const body={...newProduct,supplier_id:newProduct.supplier?.id,service_id:newProduct.service?.id}
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/purchased-products`,
-      newProduct,
+      body,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
+    const newData={...newProduct,id:response.data.data.purchased_product.id}
     dispatch({
       type: ADD_PURCHASED_PRODUCT_SUCCESS,
-      payload: response.data.data.purchased_product,
+      payload: newData,
     });
     console.log(response)
     toast.current?.show({
@@ -89,16 +92,19 @@ export const _editPurchasedProduct = (productId: number, updatedProduct: Purchas
   dispatch({ type: EDIT_PURCHASED_PRODUCT_REQUEST });
   try {
     const token = getAuthToken();
+    const body={...updatedProduct,supplier_id:updatedProduct.supplier?.id,service_id:updatedProduct.service?.id}
+
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/purchased-products/${productId}`,
-      updatedProduct,
+      body,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-    dispatch({ type: EDIT_PURCHASED_PRODUCT_SUCCESS, payload: response.data.data.purchased_product });
+    const newData={...updatedProduct,id:response.data.data.purchased_product.id}
+    dispatch({ type: EDIT_PURCHASED_PRODUCT_SUCCESS, payload: newData });
     toast.current?.show({
         severity: "success",
         summary: "Successful",

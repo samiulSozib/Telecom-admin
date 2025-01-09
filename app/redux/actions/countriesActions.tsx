@@ -47,20 +47,21 @@ export const _fetchCountries = () => async (dispatch: Dispatch) => {
 };
 
 // Add Country
-export const _addCountry = (countryData: any,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+export const _addCountry = (countryData: Country,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_COUNTRY_REQUEST });
 
     try {
         const token = getAuthToken();
         //console.log(countryData)
+        //return
         const formData=new FormData()
         formData.append('country_name',countryData.country_name)
         formData.append('country_telecom_code',countryData.country_telecom_code)
         formData.append('phone_number_length',countryData.phone_number_length)
-        formData.append('currency_id',countryData.currency)
-        formData.append('language_id',countryData.language_id)
+        formData.append('currency_id',String(countryData.currency?.id))
+        formData.append('language_id',String(countryData.language?.id))
         if (countryData.country_flag_image_url && typeof countryData.country_flag_image_url !== 'string') {
-            formData.append('country_flag_image_url', countryData.country_flag_image_url);
+            formData.append('country_flag_image', countryData.country_flag_image_url);
         }
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/countries`, formData, {
             headers: {
@@ -69,11 +70,12 @@ export const _addCountry = (countryData: any,toast: React.RefObject<Toast>) => a
             },
         });
 
-        console.log(response)
-
+        //console.log(response)
+        const newData={...countryData,id:response.data.data.country.id}
+        console.log(newData)
         dispatch({
             type: ADD_COUNTRY_SUCCESS,
-            payload: response.data.data.country,
+            payload: newData,
         });
         toast.current?.show({
             severity: "success",
@@ -109,7 +111,7 @@ export const _editCountry = (countryId: number, updatedData: any,toast: React.Re
         formData.append('currency_id',updatedData.currency)
         formData.append('language_id',updatedData.language_id)
         if (updatedData.country_flag_image_url && typeof updatedData.country_flag_image_url !== 'string') {
-            formData.append('country_flag_image_url', updatedData.country_flag_image_url);
+            formData.append('country_flag_image', updatedData.country_flag_image_url);
         }
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/countries/${countryId}`, formData, {
             headers: {
@@ -117,10 +119,10 @@ export const _editCountry = (countryId: number, updatedData: any,toast: React.Re
                 'Content-Type': 'multipart/form-data',
             },
         });
-
+        const newData={...updatedData,id:response.data.data.country.id}
         dispatch({
             type: EDIT_COUNTRY_SUCCESS,
-            payload: response.data.data.country,
+            payload: newData,
         });
         toast.current?.show({
             severity: "success",

@@ -44,20 +44,20 @@ export const _fetchProvinces = () => async (dispatch: Dispatch) => {
 // Add a province
 export const _addProvince = (provinceData: Province,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_PROVINCE_REQUEST });
-
+    const body={...provinceData,country_id:provinceData.country?.id}
     try {
         const token = getAuthToken();
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/provinces`,
-            provinceData,
+            body,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-
-        dispatch({ type: ADD_PROVINCE_SUCCESS, payload: response.data.data.province });
+        const newData={...provinceData,id:response.data.data.province.id}
+        dispatch({ type: ADD_PROVINCE_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",
@@ -81,17 +81,18 @@ export const _editProvince = (provinceId: number, provinceData: Province,toast: 
 
     try {
         const token = getAuthToken();
+        const body={...provinceData,country_id:provinceData.country?.id}
         const response = await axios.put(
             `${process.env.NEXT_PUBLIC_BASE_URL}/provinces/${provinceId}`,
-            provinceData,
+            body,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-
-        dispatch({ type: EDIT_PROVINCE_SUCCESS, payload: response.data.data.province });
+        const newData={...provinceData,id:response.data.data.province.id}
+        dispatch({ type: EDIT_PROVINCE_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",

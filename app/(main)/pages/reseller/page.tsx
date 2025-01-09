@@ -23,6 +23,8 @@ import { Password } from 'primereact/password';
 import { _fetchDistricts } from '@/app/redux/actions/districtActions';
 import { _fetchProvinces } from '@/app/redux/actions/provinceActions';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const ResellerPage = () => {
 
@@ -59,7 +61,9 @@ const ResellerPage = () => {
         deleted_at: null,
         user: null,
         code:'',
-        country:''
+        country:null,
+        province:null,
+        district:null
       };
 
 
@@ -78,6 +82,7 @@ const ResellerPage = () => {
     const {districts}=useSelector((state:any)=>state.districtReducer)
     const {provinces}=useSelector((state:any)=>state.provinceReducer)
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -156,7 +161,7 @@ const ResellerPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('RESELLER.TABLE.CREATERESELLER')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -168,7 +173,7 @@ const ResellerPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -182,7 +187,7 @@ const ResellerPage = () => {
                 <div className="" style={{display:'flex',textAlign:'center',alignItems:'center', gap:'10px'}}>
                     <img
                         src={`${rowData.profile_image_url}`}
-                        alt={rowData.profile_image_url.toString()}
+                        alt={rowData.reseller_name}
                         className="shadow-2"
                         width="55"
                     />
@@ -299,20 +304,20 @@ const ResellerPage = () => {
 
     const resellerDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveReseller} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveReseller} />
         </>
     );
     const deleteResellerDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteResellerDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteReseller} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteResellerDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')}  icon="pi pi-check" text onClick={deleteReseller} />
         </>
     );
     const deleteResellersDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteResellersDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteResellersDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -345,14 +350,14 @@ const ResellerPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                        <Column field="phone" header="Phone" sortable body={phoneBodyTemplate}></Column>
-                        <Column field="balance" header="Balance" sortable body={balanceBodyTemplate}></Column>
-                        <Column field="total_payment" header="Total Payment" sortable body={totalPaymentBodyTemplate}></Column>
-                        <Column field="loan_amount" header="Loan Amount" sortable body={loanAmountBodyTemplate}></Column>
-                        <Column field="preferred_currency" header="Preferred Currency" sortable body={preferredCurrencyBodyTemplate}></Column>
-                        <Column field="country" header="Country" sortable body={countryBodyTemplate}></Column>
-                        <Column field="status" header="Status" sortable body={statusBodyTemplate}></Column>
+                        <Column field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} sortable body={phoneBodyTemplate}></Column>
+                        <Column field="balance" header={t('MENU.BALANCE')} sortable body={balanceBodyTemplate}></Column>
+                        <Column field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')} sortable body={totalPaymentBodyTemplate}></Column>
+                        <Column field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')} sortable body={loanAmountBodyTemplate}></Column>
+                        <Column field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} sortable body={preferredCurrencyBodyTemplate}></Column>
+                        <Column field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')} sortable body={countryBodyTemplate}></Column>
+                        <Column field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
@@ -380,7 +385,7 @@ const ResellerPage = () => {
                         />
                         <div className='formgrid grid'>
                             <div className="field col">
-                                <label htmlFor="name">Name</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.RESELLERNAME')}</label>
                                 <InputText
                                     id="reseller_name"
                                     value={reseller?.reseller_name}
@@ -392,6 +397,7 @@ const ResellerPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('RESELLER.FORM.PLACEHOLDER.RESELLERNAME')}
                                     className={classNames({
                                         'p-invalid': submitted && !reseller.reseller_name
                                     })}
@@ -400,7 +406,7 @@ const ResellerPage = () => {
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="contact_name">Contact Name</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.CONTACTNAME')}</label>
                                 <InputText
                                     id="contact_name"
                                     value={reseller.contact_name || ''}
@@ -410,6 +416,7 @@ const ResellerPage = () => {
                                             contact_name: e.target.value,
                                         }))
                                     }
+                                    placeholder={t('RESELLER.FORM.PLACEHOLDER.CONTACTNAME')}
                                     className={classNames({
                                         'p-invalid': submitted && !reseller.contact_name
                                     })}
@@ -420,7 +427,7 @@ const ResellerPage = () => {
 
                         <div className='formgrid grid'>
                             <div className="field col">
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.EMAIL')}</label>
                                 <InputText
                                     id="email"
                                     value={reseller?.email}
@@ -432,6 +439,7 @@ const ResellerPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('RESELLER.FORM.PLACEHOLDER.EMAIL')}
                                     className={classNames({
                                         'p-invalid': submitted && !reseller.email
                                     })}
@@ -440,7 +448,7 @@ const ResellerPage = () => {
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="phone">Phone</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.PHONE')}</label>
                                 <InputText
                                     id="phone"
                                     value={reseller.phone || ''}
@@ -450,6 +458,7 @@ const ResellerPage = () => {
                                             phone: e.target.value,
                                         }))
                                     }
+                                    placeholder={t('RESELLER.FORM.PLACEHOLDER.PHONE')}
                                     className={classNames({
                                         'p-invalid': submitted && !reseller.phone
                                     })}
@@ -484,40 +493,40 @@ const ResellerPage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country_id">Country</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.COUNTRY')}</label>
                                 <Dropdown
-                                    id="country_id"
-                                    value={reseller.country_id}
+                                    id="country"
+                                    value={reseller.country}
                                     options={countries}
                                     onChange={(e) =>
                                         setReseller((prev) => ({
 
                                             ...prev,
-                                            country_id: e.value,
+                                            country: e.value,
                                         }))
                                     }
                                     optionLabel='country_name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a country"
                                     className="w-full"
                                 />
 
                             </div>
                             <div className="field col">
-                                <label htmlFor="province_id">Province</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.PROVINCE')}</label>
                                 <Dropdown
-                                    id="province_id"
-                                    value={reseller.province_id}
+                                    id="province"
+                                    value={reseller.province}
                                     options={provinces}
                                     onChange={(e) =>
                                         setReseller((prev) => ({
 
                                             ...prev,
-                                            province_id: e.value,
+                                            province: e.value,
                                         }))
                                     }
                                     optionLabel='province_name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a province"
                                     className="w-full"
                                 />
@@ -529,27 +538,27 @@ const ResellerPage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country_id">District</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.DISTRICT')}</label>
                                 <Dropdown
-                                    id="districts_id"
-                                    value={reseller.districts_id}
+                                    id="district"
+                                    value={reseller.district}
                                     options={districts}
                                     onChange={(e) =>
                                         setReseller((prev) => ({
 
                                             ...prev,
-                                            districts_id: e.value,
+                                            district: e.value,
                                         }))
                                     }
                                     optionLabel='district_name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a district"
                                     className="w-full"
                                 />
 
                             </div>
                             <div className="field col">
-                                <label htmlFor="code">Preferred Currency</label>
+                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.CURRENCYPREFERENCE')}</label>
                                 <Dropdown
                                     id="code"
                                     value={reseller.code}
@@ -563,7 +572,7 @@ const ResellerPage = () => {
                                     }
                                     optionLabel='code'
                                     optionValue='id'
-                                    placeholder="Choose a code"
+                                    placeholder={t('RESELLER.FORM.PLACEHOLDER.CURRENCY')}
                                     className="w-full"
                                 />
 
@@ -599,4 +608,4 @@ const ResellerPage = () => {
     );
 };
 
-export default ResellerPage;
+export default withAuth(ResellerPage);

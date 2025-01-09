@@ -19,6 +19,8 @@ import { _addCompanyCode, _deleteCompanyCode, _editCompanyCode, _fetchCompanyCod
 import { AppDispatch } from '@/app/redux/store';
 import { CompanyCode } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const CompanyCodePage = () => {
 
@@ -45,6 +47,7 @@ const CompanyCodePage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {companyCodes,loading}=useSelector((state:any)=>state.companyCodeReducer)
     const {companies}=useSelector((state:any)=>state.companyReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -87,6 +90,7 @@ const CompanyCodePage = () => {
     };
 
     const editCompanyCode = (companyCode: CompanyCode) => {
+        console.log(companyCode)
         setCompanyCode({ ...companyCode});
 
         setCompanyCodeDialog(true);
@@ -118,7 +122,7 @@ const CompanyCodePage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('COMPANYCODE.TABLE.CREATECOMPANYCODE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -130,7 +134,7 @@ const CompanyCodePage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -200,20 +204,20 @@ const CompanyCodePage = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveCompanyCode} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCompanyCode} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCompanyCodeDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteCompanyCode} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompanyCodeDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCompanyCode} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCompanyCodesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompanyCodesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -246,16 +250,16 @@ const CompanyCodePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Reserved Digit" sortable body={reservedDigitBodyTemplate}></Column>
-                        <Column field="Country" header="Country Name" body={countryNameBodyTemplate} sortable></Column>
-                        <Column field="Chat Id" header="Company Name" sortable body={companyNameBodyTemplate} ></Column>
-                        <Column field="Country Code" header="Country Code" sortable body={countryCodeBodyTemplate} ></Column>
+                        <Column field="name" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')} sortable body={reservedDigitBodyTemplate}></Column>
+                        <Column field="Country" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column field="Chat Id" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
+                        <Column field="Country Code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={companyCodeDialog}  style={{ width: '550px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Reserved Digit</label>
+                            <label htmlFor="name">{t('COMPANYCODE.FORM.INPUT.RESERVEDDIGIT')}</label>
                             <InputText
                                 id="reserved_digit"
                                 value={companyCode?.reserved_digit}
@@ -267,6 +271,7 @@ const CompanyCodePage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.RESERVEDDIGIT')}
                                 className={classNames({
                                     'p-invalid': submitted && !companyCode.reserved_digit
                                 })}
@@ -276,21 +281,21 @@ const CompanyCodePage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country_id">Company</label>
+                                <label htmlFor="company">{t('COMPANYCODE.FORM.INPUT.COMPANYNAME')}</label>
                                 <Dropdown
-                                    id="company_id"
-                                    value={companyCode.company_id}
+                                    id="company"
+                                    value={companyCode.company}
                                     options={companies}
                                     onChange={(e) =>
                                         setCompanyCode((prevCompanyCode) => ({
 
                                             ...prevCompanyCode,
-                                            company_id: e.value,
+                                            company: e.value,
                                         }))
                                     }
                                     optionLabel='company_name'
-                                    optionValue='id'
-                                    placeholder="Choose a Company"
+
+                                    placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.COMPANYNAME')}
                                     className="w-full"
                                 />
 
@@ -299,7 +304,7 @@ const CompanyCodePage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCompanyCodeDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompanyDialogFooter} onHide={hideDeleteCompanyCodeDialog}>
+                    <Dialog visible={deleteCompanyCodeDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompanyDialogFooter} onHide={hideDeleteCompanyCodeDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {companyCode && (
@@ -310,7 +315,7 @@ const CompanyCodePage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCompanyCodesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCompanyCodesDialog}>
+                    <Dialog visible={deleteCompanyCodesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCompanyCodesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {companyCode && <span>Are you sure you want to delete the selected companies?</span>}
@@ -322,4 +327,4 @@ const CompanyCodePage = () => {
     );
 };
 
-export default CompanyCodePage;
+export default withAuth(CompanyCodePage);

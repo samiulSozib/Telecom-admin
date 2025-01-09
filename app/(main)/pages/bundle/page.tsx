@@ -22,6 +22,8 @@ import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
 import { AppDispatch } from '@/app/redux/store';
 import { Bundle } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const BundlePage = () => {
 
@@ -64,6 +66,7 @@ const BundlePage = () => {
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
     const {bundles,pagination,loading}=useSelector((state:any)=>state.bundleReducer)
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {t}=useTranslation()
 
 
 
@@ -146,7 +149,7 @@ const BundlePage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('BUNDLE.TABLE.CREATEBUNDLE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -158,7 +161,7 @@ const BundlePage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -321,20 +324,20 @@ const BundlePage = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveService} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteService} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -369,16 +372,16 @@ const BundlePage = () => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Bundle Title" header="Bundle Title" sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Description" header="Description" sortable body={descriptionBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Validity Type" header="Validity Type" sortable body={validityTypeBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Admin Buying" header="Admin Buying" sortable body={adminBuyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Buying Price" header="Buying Price" sortable body={buyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Selling Price" header="Selling Price" sortable body={sellingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Currency" header="Currency" sortable body={currencyBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Service" header="Service" sortable body={serviceNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Category" header="Category" sortable body={serviceCategoryBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Created" header="Created" body={createdAtBodyTemplate} headerStyle={{ minWidth:'4rem', fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Bundle Title" header={t('BUNDLE.TABLE.COLUMN.BUNDLENAME')} sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Description" header={t('BUNDLE.TABLE.COLUMN.BUNDLEDESCRIPTION')} sortable body={descriptionBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Validity Type" header={t('BUNDLE.TABLE.COLUMN.VALIDITYTYPE')} sortable body={validityTypeBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Admin Buying" header={t('BUNDLE.TABLE.COLUMN.ADMINBUYINGPRICE')} sortable body={adminBuyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Buying Price" header={t('BUNDLE.TABLE.COLUMN.BUYINGPRICE')} sortable body={buyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Selling Price" header={t('BUNDLE.TABLE.COLUMN.SELLINGPRICE')} sortable body={sellingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Currency" header={t('BUNDLE.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Service" header={t('BUNDLE.TABLE.FILTER.SERVICE')}  sortable body={serviceNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Category" header={t('BUNDLE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="Created" header={t('TABLE.GENERAL.CREATEDAT')}  body={createdAtBodyTemplate} headerStyle={{ minWidth:'4rem', fontSize: '0.9rem', color: '#000' }}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
                     <Paginator
@@ -393,7 +396,7 @@ const BundlePage = () => {
                     <Dialog visible={serviceDialog}  style={{ width: '700px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">Bundle Title</label>
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.BUNDLETITLE')}</label>
                                 <InputText
                                     id="bundle_title"
                                     value={bundle.bundle_title}
@@ -405,6 +408,7 @@ const BundlePage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.BUNDLETITLE')}
                                     className={classNames({
                                         'p-invalid': submitted && !bundle.bundle_title
                                     })}
@@ -413,7 +417,7 @@ const BundlePage = () => {
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="name">Bundle Description</label>
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.BUNDLEDESCRIPTION')}</label>
                                 <InputText
                                     id="bundle_description"
                                     value={bundle.bundle_description}
@@ -425,6 +429,7 @@ const BundlePage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.BUNDLEDESCRIPTION')}
                                     className={classNames({
                                         'p-invalid': submitted && !bundle.bundle_description
                                     })}
@@ -435,7 +440,8 @@ const BundlePage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">Admin Buying Price</label>
+
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.ADMINBUYINGPRICE')}</label>
                                 <InputText
                                     id="admin_buying_price"
                                     value={bundle.admin_buying_price}
@@ -447,6 +453,7 @@ const BundlePage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.ADMINBUYINGPRICE')}
                                     className={classNames({
                                         'p-invalid': submitted && !bundle.admin_buying_price
                                     })}
@@ -455,7 +462,8 @@ const BundlePage = () => {
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="name">Buying Price</label>
+
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.BUYINGPRICE')}</label>
                                 <InputText
                                     id="buying_price"
                                     value={bundle.buying_price}
@@ -467,6 +475,7 @@ const BundlePage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.BUYINGPRICE')}
                                     className={classNames({
                                         'p-invalid': submitted && !bundle.buying_price
                                     })}
@@ -478,9 +487,9 @@ const BundlePage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">Selling Price</label>
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.SELLINGPRICE')}</label>
                                 <InputText
-                                    id="buying_price"
+                                    id="selling_price"
                                     value={bundle.selling_price}
                                     onChange={(e) =>
                                         setBundle((perv) => ({
@@ -490,6 +499,7 @@ const BundlePage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.SELLINGPRICE')}
                                     className={classNames({
                                         'p-invalid': submitted && !bundle.selling_price
                                     })}
@@ -497,7 +507,7 @@ const BundlePage = () => {
                                 {submitted && !bundle.selling_price && <small className="p-invalid">Selling Price is required.</small>}
                             </div>
                             <div className="field col">
-                                <label htmlFor="country_id">Validity Type</label>
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.VALIDITYTYPE')}</label>
                                 <Dropdown
                                     id="validity_type"
                                     value={bundle.validity_type}
@@ -515,7 +525,7 @@ const BundlePage = () => {
                                             validity_type: e.value,
                                         }))
                                     }
-                                    placeholder="Choose a Type"
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.VALIDITYTYPE')}
                                     className="w-full"
                                 />
 
@@ -524,20 +534,20 @@ const BundlePage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">Service</label>
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.SERVICENAME')}</label>
                                 <Dropdown
-                                    id="service_id"
-                                    value={bundle.service_id}
+                                    id="service"
+                                    value={bundle.service}
                                     options={services}
                                     onChange={(e) =>
                                         setBundle((prev) => ({
                                             ...prev,
-                                            service_id: e.value,
+                                            service: e.value,
                                         }))
                                     }
                                     optionLabel='company.company_name'
-                                    optionValue='id'
-                                    placeholder="Choose a Type"
+                                    // optionValue='id'
+                                    placeholder={t('BUNDLE.FORM.PLACEHOLDER.SERVICENAME')}
                                     className="w-full"
                                     itemTemplate={(option) => (
                                         <div style={{display:'flex', gap:"5px"}}>
@@ -548,20 +558,20 @@ const BundlePage = () => {
                                 />
                             </div>
                             <div className="field col">
-                                <label htmlFor="country_id">Currency</label>
+                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
-                                    id="currency_id"
-                                    value={bundle.currency_id}
+                                    id="currency"
+                                    value={bundle.currency}
                                     options={currencies}
                                     onChange={(e) =>
                                         setBundle((prev) => ({
                                             ...prev,
-                                            currency_id: e.value,
+                                            currency: e.value,
                                         }))
                                     }
                                     optionLabel='name'
-                                    optionValue='id'
-                                    placeholder="Choose a Type"
+                                    // optionValue='id'
+                                    placeholder={t('')}
                                     className="w-full"
                                 />
 
@@ -570,7 +580,7 @@ const BundlePage = () => {
 
                     </Dialog>
 
-                    <Dialog visible={deleteServiceDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompanyDialogFooter} onHide={hideDeleteServiceDialog}>
+                    <Dialog visible={deleteServiceDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompanyDialogFooter} onHide={hideDeleteServiceDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {bundle && (
@@ -581,7 +591,7 @@ const BundlePage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteServicesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteServicesDialog}>
+                    <Dialog visible={deleteServicesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteServicesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {bundle && <span>Are you sure you want to delete the selected companies?</span>}
@@ -593,4 +603,4 @@ const BundlePage = () => {
     );
 };
 
-export default BundlePage;
+export default withAuth(BundlePage);

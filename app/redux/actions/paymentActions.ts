@@ -43,20 +43,29 @@ export const _fetchPayments = () => async (dispatch: Dispatch) => {
 // Add a payment
 export const _addPayment = (paymentData: Payment,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_PAYMENT_REQUEST });
-
+    const body={
+        reseller_id:paymentData.reseller?.id,
+        payment_method_id:paymentData.payment_method?.id,
+        currency_id:paymentData.currency?.id,
+        amount:paymentData.amount,
+        notes:paymentData.notes,
+        payment_date:paymentData.payment_date
+    }
+    console.log(body)
+    //return
     try {
         const token = getAuthToken();
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/payments`,
-            paymentData,
+            body,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-
-        dispatch({ type: ADD_PAYMENT_SUCCESS, payload: response.data.data.payment });
+        const newData={...paymentData,id:response.data.data.payment.id}
+        dispatch({ type: ADD_PAYMENT_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",
@@ -80,17 +89,19 @@ export const _editPayment = (paymentId: number, paymentData: Payment,toast: Reac
 
     try {
         const token = getAuthToken();
+        const body={...paymentData,reseller_id:paymentData.reseller?.id,payment_method_id:paymentData.payment_method?.id,currency_id:paymentData.currency?.id}
+
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/payments/${paymentId}`,
-            paymentData,
+            body,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-
-        dispatch({ type: EDIT_PAYMENT_SUCCESS, payload: response.data.data.payment });
+        const newData={...paymentData,id:response.data.data.payment.id}
+        dispatch({ type: EDIT_PAYMENT_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",

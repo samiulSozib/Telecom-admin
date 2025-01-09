@@ -52,7 +52,7 @@ export const _addBundle = (newBundleData: Bundle, toast: React.RefObject<Toast>)
   dispatch({ type: ADD_BUNDLE_REQUEST });
   try {
     const body = {
-        service_id: newBundleData.service_id,
+        service_id: newBundleData.service?.id,
         bundle_title: newBundleData.bundle_title,
         bundle_description: newBundleData.bundle_description,
         bundle_type: newBundleData.bundle_type,
@@ -60,7 +60,7 @@ export const _addBundle = (newBundleData: Bundle, toast: React.RefObject<Toast>)
         admin_buying_price: newBundleData.admin_buying_price,
         buying_price: newBundleData.buying_price,
         selling_price: newBundleData.selling_price,
-        currency_id: newBundleData.currency_id,
+        currency_id: newBundleData.currency?.id,
     };
     const token = getAuthToken();
     const response = await axios.post(
@@ -72,9 +72,10 @@ export const _addBundle = (newBundleData: Bundle, toast: React.RefObject<Toast>)
         },
       }
     );
+    const newData={...newBundleData,id:response.data.data.bundle.id}
     dispatch({
       type: ADD_BUNDLE_SUCCESS,
-      payload: response.data.data.bundle,
+      payload: newData,
     });
     toast.current?.show({
       severity: "success",
@@ -103,7 +104,7 @@ export const _editBundle = (bundleId: number, updatedBundleData: Bundle, toast: 
 
     const body = {
         bundle_code:updatedBundleData.bundle_code,
-        service_id: updatedBundleData.service_id,
+        service_id: updatedBundleData.service?.id,
         bundle_title: updatedBundleData.bundle_title,
         bundle_description: updatedBundleData.bundle_description,
         bundle_type: updatedBundleData.bundle_type,
@@ -111,10 +112,10 @@ export const _editBundle = (bundleId: number, updatedBundleData: Bundle, toast: 
         admin_buying_price: updatedBundleData.admin_buying_price,
         buying_price: updatedBundleData.buying_price,
         selling_price: updatedBundleData.selling_price,
-        currency_id: updatedBundleData.currency_id,
+        currency_id: updatedBundleData.currency?.id,
     };
     const token = getAuthToken();
-    const response = await axios.put(
+    const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/bundles/${bundleId}`,
       body,
       {
@@ -123,10 +124,10 @@ export const _editBundle = (bundleId: number, updatedBundleData: Bundle, toast: 
         },
       }
     );
-
+    const newData={...updatedBundleData,id:response.data.data.bundle.id}
     dispatch({
       type: EDIT_BUNDLE_SUCCESS,
-      payload: response.data.data.bundle,
+      payload: newData,
     });
     toast.current?.show({
       severity: "success",

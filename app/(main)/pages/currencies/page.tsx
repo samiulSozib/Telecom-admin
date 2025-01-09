@@ -18,6 +18,8 @@ import { AppDispatch } from '@/app/redux/store';
 import { Currency } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addCurrency, _deleteCurrency, _editCurrency, _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const CurrencyPage = () => {
 
@@ -45,6 +47,7 @@ const CurrencyPage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {currencies,loading}=useSelector((state:any)=>state.currenciesReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -117,7 +120,7 @@ const CurrencyPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('CURRENCY.TABLE.CREATECURRENCY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -129,7 +132,7 @@ const CurrencyPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -185,20 +188,20 @@ const CurrencyPage = () => {
 
     const currencyDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveCurrency} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCurrency} />
         </>
     );
     const deleteCurrencyDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCurrencyDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteCurrency} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCurrencyDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCurrency} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCurrencysDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCurrencysDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -231,15 +234,15 @@ const CurrencyPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={currencyNameBodyTemplate}></Column>
-                        <Column field="code" header="Code" sortable body={currencyCodeBodyTemplate}></Column>
-                        <Column field="exchange_rate" header="Exchange Rate" sortable body={exchangeRateBodyTemplate}></Column>
+                        <Column field="name" header={t('CURRENCY.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyNameBodyTemplate}></Column>
+                        <Column field="code" header={t('CURRENCY.TABLE.COLUMN.CURRENCYCODE')} sortable body={currencyCodeBodyTemplate}></Column>
+                        <Column field="exchange_rate" header={t('CURRENCY.TABLE.COLUMN.EXCHANGERATE')} sortable body={exchangeRateBodyTemplate}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={currencyDialog}  style={{ width: '550px' }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Currency Name</label>
+                            <label htmlFor="name">{t('CURRENCY.FORM.INPUT.CURRENCYNAME')}</label>
                             <InputText
                                 id="name"
                                 value={currency.name}
@@ -251,6 +254,7 @@ const CurrencyPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.CURRENCYNAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !currency.name
                                 })}
@@ -259,7 +263,7 @@ const CurrencyPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="code">Currency Code</label>
+                            <label htmlFor="code">{t('CURRENCY.FORM.INPUT.CURRENCYCODE')}</label>
                             <InputText
                                 id="code"
                                 value={currency.code}
@@ -271,6 +275,7 @@ const CurrencyPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.CURRENCYCODE')}
                                 className={classNames({
                                     'p-invalid': submitted && !currency.code
                                 })}
@@ -279,7 +284,7 @@ const CurrencyPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="symbol">Symbol</label>
+                            <label htmlFor="symbol">{t('CURRENCY.FORM.INPUT.SYMBOL')}</label>
                             <InputText
                                 id="symbol"
                                 value={currency.symbol}
@@ -291,6 +296,7 @@ const CurrencyPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.SYMBOL')}
                                 className={classNames({
                                     'p-invalid': submitted && !currency.symbol
                                 })}
@@ -299,7 +305,7 @@ const CurrencyPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="exchange_rate_per_usd">Exchange Rate</label>
+                            <label htmlFor="exchange_rate_per_usd">{t('CURRENCY.FORM.INPUT.EXCHANGERATE')}</label>
                             <InputText
                                 id="exchange_rate_per_usd"
                                 value={currency.exchange_rate_per_usd}
@@ -311,6 +317,7 @@ const CurrencyPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.EXCHANGERATE')}
                                 className={classNames({
                                     'p-invalid': submitted && !currency.exchange_rate_per_usd
                                 })}
@@ -322,7 +329,7 @@ const CurrencyPage = () => {
 
                     </Dialog>
 
-                    <Dialog visible={deleteCurrencyDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCurrencyDialogFooter} onHide={hideDeleteCurrencyDialog}>
+                    <Dialog visible={deleteCurrencyDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCurrencyDialogFooter} onHide={hideDeleteCurrencyDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {currency && (
@@ -333,7 +340,7 @@ const CurrencyPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCurrencysDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCurrencysDialog}>
+                    <Dialog visible={deleteCurrencysDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCurrencysDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {currency && <span>Are you sure you want to delete the selected companies?</span>}
@@ -345,4 +352,4 @@ const CurrencyPage = () => {
     );
 };
 
-export default CurrencyPage;
+export default withAuth(CurrencyPage);

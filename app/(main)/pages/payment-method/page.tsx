@@ -19,6 +19,8 @@ import { AppDispatch } from '@/app/redux/store';
 import {PaymentMethod } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addPaymentMethod, _deletePaymentMethod, _editPaymentMethod, _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const PaymentMethodPage = () => {
 
@@ -45,6 +47,7 @@ const PaymentMethodPage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {paymentMethods,loading}=useSelector((state:any)=>state.paymentMethodsReducer)
+    const {t}=useTranslation()
 
     useEffect(()=>{
         dispatch(_fetchPaymentMethods())
@@ -118,7 +121,7 @@ const PaymentMethodPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('PAYMENTMETHOD.TABLE.CREATEPAYMENTMETHOD')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -130,7 +133,7 @@ const PaymentMethodPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -218,20 +221,20 @@ const PaymentMethodPage = () => {
 
     const methodDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveMethod} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveMethod} />
         </>
     );
     const deleteMethodDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteMethodDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteMethod} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteMethodDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteMethod} />
         </>
     );
     const deleteMethodsDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteMethodsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteMethodsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -264,10 +267,10 @@ const PaymentMethodPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                        <Column field="Account Details" header="Account Details" body={accountDetailsBodyTemplate} sortable></Column>
-                        <Column header="Image" body={imageBodyTemplate}></Column>
-                        <Column header="Status" body={statusBodyTemplate}></Column>
+                        <Column field="name" header={t('PAYMENTMETHOD.TABLE.COLUMN.METHODNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column field="Account Details" header={t('PAYMENTMETHOD.TABLE.COLUMN.ACCOUNTDETAILS')} body={accountDetailsBodyTemplate} sortable></Column>
+                        <Column header={t('PAYMENTMETHOD.TABLE.COLUMN.IMAGE')} body={imageBodyTemplate}></Column>
+                        <Column header={t('PAYMENTMETHOD.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
@@ -294,7 +297,7 @@ const PaymentMethodPage = () => {
                             }))}
                         />
                         <div className="field">
-                            <label htmlFor="name">Name</label>
+                            <label htmlFor="name">{t('PAYMENTMETHOD.FORM.INPUT.METHODNAME')}</label>
                             <InputText
                                 id="method_name"
                                 value={paymentMethod?.method_name}
@@ -306,6 +309,7 @@ const PaymentMethodPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('PAYMENTMETHOD.FORM.INPUT.METHODNAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !paymentMethod.method_name
                                 })}
@@ -314,7 +318,7 @@ const PaymentMethodPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="status">Status</label>
+                            <label htmlFor="status">{t('PAYMENTMETHOD.FORM.INPUT.STATUS')}</label>
                             <Dropdown
                                 id="status"
                                 value={paymentMethod.status}
@@ -337,7 +341,7 @@ const PaymentMethodPage = () => {
 
 
                         <div className="field">
-                            <label htmlFor="telegram_chat_id">Account Details</label>
+                            <label htmlFor="telegram_chat_id">{t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}</label>
                             <textarea
                                 id="account_details"
                                 value={paymentMethod.account_details || ''}
@@ -347,7 +351,7 @@ const PaymentMethodPage = () => {
                                         account_details: e.target.value,
                                     }))
                                 }
-                                placeholder="Enter Account details"
+                                placeholder={t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}
                                 className="w-full p-2 border rounded"
                                 rows={4} // Adjust the number of visible rows as needed
                             />
@@ -356,7 +360,7 @@ const PaymentMethodPage = () => {
 
                     </Dialog>
 
-                    <Dialog visible={deleteMethodDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteMethodDialogFooter} onHide={hideDeleteMethodDialog}>
+                    <Dialog visible={deleteMethodDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteMethodDialogFooter} onHide={hideDeleteMethodDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {paymentMethod && (
@@ -367,7 +371,7 @@ const PaymentMethodPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteMethodsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteMethodsDialogFooter} onHide={hideDeleteMethodsDialog}>
+                    <Dialog visible={deleteMethodsDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteMethodsDialogFooter} onHide={hideDeleteMethodsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {paymentMethod && <span>Are you sure you want to delete the selected companies?</span>}
@@ -379,4 +383,4 @@ const PaymentMethodPage = () => {
     );
 };
 
-export default PaymentMethodPage;
+export default withAuth(PaymentMethodPage);

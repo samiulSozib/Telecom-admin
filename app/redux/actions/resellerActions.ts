@@ -52,9 +52,9 @@ export const _addReseller = (resellerData: Reseller,toast: React.RefObject<Toast
         formData.append('email', resellerData.email);
         formData.append('phone', resellerData.phone);
         formData.append('account_password', resellerData.account_password);
-        formData.append('country_id', resellerData.country_id);
-        formData.append('province_id', resellerData.province_id);
-        formData.append('districts_id', resellerData.districts_id);
+        formData.append('country_id', String(resellerData.country?.id));
+        formData.append('province_id', String(resellerData.province?.id));
+        formData.append('districts_id', String(resellerData.district?.id));
         formData.append('currency_preference_id', resellerData.code);
 
         if (resellerData.profile_image_url && typeof resellerData.profile_image_url !== 'string') {
@@ -72,7 +72,8 @@ export const _addReseller = (resellerData: Reseller,toast: React.RefObject<Toast
                 },
             }
         );
-        dispatch({ type: ADD_RESELLER_SUCCESS, payload: response.data.data.reseller });
+        const newData={...resellerData,id:response.data.data.reseller.id}
+        dispatch({ type: ADD_RESELLER_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",
@@ -104,9 +105,9 @@ export const _editReseller = (id: number, resellerData: Reseller,toast: React.Re
         formData.append('email', resellerData.email);
         formData.append('phone', resellerData.phone);
         formData.append('account_password', resellerData.account_password);
-        formData.append('country_id', resellerData.country_id);
-        formData.append('province_id', resellerData.province_id);
-        formData.append('districts_id', resellerData.districts_id);
+        formData.append('country_id', String(resellerData.country?.id));
+        formData.append('province_id', String(resellerData.province?.id));
+        formData.append('districts_id', String(resellerData.district?.id));
         formData.append('currency_preference_id', resellerData.code);
 
         if (resellerData.profile_image_url && typeof resellerData.profile_image_url !== 'string') {
@@ -124,7 +125,8 @@ export const _editReseller = (id: number, resellerData: Reseller,toast: React.Re
                 },
             }
         );
-        dispatch({ type: EDIT_RESELLER_SUCCESS, payload: response.data.data.reseller });
+        const newData={...resellerData,id:response.data.data.reseller.id}
+        dispatch({ type: EDIT_RESELLER_SUCCESS, payload: newData});
         toast.current?.show({
             severity: "success",
             summary: "Successful",

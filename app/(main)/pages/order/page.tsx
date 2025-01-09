@@ -18,6 +18,8 @@ import { AppDispatch } from '@/app/redux/store';
 import { Order } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _deleteOrder, _fetchOrders } from '@/app/redux/actions/orderActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const OrderPage = () => {
 
@@ -34,6 +36,7 @@ const OrderPage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {orders,pagination,loading}=useSelector((state:any)=>state.orderReducer)
     const [order,setOrder]=useState<Order>();
+    const {t}=useTranslation()
 
 
 
@@ -102,7 +105,7 @@ const OrderPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -279,20 +282,20 @@ const statusBodyTemplate = (rowData: Order) => {
 
     const companyDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={()=>{}} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={()=>{}} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteOrderDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteOrder} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteOrderDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteOrder} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteOrdersDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteOrdersDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -327,16 +330,16 @@ const statusBodyTemplate = (rowData: Order) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="" header="Reseller Name" sortable body={resellerNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Rechargeable Account" sortable body={rechargeableAccountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Bundle ID" sortable body={bundleIdBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Payable Amount" sortable body={payableAmountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Bundle Title" sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Reject Reason" sortable body={rejectedReasonBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Company" sortable body={companyNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Category" sortable body={categoryNameNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Order Date" sortable body={createdAtBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header="Status" sortable body={statusBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')} sortable body={resellerNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')} sortable body={rechargeableAccountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.BUNDLEID')} sortable body={bundleIdBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')} sortable body={payableAmountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')} sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')} sortable body={rejectedReasonBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')} sortable body={categoryNameNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')} sortable body={createdAtBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
                     <Paginator
@@ -395,7 +398,7 @@ const statusBodyTemplate = (rowData: Order) => {
 
                     </Dialog>
 
-                    <Dialog visible={deleteOrderDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompanyDialogFooter} onHide={hideDeleteOrderDialog}>
+                    <Dialog visible={deleteOrderDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompanyDialogFooter} onHide={hideDeleteOrderDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {order && (
@@ -406,7 +409,7 @@ const statusBodyTemplate = (rowData: Order) => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteOrdersDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteOrdersDialog}>
+                    <Dialog visible={deleteOrdersDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteOrdersDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {order && <span>Are you sure you want to delete the selected companies?</span>}
@@ -418,4 +421,4 @@ const statusBodyTemplate = (rowData: Order) => {
     );
 };
 
-export default OrderPage;
+export default withAuth(OrderPage);

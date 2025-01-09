@@ -20,6 +20,8 @@ import { _addCountry, _deleteCountry, _editCountry, _fetchCountries } from '@/ap
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { _fetchLanguages } from '@/app/redux/actions/languageActions';
 import { FileUpload } from 'primereact/fileupload';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const CountryPage = () => {
 
@@ -33,7 +35,7 @@ const CountryPage = () => {
         deleted_at: '' ,
         created_at: '',
         updated_at: '',
-        currency: '',
+        currency: null,
         language: null,
         currency_id:0
     }
@@ -53,6 +55,7 @@ const CountryPage = () => {
     const {countries,loading}=useSelector((state:any)=>state.countriesReducer)
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
     const {languages}=useSelector((state:any)=>state.languageReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -127,7 +130,7 @@ const CountryPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('COUNTRY.TABLE.CREATECOUNTRY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -139,7 +142,7 @@ const CountryPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -177,7 +180,7 @@ const CountryPage = () => {
         return (
             <>
                 <span className="p-column-title">Currency</span>
-                {rowData.currency}
+                {rowData.currency?.name}
             </>
         );
     };
@@ -216,20 +219,20 @@ const CountryPage = () => {
 
     const countryDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveCountry} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCountry} />
         </>
     );
     const deleteCountryDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCountryDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteCountry} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCountryDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCountry} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteCountrysDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCountrysDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -263,10 +266,10 @@ const CountryPage = () => {
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                         <Column field="" header="" sortable body={imageBodyTemplate}></Column>
-                        <Column field="name" header="Country" sortable body={countryNameBodyTemplate}></Column>
-                        <Column field="country_code" header="Country Code" body={countryCodeBodyTemplate} sortable></Column>
-                        <Column field="currency" header="Currency" body={currencyBodyTemplate} sortable></Column>
-                        <Column field="language" header="Language" body={languageBodyTemplate} sortable></Column>
+                        <Column field="name" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} sortable body={countryNameBodyTemplate}></Column>
+                        <Column field="country_code" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} body={countryCodeBodyTemplate} sortable></Column>
+                        <Column field="currency" header={t('COUNTRY.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
+                        <Column field="language" header={t('COUNTRY.TABLE.COLUMN.LANGUAGE')} body={languageBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
@@ -293,7 +296,7 @@ const CountryPage = () => {
                             }))}
                         />
                         <div className="field">
-                            <label htmlFor="country_name">Country Name</label>
+                            <label htmlFor="country_name">{t('COUNTRY.FORM.INPUT.COUNTRYNAME')}</label>
                             <InputText
                                 id="country_name"
                                 value={country.country_name}
@@ -305,6 +308,7 @@ const CountryPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('COUNTRY.FORM.PLACEHOLDER.COUNTRYNAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !country.country_name
                                 })}
@@ -313,7 +317,7 @@ const CountryPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="country_telecom_code">Country Code</label>
+                            <label htmlFor="country_telecom_code">{t('COUNTRY.FORM.INPUT.COUNTRYTELECOMCODE')}</label>
                             <InputText
                                 id="country_telecom_code"
                                 value={country.country_telecom_code}
@@ -325,6 +329,7 @@ const CountryPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('COUNTRY.FORM.PLACEHOLDER.COUNTRYTELECOMCODE')}
                                 className={classNames({
                                     'p-invalid': submitted && !country.country_telecom_code
                                 })}
@@ -333,7 +338,7 @@ const CountryPage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="phone_number_length">Phone Number Length</label>
+                            <label htmlFor="phone_number_length">{t('COUNTRY.FORM.INPUT.PHONENUMBERLENGTH')}</label>
                             <InputText
                                 id="phone_number_length"
                                 value={country.phone_number_length}
@@ -345,6 +350,7 @@ const CountryPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('COUNTRY.FORM.PLACEHOLDER.PHONENUMBERLENGTH')}
                                 className={classNames({
                                     'p-invalid': submitted && !country.phone_number_length
                                 })}
@@ -353,7 +359,7 @@ const CountryPage = () => {
                         </div>
 
                         <div className="field col">
-                                <label htmlFor="currency">Currency</label>
+                                <label htmlFor="currency">{t('COUNTRY.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
                                     id="currency"
                                     value={country.currency}
@@ -366,7 +372,7 @@ const CountryPage = () => {
                                         }))
                                     }
                                     optionLabel='name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a currency"
                                     className="w-full"
                                 />
@@ -374,20 +380,20 @@ const CountryPage = () => {
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="language">Language</label>
+                                <label htmlFor="language">{t('COUNTRY.FORM.INPUT.LANGUAGE')}</label>
                                 <Dropdown
                                     id="language"
-                                    value={country.language_id}
+                                    value={country.language}
                                     options={languages}
                                     onChange={(e) =>
                                         setCountry((perv) => ({
 
                                             ...perv,
-                                            language_id: e.value,
+                                            language: e.value,
                                         }))
                                     }
                                     optionLabel='language_name'
-                                    optionValue='id'
+                                    // optionValue='id'
                                     placeholder="Choose a language"
                                     className="w-full"
                                 />
@@ -395,7 +401,7 @@ const CountryPage = () => {
                             </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCountryDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCountryDialogFooter} onHide={hideDeleteCountryDialog}>
+                    <Dialog visible={deleteCountryDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCountryDialogFooter} onHide={hideDeleteCountryDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {country && (
@@ -406,7 +412,7 @@ const CountryPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteCountrysDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCountrysDialog}>
+                    <Dialog visible={deleteCountrysDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteCountrysDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {country && <span>Are you sure you want to delete the selected companies?</span>}
@@ -418,4 +424,4 @@ const CountryPage = () => {
     );
 };
 
-export default CountryPage;
+export default withAuth(CountryPage);

@@ -18,6 +18,8 @@ import { AppDispatch } from '@/app/redux/store';
 import {Supplier } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addSupplier, _deleteSupplier, _editSupplier, _fetchSuppliers } from '@/app/redux/actions/supplierActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const SupplierPage = () => {
 
@@ -43,6 +45,7 @@ const SupplierPage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {suppliers,loading}=useSelector((state:any)=>state.suppliersReducer)
+    const {t}=useTranslation()
 
     useEffect(()=>{
         dispatch(_fetchSuppliers())
@@ -116,7 +119,7 @@ const SupplierPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('SUPPLIER.TABLE.CREATESUPPLIER')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -128,7 +131,7 @@ const SupplierPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -217,20 +220,20 @@ const SupplierPage = () => {
 
     const supplierDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveSupplier} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveSupplier} />
         </>
     );
     const deleteSupplierDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteSupplierDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteSupplier} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteSupplierDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteSupplier} />
         </>
     );
     const deleteSuppliersDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteSuppliersDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteSuppliersDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -263,17 +266,17 @@ const SupplierPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                        <Column field="Contact Details" header="Contact Details" body={contactDetailsBodyTemplate} sortable></Column>
-                        <Column field="Address" header="Address" body={addressBodyTemplate} sortable></Column>
-                        <Column header="Status" body={statusBodyTemplate}></Column>
+                        <Column field="name" header={t('SUPPLIER.TABLE.COLUMN.SUPPLIERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column field="Contact Details" header={t('SUPPLIER.TABLE.COLUMN.CONTACTDETAILS')} body={contactDetailsBodyTemplate} sortable></Column>
+                        <Column field="Address" header={t('SUPPLIER.TABLE.COLUMN.ADDRESS')} body={addressBodyTemplate} sortable></Column>
+                        <Column header={t('SUPPLIER.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={supplierDialog}  style={{ width: '550px' }} header="Supplier Details" modal className="p-fluid" footer={supplierDialogFooter} onHide={hideDialog}>
 
                         <div className="field">
-                            <label htmlFor="name">Name</label>
+                            <label htmlFor="name">{t('SUPPLIER.FORM.INPUT.SUPPLIERNAME')}</label>
                             <InputText
                                 id="supplier_name"
                                 value={supplier?.supplier_name}
@@ -285,6 +288,7 @@ const SupplierPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('SUPPLIER.FORM.PLACEHOLDER.SUPPLIERNAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !supplier.supplier_name
                                 })}
@@ -296,7 +300,7 @@ const SupplierPage = () => {
 
 
                         <div className="field">
-                            <label htmlFor="telegram_chat_id">Contact Details</label>
+                            <label htmlFor="telegram_chat_id">{t('SUPPLIER.FORM.INPUT.CONTACTDETAILS')}</label>
                             <InputText
                                 id="contact_details"
                                 value={supplier.contact_details || ''}
@@ -306,14 +310,14 @@ const SupplierPage = () => {
                                         contact_details: e.target.value,
                                     }))
                                 }
-                                placeholder="Contact details"
+                                placeholder={t('SUPPLIER.FORM.PLACEHOLDER.CONTACTDETAILS')}
                                 className="w-full p-2 border rounded"
 
                             />
                         </div>
 
                         <div className="field">
-                            <label htmlFor="address">Address</label>
+                            <label htmlFor="address">{t('SUPPLIER.FORM.INPUT.ADDRESS')}</label>
                             <InputText
                                 id="address"
                                 value={supplier.address || ''}
@@ -323,14 +327,14 @@ const SupplierPage = () => {
                                         address: e.target.value,
                                     }))
                                 }
-                                placeholder="Address"
+                                placeholder={t('SUPPLIER.FORM.PLACEHOLDER.ADDRESS')}
                                 className="w-full p-2 border rounded"
 
                             />
                         </div>
 
                         <div className="field">
-                            <label htmlFor="status">Status</label>
+                            <label htmlFor="status">{t('SUPPLIER.FORM.INPUT.STATUS')}</label>
                             <Dropdown
                                 id="status"
                                 value={supplier.status}
@@ -346,7 +350,7 @@ const SupplierPage = () => {
                                 }
                                 optionLabel="label"
                                 optionValue="value"
-                                placeholder="Choose a status"
+                                placeholder={t('SUPPLIER.FORM.PLACEHOLDER.STATUS')}
                                 className="w-full"
                             />
                         </div>
@@ -354,7 +358,7 @@ const SupplierPage = () => {
 
                     </Dialog>
 
-                    <Dialog visible={deleteSupplierDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteSupplierDialogFooter} onHide={hideDeleteSupplierDialog}>
+                    <Dialog visible={deleteSupplierDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteSupplierDialogFooter} onHide={hideDeleteSupplierDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {supplier && (
@@ -365,7 +369,7 @@ const SupplierPage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteSuppliersDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteSuppliersDialogFooter} onHide={hideDeleteSuppliersDialog}>
+                    <Dialog visible={deleteSuppliersDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteSuppliersDialogFooter} onHide={hideDeleteSuppliersDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {supplier && <span>Are you sure you want to delete the selected companies?</span>}
@@ -377,4 +381,4 @@ const SupplierPage = () => {
     );
 };
 
-export default SupplierPage;
+export default withAuth(SupplierPage);

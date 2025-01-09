@@ -18,6 +18,8 @@ import { AppDispatch } from '@/app/redux/store';
 import { Language } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addLanguage, _deleteLanguage, _editLanguage, _fetchLanguages } from '@/app/redux/actions/languageActions';
+import withAuth from '../../authGuard';
+import { useTranslation } from 'react-i18next';
 
 const LanguagePage = () => {
 
@@ -43,6 +45,8 @@ const LanguagePage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {languages,loading}=useSelector((state:any)=>state.languageReducer)
+    const {t}=useTranslation()
+
 
 
     useEffect(()=>{
@@ -115,7 +119,7 @@ const LanguagePage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                    <Button label={t('LANGUAGE.TABLE.CREATELANGUAGE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
@@ -127,7 +131,7 @@ const LanguagePage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
             </span>
             </React.Fragment>
         );
@@ -188,20 +192,20 @@ const LanguagePage = () => {
 
     const languageDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveLanguage} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveLanguage} />
         </>
     );
     const deleteLanguageDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteLanguageDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteLanguage} />
+            <Button label={t('APP.GENERAL.CANCEL')}  icon="pi pi-times" text onClick={hideDeleteLanguageDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteLanguage} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteLanguagesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteLanguagesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
         </>
     );
 
@@ -234,15 +238,15 @@ const LanguagePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Language" sortable body={languageNameBodyTemplate}></Column>
-                        <Column field="language_code" header="Language Code" body={languageCodeBodyTemplate} sortable></Column>
-                        <Column field="direction" header="Direction" sortable body={directionBodyTemplate} ></Column>
+                        <Column field="name" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGENAME')} sortable body={languageNameBodyTemplate}></Column>
+                        <Column field="language_code" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGECODE')} body={languageCodeBodyTemplate} sortable></Column>
+                        <Column field="direction" header={t('LANGUAGE.TABLE.COLUMN.DIRECTION')} sortable body={directionBodyTemplate} ></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={languageDialog}  style={{ width: '550px' }} header="Language Details" modal className="p-fluid" footer={languageDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="language_name">Language Name</label>
+                            <label htmlFor="language_name">{t('LANGUAGE.FORM.INPUT.LANGUAGENAME')}</label>
                             <InputText
                                 id="language_name"
                                 value={language.language_name}
@@ -254,6 +258,7 @@ const LanguagePage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('LANGUAGE.FORM.PLACEHOLDER.LANGUAGENAME')}
                                 className={classNames({
                                     'p-invalid': submitted && !language.language_name
                                 })}
@@ -262,7 +267,7 @@ const LanguagePage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="language_code">Language Code</label>
+                            <label htmlFor="language_code">{t('LANGUAGE.FORM.INPUT.LANGUAGECODE')}</label>
                             <InputText
                                 id="language_code"
                                 value={language.language_code}
@@ -274,6 +279,7 @@ const LanguagePage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('LANGUAGE.FORM.PLACEHOLDER.LANGUAGECODE')}
                                 className={classNames({
                                     'p-invalid': submitted && !language.language_code
                                 })}
@@ -282,7 +288,7 @@ const LanguagePage = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="status">Direction</label>
+                            <label htmlFor="status">{t('LANGUAGE.TABLE.COLUMN.DIRECTION')}</label>
                             <Dropdown
                                 id="direction"
                                 value={language.direction}
@@ -298,13 +304,13 @@ const LanguagePage = () => {
                                 }
                                 optionLabel="label"
                                 optionValue="value"
-                                placeholder="Choose a direction"
+                                placeholder={t('LANGUAGE.TABLE.COLUMN.DIRECTION')}
                                 className="w-full"
                             />
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteLanguageDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteLanguageDialogFooter} onHide={hideDeleteLanguageDialog}>
+                    <Dialog visible={deleteLanguageDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteLanguageDialogFooter} onHide={hideDeleteLanguageDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {language && (
@@ -315,7 +321,7 @@ const LanguagePage = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteLanguagesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteLanguagesDialog}>
+                    <Dialog visible={deleteLanguagesDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteLanguagesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {language && <span>Are you sure you want to delete the selected companies?</span>}
@@ -327,4 +333,4 @@ const LanguagePage = () => {
     );
 };
 
-export default LanguagePage;
+export default withAuth(LanguagePage);
