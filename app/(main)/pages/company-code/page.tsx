@@ -121,7 +121,7 @@ const CompanyCodePage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2    ">
                     <Button label={t('COMPANYCODE.TABLE.CREATECOMPANYCODE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -131,12 +131,17 @@ const CompanyCodePage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -204,20 +209,20 @@ const CompanyCodePage = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCompanyCode} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveCompanyCode} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompanyCodeDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCompanyCode} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCompanyCodeDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteCompanyCode} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompanyCodesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCompanyCodesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -257,50 +262,52 @@ const CompanyCodePage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={companyCodeDialog}  style={{ width: '550px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
-                        <div className="field">
-                            <label htmlFor="name">{t('COMPANYCODE.FORM.INPUT.RESERVEDDIGIT')}</label>
-                            <InputText
-                                id="reserved_digit"
-                                value={companyCode?.reserved_digit}
-                                onChange={(e) =>
-                                    setCompanyCode((prevCompanyCode) => ({
-                                        ...prevCompanyCode,
-                                        reserved_digit: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.RESERVEDDIGIT')}
-                                className={classNames({
-                                    'p-invalid': submitted && !companyCode.reserved_digit
-                                })}
-                            />
-                            {submitted && !companyCode.reserved_digit && <small className="p-invalid">Reserved Digit is required.</small>}
-                        </div>
-
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="company">{t('COMPANYCODE.FORM.INPUT.COMPANYNAME')}</label>
-                                <Dropdown
-                                    id="company"
-                                    value={companyCode.company}
-                                    options={companies}
+                    <Dialog visible={companyCodeDialog}  style={{ width: '700px',padding:'5px' }} header={t('MENU.COMPANYCODE')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}>
+                            <div className="field">
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('COMPANYCODE.FORM.INPUT.RESERVEDDIGIT')}</label>
+                                <InputText
+                                    id="reserved_digit"
+                                    value={companyCode?.reserved_digit}
                                     onChange={(e) =>
                                         setCompanyCode((prevCompanyCode) => ({
-
                                             ...prevCompanyCode,
-                                            company: e.value,
+                                            reserved_digit: e.target.value,
                                         }))
                                     }
-                                    optionLabel='company_name'
-
-                                    placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.COMPANYNAME')}
-                                    className="w-full"
+                                    required
+                                    autoFocus
+                                    placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.RESERVEDDIGIT')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !companyCode.reserved_digit
+                                    })}
                                 />
-
+                                {submitted && !companyCode.reserved_digit && <small className="p-invalid" style={{ color: 'red' }}>Reserved Digit is required.</small>}
                             </div>
 
+                            <div className="formgrid grid">
+                                <div className="field col">
+                                    <label htmlFor="company" style={{fontWeight:'bold'}}>{t('COMPANYCODE.FORM.INPUT.COMPANYNAME')}</label>
+                                    <Dropdown
+                                        id="company"
+                                        value={companyCode.company}
+                                        options={companies}
+                                        onChange={(e) =>
+                                            setCompanyCode((prevCompanyCode) => ({
+
+                                                ...prevCompanyCode,
+                                                company: e.value,
+                                            }))
+                                        }
+                                        optionLabel='company_name'
+
+                                        placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.COMPANYNAME')}
+                                        className="w-full"
+                                    />
+
+                                </div>
+
+                            </div>
                         </div>
                     </Dialog>
 

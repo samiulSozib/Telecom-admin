@@ -120,7 +120,7 @@ const ProvincePage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('PROVINCE.TABLE.CREATEPROVINCE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -130,12 +130,17 @@ const ProvincePage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -187,20 +192,20 @@ const ProvincePage = () => {
 
     const provinceDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveProvince} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveProvince} />
         </>
     );
     const deleteProvinceDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteProvinceDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteProvince} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteProvinceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteProvince} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteProvincesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteProvincesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -238,50 +243,50 @@ const ProvincePage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={provinceDialog}  style={{ width: '550px' }} header="Province Details" modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>
-                        <div className="field">
-                            <label htmlFor="province_name">{t('PROVINCE.FORM.INPUT.PROVINCENAME')}</label>
-                            <InputText
-                                id="province_name"
-                                value={province.province_name}
-                                onChange={(e) =>
-                                    setProvince((prevProvince) => ({
-                                        ...prevProvince,
-                                        province_name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('PROVINCE.FORM.PLACEHOLDER.PROVINCENAME')}
-                                className={classNames({
-                                    'p-invalid': submitted && !province.province_name
-                                })}
-                            />
-                            {submitted && !province.province_name && <small className="p-invalid">Province Name is required.</small>}
-                        </div>
-
-
-
-                        <div className="field col">
-                                <label htmlFor="country_id">{t('PROVINCE.FORM.INPUT.COUNTRY')}</label>
-                                <Dropdown
-                                    id="country"
-                                    value={province.country}
-                                    options={countries}
+                    <Dialog visible={provinceDialog}  style={{ width: '700px',padding:'5px' }} header="Province Details" modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:"40px"}}>
+                            <div className="field">
+                                <label htmlFor="province_name" style={{fontWeight:'bold'}}>{t('PROVINCE.FORM.INPUT.PROVINCENAME')}</label>
+                                <InputText
+                                    id="province_name"
+                                    value={province.province_name}
                                     onChange={(e) =>
-                                        setProvince((prev) => ({
-
-                                            ...prev,
-                                            country: e.value,
+                                        setProvince((prevProvince) => ({
+                                            ...prevProvince,
+                                            province_name: e.target.value,
                                         }))
                                     }
-                                    optionLabel='country_name'
-                                    // optionValue='id'
-                                    placeholder={t('PROVINCE.FORM.PLACEHOLDER.COUNTRY')}
-                                    className="w-full"
+                                    required
+                                    autoFocus
+                                    placeholder={t('PROVINCE.FORM.PLACEHOLDER.PROVINCENAME')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !province.province_name
+                                    })}
                                 />
+                                {submitted && !province.province_name && <small className="p-invalid" style={{ color: 'red' }}>Province Name is required.</small>}
+                            </div>
+
+                            <div className="field col">
+                                    <label htmlFor="country_id" style={{fontWeight:'bold'}}>{t('PROVINCE.FORM.INPUT.COUNTRY')}</label>
+                                    <Dropdown
+                                        id="country"
+                                        value={province.country}
+                                        options={countries}
+                                        onChange={(e) =>
+                                            setProvince((prev) => ({
+
+                                                ...prev,
+                                                country: e.value,
+                                            }))
+                                        }
+                                        optionLabel='country_name'
+                                        // optionValue='id'
+                                        placeholder={t('PROVINCE.FORM.PLACEHOLDER.COUNTRY')}
+                                        className="w-full"
+                                    />
 
                             </div>
+                        </div>
                     </Dialog>
 
                     <Dialog visible={deleteProvinceDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteProvinceDialogFooter} onHide={hideDeleteProvinceDialog}>

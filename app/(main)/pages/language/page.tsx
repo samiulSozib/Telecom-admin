@@ -118,7 +118,7 @@ const LanguagePage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('LANGUAGE.TABLE.CREATELANGUAGE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -128,12 +128,17 @@ const LanguagePage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -192,20 +197,20 @@ const LanguagePage = () => {
 
     const languageDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveLanguage} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveLanguage} />
         </>
     );
     const deleteLanguageDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')}  icon="pi pi-times" text onClick={hideDeleteLanguageDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteLanguage} />
+            <Button label={t('APP.GENERAL.CANCEL')}  icon="pi pi-times" severity="danger" onClick={hideDeleteLanguageDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteLanguage} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteLanguagesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteLanguagesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -244,9 +249,10 @@ const LanguagePage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={languageDialog}  style={{ width: '550px' }} header="Language Details" modal className="p-fluid" footer={languageDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={languageDialog}  style={{ width: '700px',padding:'5px' }} header="Language Details" modal className="p-fluid" footer={languageDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:"40px"}}>
                         <div className="field">
-                            <label htmlFor="language_name">{t('LANGUAGE.FORM.INPUT.LANGUAGENAME')}</label>
+                            <label htmlFor="language_name" style={{fontWeight:'bold'}}>{t('LANGUAGE.FORM.INPUT.LANGUAGENAME')}</label>
                             <InputText
                                 id="language_name"
                                 value={language.language_name}
@@ -263,11 +269,11 @@ const LanguagePage = () => {
                                     'p-invalid': submitted && !language.language_name
                                 })}
                             />
-                            {submitted && !language.language_name && <small className="p-invalid">Language Name is required.</small>}
+                            {submitted && !language.language_name && <small className="p-invalid" style={{ color: 'red' }}>Language Name is required.</small>}
                         </div>
 
                         <div className="field">
-                            <label htmlFor="language_code">{t('LANGUAGE.FORM.INPUT.LANGUAGECODE')}</label>
+                            <label htmlFor="language_code" style={{fontWeight:'bold'}}>{t('LANGUAGE.FORM.INPUT.LANGUAGECODE')}</label>
                             <InputText
                                 id="language_code"
                                 value={language.language_code}
@@ -284,11 +290,11 @@ const LanguagePage = () => {
                                     'p-invalid': submitted && !language.language_code
                                 })}
                             />
-                            {submitted && !language.language_code && <small className="p-invalid">Language Code is required.</small>}
+                            {submitted && !language.language_code && <small className="p-invalid" style={{ color: 'red' }}>Language Code is required.</small>}
                         </div>
 
                         <div className="field">
-                            <label htmlFor="status">{t('LANGUAGE.TABLE.COLUMN.DIRECTION')}</label>
+                            <label htmlFor="status" style={{fontWeight:'bold'}}>{t('LANGUAGE.TABLE.COLUMN.DIRECTION')}</label>
                             <Dropdown
                                 id="direction"
                                 value={language.direction}
@@ -307,6 +313,7 @@ const LanguagePage = () => {
                                 placeholder={t('LANGUAGE.TABLE.COLUMN.DIRECTION')}
                                 className="w-full"
                             />
+                        </div>
                         </div>
                     </Dialog>
 

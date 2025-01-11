@@ -24,6 +24,7 @@ import { rolesReducer } from '../../../redux/reducers/rolesReducer';
 import { permissionsReducer } from '../../../redux/reducers/permissionReducer';
 import { _fetchPermissions } from '@/app/redux/actions/permissionActions';
 import { Checkbox } from 'primereact/checkbox';
+import { useTranslation } from 'react-i18next';
 
 const RolesPage = () => {
 
@@ -50,6 +51,7 @@ const RolesPage = () => {
     const {roles,loading,singleRole}=useSelector((state:any)=>state.rolesReducer)
     const {permissions}=useSelector((state:any)=>state.permissionsReducer)
     const [selectedPermissions, setSelectedPermissions] = useState<Permission[]>([]);
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -146,7 +148,7 @@ const RolesPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -156,12 +158,17 @@ const RolesPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -213,20 +220,20 @@ const RolesPage = () => {
 
     const roleDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveRole} />
+            <Button label="Cancel" icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" severity="success" onClick={saveRole} />
         </>
     );
     const deleteRoleDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteRoleDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteRole} />
+            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteRoleDialog} />
+            <Button label="Yes" icon="pi pi-check" severity="success" onClick={deleteRole} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteRolesDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteRolesDialog} />
+            <Button label="Yes" icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -291,7 +298,7 @@ const RolesPage = () => {
                         visible={roleDialog}
                         style={{
                             width: "90vw",
-                            maxWidth: "800px",
+                            maxWidth: "900px",
                             borderRadius: "10px",
                             padding: "1rem",
                             margin:'5px'

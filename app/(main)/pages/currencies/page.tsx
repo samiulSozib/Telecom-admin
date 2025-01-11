@@ -77,6 +77,14 @@ const CurrencyPage = () => {
 
     const saveCurrency = () => {
         setSubmitted(true);
+        if (!currency.name || currency.name.length === 0 ||
+            !currency.code || currency.code.length === 0 ||
+            !currency.symbol || currency.symbol.length === 0 ||
+            !currency.exchange_rate_per_usd || currency.exchange_rate_per_usd.length === 0) {
+
+            // Don't proceed if any field is invalid
+            return;
+        }
         if (currency.id && currency.id !== 0) {
             dispatch(_editCurrency(currency.id,currency,toast));
 
@@ -119,7 +127,7 @@ const CurrencyPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('CURRENCY.TABLE.CREATECURRENCY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -129,12 +137,17 @@ const CurrencyPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -188,20 +201,20 @@ const CurrencyPage = () => {
 
     const currencyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCurrency} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveCurrency} />
         </>
     );
     const deleteCurrencyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCurrencyDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCurrency} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCurrencyDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteCurrency} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCurrencysDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCurrencysDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -240,91 +253,106 @@ const CurrencyPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={currencyDialog}  style={{ width: '550px' }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
-                        <div className="field">
-                            <label htmlFor="name">{t('CURRENCY.FORM.INPUT.CURRENCYNAME')}</label>
-                            <InputText
-                                id="name"
-                                value={currency.name}
-                                onChange={(e) =>
-                                    setCurrency((prevCurrency) => ({
-                                        ...prevCurrency,
-                                        name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.CURRENCYNAME')}
-                                className={classNames({
-                                    'p-invalid': submitted && !currency.name
-                                })}
-                            />
-                            {submitted && !currency.name && <small className="p-invalid">Currency Name is required.</small>}
-                        </div>
+                    <Dialog visible={currencyDialog}  style={{ width: '900px',padding:"5px" }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:"40px"}}>
+                            <div className="field">
+                                <small className="p-text-muted" style={{fontSize:'14px', fontWeight:'bold', display: 'block', marginBottom: '10px' }}>
+                                    <b>Hints:</b><br />
+                                    <hr />
+                                    AFN, IRR, INR, PKR: ؋, ﷼, ₹, Rs
+                                    USD: $, EUR: €, JPY: ¥, GBP: £
+                                    AUD, CAD: $, CHF: Fr, CNY: ¥
+                                    SEK: kr, NZD: $, MXN: $, SGD, HKD: $, NOK: kr
+                                    KRW: ₩, TRY: ₺, BRL: R$, ZAR: R
+                                </small>
+                            </div>
+                            <div className="field">
+                                <label htmlFor="name" style={{ fontWeight: 'bold' }}>{t('CURRENCY.FORM.INPUT.CURRENCYNAME')}</label>
+                                <InputText
+                                    id="name"
+                                    value={currency.name}
+                                    onChange={(e) =>
+                                        setCurrency((prevCurrency) => ({
+                                            ...prevCurrency,
+                                            name: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    placeholder={t('CURRENCY.FORM.PLACEHOLDER.CURRENCYNAME')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !currency.name
+                                    })}
+                                />
+                                {submitted && !currency.name && <small className="p-invalid" style={{ color: 'red' }}>Currency Name is required.</small>}
 
-                        <div className="field">
-                            <label htmlFor="code">{t('CURRENCY.FORM.INPUT.CURRENCYCODE')}</label>
-                            <InputText
-                                id="code"
-                                value={currency.code}
-                                onChange={(e) =>
-                                    setCurrency((prevCurrency) => ({
-                                        ...prevCurrency,
-                                        code: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.CURRENCYCODE')}
-                                className={classNames({
-                                    'p-invalid': submitted && !currency.code
-                                })}
-                            />
-                            {submitted && !currency.code && <small className="p-invalid">Code is required.</small>}
-                        </div>
+                            </div>
 
-                        <div className="field">
-                            <label htmlFor="symbol">{t('CURRENCY.FORM.INPUT.SYMBOL')}</label>
-                            <InputText
-                                id="symbol"
-                                value={currency.symbol}
-                                onChange={(e) =>
-                                    setCurrency((prevCurrency) => ({
-                                        ...prevCurrency,
-                                        symbol: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.SYMBOL')}
-                                className={classNames({
-                                    'p-invalid': submitted && !currency.symbol
-                                })}
-                            />
-                            {submitted && !currency.symbol && <small className="p-invalid">Symbol is required.</small>}
-                        </div>
+                            <div className="field">
+                                <label htmlFor="code" style={{ fontWeight: 'bold' }}>{t('CURRENCY.FORM.INPUT.CURRENCYCODE')}</label>
+                                <InputText
+                                    id="code"
+                                    value={currency.code}
+                                    onChange={(e) =>
+                                        setCurrency((prevCurrency) => ({
+                                            ...prevCurrency,
+                                            code: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    placeholder={t('CURRENCY.FORM.PLACEHOLDER.CURRENCYCODE')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !currency.code
+                                    })}
+                                />
+                                {submitted && !currency.code && <small className="p-invalid" style={{ color: 'red' }}>Code is required.</small>}
+                            </div>
 
-                        <div className="field">
-                            <label htmlFor="exchange_rate_per_usd">{t('CURRENCY.FORM.INPUT.EXCHANGERATE')}</label>
-                            <InputText
-                                id="exchange_rate_per_usd"
-                                value={currency.exchange_rate_per_usd}
-                                onChange={(e) =>
-                                    setCurrency((prevCurrency) => ({
-                                        ...prevCurrency,
-                                        exchange_rate_per_usd: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('CURRENCY.FORM.PLACEHOLDER.EXCHANGERATE')}
-                                className={classNames({
-                                    'p-invalid': submitted && !currency.exchange_rate_per_usd
-                                })}
-                            />
-                            {submitted && !currency.exchange_rate_per_usd && <small className="p-invalid">Exchange Rate is required.</small>}
-                        </div>
+                            <div className="field">
+                                <label htmlFor="symbol" style={{ fontWeight: 'bold' }}>{t('CURRENCY.FORM.INPUT.SYMBOL')}</label>
+                                <InputText
+                                    id="symbol"
+                                    value={currency.symbol}
+                                    onChange={(e) =>
+                                        setCurrency((prevCurrency) => ({
+                                            ...prevCurrency,
+                                            symbol: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    placeholder={t('CURRENCY.FORM.PLACEHOLDER.SYMBOL')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !currency.symbol
+                                    })}
+                                />
+                                {submitted && !currency.symbol && <small className="p-invalid" style={{ color: 'red' }}>Symbol is required.</small>}
 
+
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="exchange_rate_per_usd" style={{ fontWeight: 'bold' }}>{t('CURRENCY.FORM.INPUT.EXCHANGERATE')}</label>
+                                <InputText
+                                    id="exchange_rate_per_usd"
+                                    value={currency.exchange_rate_per_usd}
+                                    onChange={(e) =>
+                                        setCurrency((prevCurrency) => ({
+                                            ...prevCurrency,
+                                            exchange_rate_per_usd: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    placeholder={t('CURRENCY.FORM.PLACEHOLDER.EXCHANGERATE')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !currency.exchange_rate_per_usd
+                                    })}
+                                />
+                                {submitted && !currency.exchange_rate_per_usd && <small className="p-invalid" style={{ color: 'red' }}>Exchange Rate is required.</small>}
+                            </div>
+                        </div>
 
 
                     </Dialog>

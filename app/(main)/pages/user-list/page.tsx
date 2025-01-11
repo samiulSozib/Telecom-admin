@@ -23,6 +23,7 @@ import { _addUser, _deleteUser, _editUser, _fetchUserList } from '@/app/redux/ac
 import { userReducer } from '../../../redux/reducers/userListReducer';
 import { rolesReducer } from '../../../redux/reducers/rolesReducer';
 import { _fetchRoleList } from '@/app/redux/actions/rolesActions';
+import { useTranslation } from 'react-i18next';
 
 const UserListGroupPage = () => {
 
@@ -62,6 +63,7 @@ const UserListGroupPage = () => {
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
     const {roles}=useSelector((state:any)=>state.rolesReducer)
     const {users,loading}=useSelector((state:any)=>state.userReducer)
+    const {t}=useTranslation()
 
 
 
@@ -136,7 +138,7 @@ const UserListGroupPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -146,12 +148,17 @@ const UserListGroupPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -225,20 +232,20 @@ const UserListGroupPage = () => {
 
     const userListDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveUserList} />
+            <Button label="Cancel" icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" severity="success" onClick={saveUserList} />
         </>
     );
     const deleteUserListDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteUserListDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteUserList} />
+            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteUserListDialog} />
+            <Button label="Yes" icon="pi pi-check" severity="success" onClick={deleteUserList} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteUserListsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteUserListsDialog} />
+            <Button label="Yes" icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -279,11 +286,11 @@ const UserListGroupPage = () => {
                     </DataTable>
 
 
-                    <Dialog visible={userListDialog}  style={{ width: '750px' }} header="User Details" modal className="p-fluid" footer={userListDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={userListDialog}  style={{ width: '900px' }} header="User Details" modal className="p-fluid" footer={userListDialogFooter} onHide={hideDialog}>
                         <div className="card flex flex-column md:flex-row gap-3">
                             <div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">First Name</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>First Name</label>
                                     <InputText
                                         id="name"
                                         value={user.name}
@@ -302,7 +309,7 @@ const UserListGroupPage = () => {
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">Email</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Email</label>
                                     <InputText
                                         id="discount_value"
                                         value={user.email}
@@ -321,7 +328,7 @@ const UserListGroupPage = () => {
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">Password</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Password</label>
                                     <InputText
                                         id="sub_reseller_limit"
                                         value={user.password}
@@ -340,7 +347,7 @@ const UserListGroupPage = () => {
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">Confirm Password</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Confirm Password</label>
                                     <InputText
                                         id="sub_reseller_limit"
                                         value={user.confirm_password}
@@ -363,7 +370,7 @@ const UserListGroupPage = () => {
                             <br />
                             <div>
                             <div className="field col flex-1">
-                                    <label htmlFor="supplier">Phone Number</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Phone Number</label>
                                     <InputText
                                         id="phone"
                                         //value={user.phone.toString()}
@@ -381,7 +388,7 @@ const UserListGroupPage = () => {
                                     />
                                 </div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="discount_type">Role</label>
+                                    <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Role</label>
                                     <Dropdown
                                         id="discount_type"
                                         value={user.roles}
@@ -400,7 +407,7 @@ const UserListGroupPage = () => {
                                     />
                                 </div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="status">Currency</label>
+                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Currency</label>
                                     <Dropdown
                                         id="currency_preference_id"
                                         value={user.currency_preference_id}

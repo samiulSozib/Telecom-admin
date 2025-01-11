@@ -134,7 +134,7 @@ const PurchasedProductPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('PURCHASEDPRODUCT.TABLE.CREATEPURCHASEDPRODUCT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -144,12 +144,17 @@ const PurchasedProductPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -257,20 +262,20 @@ const PurchasedProductPage = () => {
 
     const purchasedProductDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={savePurchasedProduct} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={savePurchasedProduct} />
         </>
     );
     const deletePurchasedProductDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePurchasedProductDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deletePurchasedProduct} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeletePurchasedProductDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deletePurchasedProduct} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePurchasedProductsDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeletePurchasedProductsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -312,11 +317,11 @@ const PurchasedProductPage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={purchasedProductDialog}  style={{ width: '750px' }} header="Purchased Product Details" modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={purchasedProductDialog}  style={{ width: '900px' }} header="Purchased Product Details" modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
                     <div className="card flex flex-column md:flex-row gap-3">
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="supplier">{t('PURCHASEDPRODUCT.FORM.INPUT.SUPPLIER')}</label>
+                                <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.SUPPLIER')}</label>
                                 <Dropdown
                                     id="supplier"
                                     value={purchasedProduct.supplier}
@@ -336,7 +341,7 @@ const PurchasedProductPage = () => {
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="product_name">{t('PURCHASEDPRODUCT.FORM.INPUT.PRODUCTNAME')}</label>
+                                <label htmlFor="product_name" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.PRODUCTNAME')}</label>
                                 <InputText
                                     id="product_name"
                                     value={purchasedProduct.product_name}
@@ -352,10 +357,10 @@ const PurchasedProductPage = () => {
                                         'p-invalid': submitted && !purchasedProduct.product_name
                                     })}
                                 />
-                                {submitted && !purchasedProduct.product_name && <small className="p-invalid">Product Name is required.</small>}
+                                {submitted && !purchasedProduct.product_name && <small className="p-invalid" style={{ color: 'red' }}>Product Name is required.</small>}
                             </div>
                             <div className="field col flex-1">
-                                <label htmlFor="purchase_price">{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEPRICE')}</label>
+                                <label htmlFor="purchase_price" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEPRICE')}</label>
                                 <InputText
                                     id="purchase_price"
                                     value={purchasedProduct.purchase_price}
@@ -371,10 +376,10 @@ const PurchasedProductPage = () => {
                                         'p-invalid': submitted && !purchasedProduct.purchase_price
                                     })}
                                 />
-                                {submitted && !purchasedProduct.purchase_price && <small className="p-invalid">Purchase Price is required.</small>}
+                                {submitted && !purchasedProduct.purchase_price && <small className="p-invalid" style={{ color: 'red' }}>Purchase Price is required.</small>}
                             </div>
                             <div className="field">
-                                <label htmlFor="status">{t('PURCHASEDPRODUCT.FORM.INPUT.STATUS')}</label>
+                                <label htmlFor="status" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.STATUS')}</label>
                                 <Dropdown
                                     id="status"
                                     value={purchasedProduct.status}
@@ -399,7 +404,7 @@ const PurchasedProductPage = () => {
                         <br />
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="service">{t('PURCHASEDPRODUCT.FORM.INPUT.SERVICE')}</label>
+                                <label htmlFor="service" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.SERVICE')}</label>
                                 <Dropdown
                                     id="service"
                                     value={purchasedProduct.service}
@@ -425,7 +430,7 @@ const PurchasedProductPage = () => {
 
 
                             <div className="field col flex-1">
-                                <label htmlFor="purchasedProduct_date">{t('PURCHASEDPRODUCT.FORM.INPUT.QUANTITY')}</label>
+                                <label htmlFor="purchasedProduct_date" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.QUANTITY')}</label>
                                 <InputText
                                     id="quantity"
                                     value={purchasedProduct.quantity.toString()}
@@ -444,7 +449,7 @@ const PurchasedProductPage = () => {
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="purchase_date">{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEDATE')}</label>
+                                <label htmlFor="purchase_date" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEDATE')}</label>
                                 <InputText
                                     id="purchase_date"
                                     value={purchasedProduct.purchase_date}

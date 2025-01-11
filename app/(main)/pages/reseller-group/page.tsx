@@ -22,6 +22,7 @@ import { _fetchLanguages } from '@/app/redux/actions/languageActions';
 import { FileUpload } from 'primereact/fileupload';
 import { resellerGroupReducer } from '../../../redux/reducers/resellerGroupReducer';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { useTranslation } from 'react-i18next';
 
 const ResellerGroupPage = () => {
 
@@ -55,6 +56,7 @@ const ResellerGroupPage = () => {
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
     const {languages}=useSelector((state:any)=>state.languageReducer)
     const {reseller_groups}=useSelector((state:any)=>state.resellerGroupReducer)
+    const {t}=useTranslation()
 
 
     useEffect(()=>{
@@ -127,7 +129,7 @@ const ResellerGroupPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -137,12 +139,17 @@ const ResellerGroupPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -247,20 +254,20 @@ const ResellerGroupPage = () => {
 
     const resellerGroupDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveResellerGroup} />
+            <Button label="Cancel" icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" severity="success" onClick={saveResellerGroup} />
         </>
     );
     const deleteResellerGroupDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteResellerGroupDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteResellerGroup} />
+            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteResellerGroupDialog} />
+            <Button label="Yes" icon="pi pi-check" severity="success" onClick={deleteResellerGroup} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteResellerGroupsDialog} />
-            <Button label="Yes" icon="pi pi-check" text  />
+            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteResellerGroupsDialog} />
+            <Button label="Yes" icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -309,7 +316,7 @@ const ResellerGroupPage = () => {
                         <div className="card flex flex-column md:flex-row gap-3">
                             <div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">Group Name</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Group Name</label>
                                     <InputText
                                         id="name"
                                         value={resellerGroup.name}
@@ -328,7 +335,7 @@ const ResellerGroupPage = () => {
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">Discount Value</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Discount Value</label>
                                     <InputText
                                         id="discount_value"
                                         value={resellerGroup.discount_value}
@@ -347,7 +354,7 @@ const ResellerGroupPage = () => {
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier">Sub Reseller Limit</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Sub Reseller Limit</label>
                                     <InputText
                                         id="sub_reseller_limit"
                                         value={resellerGroup.sub_reseller_limit.toString()}
@@ -366,7 +373,7 @@ const ResellerGroupPage = () => {
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="status">Status</label>
+                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Status</label>
                                     <Dropdown
                                         id="status"
                                         value={resellerGroup.status}
@@ -392,7 +399,7 @@ const ResellerGroupPage = () => {
                             <br />
                             <div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="discount_type">Discount Type</label>
+                                    <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Discount Type</label>
                                     <Dropdown
                                         id="discount_type"
                                         value={resellerGroup.discount_type}
@@ -413,7 +420,7 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="status">Can Add Sub-reseller</label>
+                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Can Add Sub-reseller</label>
                                     <Dropdown
                                         id="can_create_sub_resellers"
                                         value={resellerGroup.can_create_sub_resellers}
@@ -434,7 +441,7 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="status">Can Sub-reseller add Subs</label>
+                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Can Sub-reseller add Subs</label>
                                     <Dropdown
                                         id="can_sub_reseller_create_subs"
                                         value={resellerGroup.can_sub_reseller_create_subs}
@@ -455,7 +462,7 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
                                 <div className="field col flex-1">
-                                    <label htmlFor="notes">Notes</label>
+                                    <label htmlFor="notes" style={{fontWeight:'bold'}}>Notes</label>
                                     <InputTextarea
                                     value={resellerGroup.notes}
                                     onChange={(e) =>

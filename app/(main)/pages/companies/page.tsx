@@ -86,6 +86,14 @@ const CompanyPage = () => {
     const saveCompany = () => {
         setSubmitted(true);
         //console.log(company)
+        if (!company.company_name || company.company_name.length === 0 ||
+            !company.country ||
+            !company.telegram_chat_id
+            ) {
+
+            // Don't proceed if any field is invalid
+            return;
+        }
         if (company.id && company.id !== 0) {
             dispatch(_editCompany(company,toast));
 
@@ -128,23 +136,38 @@ const CompanyPage = () => {
 
     const rightToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <div className="my-2">
-                    <Button label={t('COMPANY.TABLE.CREATECOMPANY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
-                </div>
-            </React.Fragment>
+            <div className="flex justify-end items-center space-x-2">
+                <Button
+                    label={t('COMPANY.TABLE.CREATECOMPANY')}
+                    icon="pi pi-plus"
+                    severity="success"
+                    className="mr-2"
+                    onClick={openNew}
+                />
+                <Button
+                    label="Delete"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    onClick={confirmDeleteSelected}
+                    disabled={!selectedCompanies || !(selectedCompanies as any).length}
+                />
+            </div>
         );
     };
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -226,20 +249,20 @@ const CompanyPage = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCompany} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveCompany} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompanyDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCompany} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCompanyDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteCompany} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCompaniesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCompaniesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -252,7 +275,7 @@ const CompanyPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4 flex flex-col md:flex-row justify-between items-center" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -280,7 +303,8 @@ const CompanyPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={companyDialog}  style={{ width: '550px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={companyDialog}  style={{ width: '900px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:"40px"}}>
                         {company.company_logo && (
                             <img
                                 src={
@@ -308,11 +332,11 @@ const CompanyPage = () => {
                             ...prevCompany,
                             company_logo: e.files[0],
                         }))}
-                        style={{textAlign:'center'}}
+                        style={{textAlign:'center',marginBottom:'10px'}}
                         />
 
                         <div className="field">
-                            <label htmlFor="name">{t('COMPANY.FORM.INPUT.COMPANYNAME')}</label>
+                            <label htmlFor="name" style={{ fontWeight: 'bold' }}>{t('COMPANY.FORM.INPUT.COMPANYNAME')}</label>
                             <InputText
                                 id="company_name"
                                 value={company?.company_name}
@@ -329,12 +353,12 @@ const CompanyPage = () => {
                                     'p-invalid': submitted && !company.company_name
                                 })}
                             />
-                            {submitted && !company.company_name && <small className="p-invalid">Name is required.</small>}
+                            {submitted && !company.company_name && <small className="p-invalid" style={{ color: 'red' }}>Name is required.</small>}
                         </div>
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="country">{t('COMPANY.FORM.INPUT.COUNTRYNAME')}</label>
+                                <label htmlFor="country" style={{ fontWeight: 'bold' }}>{t('COMPANY.FORM.INPUT.COUNTRYNAME')}</label>
                                 <Dropdown
                                     id="country"
                                     value={company.country}
@@ -350,11 +374,11 @@ const CompanyPage = () => {
                                     placeholder={t('COMPANY.FORM.PLACEHOLDER.COUNTRY')}
                                     className="w-full"
                                 />
-
+                                {submitted && !company.country && <small className="p-invalid" style={{ color: 'red' }}>Country is required.</small>}
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="telegram_chat_id">{t('COMPANY.FORM.INPUT.TELEGRAMID')}</label>
+                                <label htmlFor="telegram_chat_id" style={{ fontWeight: 'bold' }}>{t('COMPANY.FORM.INPUT.TELEGRAMID')}</label>
                                 <Dropdown
                                     id="telegram_chat_id"
                                     value={company.telegram_chat_id}
@@ -369,9 +393,10 @@ const CompanyPage = () => {
                                     placeholder="Choose a group"
                                     className="w-full"
                                 />
-
+                            {submitted && !company.telegram_chat_id && <small className="p-invalid" style={{ color: 'red' }}>Telegram is required.</small>}
                             </div>
 
+                        </div>
                         </div>
                     </Dialog>
 

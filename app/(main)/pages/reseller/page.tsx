@@ -160,7 +160,7 @@ const ResellerPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('RESELLER.TABLE.CREATERESELLER')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -170,12 +170,17 @@ const ResellerPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -304,20 +309,20 @@ const ResellerPage = () => {
 
     const resellerDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveReseller} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveReseller} />
         </>
     );
     const deleteResellerDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteResellerDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')}  icon="pi pi-check" text onClick={deleteReseller} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteResellerDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')}  icon="pi pi-check" severity="success" onClick={deleteReseller} />
         </>
     );
     const deleteResellersDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteResellersDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteResellersDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -361,7 +366,8 @@ const ResellerPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={resellerDialog}  style={{ width: '650px' }} header="Reseller Details" modal className="p-fluid" footer={resellerDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={resellerDialog}  style={{ width: '900px',padding:'5px' }} header="Reseller Details" modal className="p-fluid" footer={resellerDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:"10px"}}>
                         {reseller.profile_image_url && (
                             <img
                                 src={
@@ -375,6 +381,7 @@ const ResellerPage = () => {
                             />
                         )}
                         <FileUpload
+                        mode="basic"
                             name="company_logo"
                             accept="image/*"
                             customUpload
@@ -382,10 +389,11 @@ const ResellerPage = () => {
                                 ...prev,
                                 profile_image_url: e.files[0],
                             }))}
+                            style={{textAlign:'center',marginBottom:'10px'}}
                         />
                         <div className='formgrid grid'>
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.RESELLERNAME')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.RESELLERNAME')}</label>
                                 <InputText
                                     id="reseller_name"
                                     value={reseller?.reseller_name}
@@ -402,11 +410,11 @@ const ResellerPage = () => {
                                         'p-invalid': submitted && !reseller.reseller_name
                                     })}
                                 />
-                                {submitted && !reseller.reseller_name && <small className="p-invalid">Name is required.</small>}
+                                {submitted && !reseller.reseller_name && <small className="p-invalid" style={{ color: 'red' }}>Name is required.</small>}
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.CONTACTNAME')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.CONTACTNAME')}</label>
                                 <InputText
                                     id="contact_name"
                                     value={reseller.contact_name || ''}
@@ -427,7 +435,7 @@ const ResellerPage = () => {
 
                         <div className='formgrid grid'>
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.EMAIL')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.EMAIL')}</label>
                                 <InputText
                                     id="email"
                                     value={reseller?.email}
@@ -444,11 +452,11 @@ const ResellerPage = () => {
                                         'p-invalid': submitted && !reseller.email
                                     })}
                                 />
-                                {submitted && !reseller.email && <small className="p-invalid">Email is required.</small>}
+                                {submitted && !reseller.email && <small className="p-invalid" style={{ color: 'red' }}>Email is required.</small>}
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.PHONE')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.PHONE')}</label>
                                 <InputText
                                     id="phone"
                                     value={reseller.phone || ''}
@@ -464,13 +472,13 @@ const ResellerPage = () => {
                                     })}
 
                                 />
-                                {submitted && !reseller.phone && <small className="p-invalid">Phone is required.</small>}
+                                {submitted && !reseller.phone && <small className="p-invalid" style={{ color: 'red' }}>Phone is required.</small>}
                             </div>
                         </div>
 
                         <div className='formgrid grid'>
                             <div className="field col">
-                                <label htmlFor="password">Password</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="password">Password</label>
                                 <Password
                                     id="account_password"
                                     value={reseller?.account_password}
@@ -486,14 +494,14 @@ const ResellerPage = () => {
                                         'p-invalid': submitted && !reseller.account_password
                                     })}
                                 />
-                                {submitted && !reseller.account_password && <small className="p-invalid">Password is required.</small>}
+                                {submitted && !reseller.account_password && <small className="p-invalid" style={{ color: 'red' }}>Password is required.</small>}
                             </div>
 
                         </div>
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.COUNTRY')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.COUNTRY')}</label>
                                 <Dropdown
                                     id="country"
                                     value={reseller.country}
@@ -513,7 +521,7 @@ const ResellerPage = () => {
 
                             </div>
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.PROVINCE')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.PROVINCE')}</label>
                                 <Dropdown
                                     id="province"
                                     value={reseller.province}
@@ -538,7 +546,7 @@ const ResellerPage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.DISTRICT')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.DISTRICT')}</label>
                                 <Dropdown
                                     id="district"
                                     value={reseller.district}
@@ -558,7 +566,7 @@ const ResellerPage = () => {
 
                             </div>
                             <div className="field col">
-                                <label htmlFor="name">{t('RESELLER.FORM.INPUT.CURRENCYPREFERENCE')}</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.CURRENCYPREFERENCE')}</label>
                                 <Dropdown
                                     id="code"
                                     value={reseller.code}
@@ -580,7 +588,7 @@ const ResellerPage = () => {
 
 
                         </div>
-
+                        </div>
 
 
                     </Dialog>

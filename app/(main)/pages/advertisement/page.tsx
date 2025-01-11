@@ -20,7 +20,6 @@ import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { _fetchLanguages } from '@/app/redux/actions/languageActions';
 import { FileUpload } from 'primereact/fileupload';
 import { _addAdvertisement, _deleteAdvertisement, _editAdvertisement, _fetchAdvertisements } from '@/app/redux/actions/advertisementActions';
-import { advertisementsReducer } from '../../../redux/reducers/advertisementReducer';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 
@@ -121,7 +120,7 @@ const AdvertisementPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('ADVERTISEMENT.TABLE.CREATEADVERTISEMENT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -131,12 +130,17 @@ const AdvertisementPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -212,20 +216,20 @@ const AdvertisementPage = () => {
 
     const advertisementDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveAdvertisement} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveAdvertisement} />
         </>
     );
     const deleteAdvertisementDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteAdvertisementDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteAdvertisement} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteAdvertisementDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteAdvertisement} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteAdvertisementsDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteAdvertisementsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -264,7 +268,8 @@ const AdvertisementPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={advertisementDialog}  style={{ width: '550px' }} header="Advertisement Details" modal className="p-fluid" footer={advertisementDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={advertisementDialog}  style={{ width: '700px',padding:'5px' }} header="Advertisement Details" modal className="p-fluid" footer={advertisementDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}></div>
                         {advertisement.ad_slider_image_url && (
                             <img
                                 src={
@@ -278,6 +283,7 @@ const AdvertisementPage = () => {
                             />
                         )}
                         <FileUpload
+                        mode='basic'
                             name="company_logo"
                             accept="image/*"
                             customUpload
@@ -285,9 +291,10 @@ const AdvertisementPage = () => {
                                 ...prev,
                                 ad_slider_image_url: e.files[0],
                             }))}
+                            style={{textAlign:'center',marginBottom:'10px'}}
                         />
                         <div className="field">
-                            <label htmlFor="advertisement_title">{t('ADVERTISEMENT.FORM.INPUT.ADVERTISEMENTTITLE')}</label>
+                            <label htmlFor="advertisement_title" style={{fontWeight:'bold'}}>{t('ADVERTISEMENT.FORM.INPUT.ADVERTISEMENTTITLE')}</label>
                             <InputText
                                 id="advertisement_title"
                                 value={advertisement.advertisement_title}
@@ -304,11 +311,11 @@ const AdvertisementPage = () => {
                                     'p-invalid': submitted && !advertisement.advertisement_title
                                 })}
                             />
-                            {submitted && !advertisement.advertisement_title && <small className="p-invalid">Advertisement Title is required.</small>}
+                            {submitted && !advertisement.advertisement_title && <small className="p-invalid" style={{ color: 'red' }}>Advertisement Title is required.</small>}
                         </div>
 
                         <div className="field">
-                            <label htmlFor="status">{t('ADVERTISEMENT.FORM.INPUT.ADVERTISEMENTSTATUS')}</label>
+                            <label htmlFor="status" style={{fontWeight:'bold'}}>{t('ADVERTISEMENT.FORM.INPUT.ADVERTISEMENTSTATUS')}</label>
                             <Dropdown
                                 id="status"
                                 value={advertisement.status}

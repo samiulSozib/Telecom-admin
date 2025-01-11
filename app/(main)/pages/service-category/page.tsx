@@ -119,7 +119,7 @@ const Category = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2  ">
                     <Button label={t('SERVICECATEGORY.TABLE.CREATESERVICECATEGORY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -129,12 +129,17 @@ const Category = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -186,20 +191,20 @@ const Category = () => {
 
     const serviceCategoryDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveServiceCategory} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveServiceCategory} />
         </>
     );
     const deleteServiceCategoryDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceCategoryDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteServiceCategory} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteServiceCategoryDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteServiceCategory} />
         </>
     );
     const deleteServiceCategoriesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceCategoriesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteServiceCategoriesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -237,46 +242,48 @@ const Category = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={serviceCategoryDialog}  style={{ width: '550px' }} header="Category Details" modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>
-                        <div className="field">
-                            <label htmlFor="name">{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYNAME')}</label>
-                            <InputText
-                                id="category_name"
-                                value={serviceCategory.category_name}
-                                onChange={(e) =>
-                                    setServiceCategory((prev) => ({
-                                        ...prev,
-                                        category_name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !serviceCategory.category_name
-                                })}
-                            />
-                            {submitted && !serviceCategory.category_name && <small className="p-invalid">Category Name is required.</small>}
-                        </div>
-
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="type">{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYTYPE')}</label>
-                                <Dropdown
-                                    id="type"
-                                    value={serviceCategory.type}
-                                    options={[
-                                        { label: "Social", value: "social" },
-                                        { label: "Non-Social", value: "nonsocial" }
-                                    ]}
+                    <Dialog visible={serviceCategoryDialog}  style={{ width: '700px',padding:'5px' }} header="Category Details" modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}>
+                            <div className="field">
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYNAME')}</label>
+                                <InputText
+                                    id="category_name"
+                                    value={serviceCategory.category_name}
                                     onChange={(e) =>
                                         setServiceCategory((prev) => ({
                                             ...prev,
-                                            type: e.value,
+                                            category_name: e.target.value,
                                         }))
                                     }
-                                    placeholder="Choose a Type"
-                                    className="w-full"
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !serviceCategory.category_name
+                                    })}
                                 />
+                                {submitted && !serviceCategory.category_name && <small className="p-invalid" style={{ color: 'red' }}>Category Name is required.</small>}
+                            </div>
+
+                            <div className="formgrid grid">
+                                <div className="field col">
+                                    <label htmlFor="type" style={{fontWeight:'bold'}}>{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYTYPE')}</label>
+                                    <Dropdown
+                                        id="type"
+                                        value={serviceCategory.type}
+                                        options={[
+                                            { label: "Social", value: "social" },
+                                            { label: "Non-Social", value: "nonsocial" }
+                                        ]}
+                                        onChange={(e) =>
+                                            setServiceCategory((prev) => ({
+                                                ...prev,
+                                                type: e.value,
+                                            }))
+                                        }
+                                        placeholder="Choose a Type"
+                                        className="w-full"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </Dialog>

@@ -148,7 +148,7 @@ const BundlePage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('BUNDLE.TABLE.CREATEBUNDLE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -158,12 +158,17 @@ const BundlePage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -324,20 +329,20 @@ const BundlePage = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveService} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteServiceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteService} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteServicesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -393,10 +398,11 @@ const BundlePage = () => {
                     />
 
 
-                    <Dialog visible={serviceDialog}  style={{ width: '700px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={serviceDialog}  style={{ width: '900px',padding:'5px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}>
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.BUNDLETITLE')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.BUNDLETITLE')}</label>
                                 <InputText
                                     id="bundle_title"
                                     value={bundle.bundle_title}
@@ -413,11 +419,11 @@ const BundlePage = () => {
                                         'p-invalid': submitted && !bundle.bundle_title
                                     })}
                                 />
-                                {submitted && !bundle.bundle_title && <small className="p-invalid">Bundle Title is required.</small>}
+                                {submitted && !bundle.bundle_title && <small className="p-invalid" style={{ color: 'red' }}>Bundle Title is required.</small>}
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.BUNDLEDESCRIPTION')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.BUNDLEDESCRIPTION')}</label>
                                 <InputText
                                     id="bundle_description"
                                     value={bundle.bundle_description}
@@ -434,14 +440,14 @@ const BundlePage = () => {
                                         'p-invalid': submitted && !bundle.bundle_description
                                     })}
                                 />
-                                {submitted && !bundle.bundle_description && <small className="p-invalid">Bundle Description is required.</small>}
+                                {submitted && !bundle.bundle_description && <small className="p-invalid" style={{ color: 'red' }}>Bundle Description is required.</small>}
                             </div>
                         </div>
 
                         <div className="formgrid grid">
                             <div className="field col">
 
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.ADMINBUYINGPRICE')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.ADMINBUYINGPRICE')}</label>
                                 <InputText
                                     id="admin_buying_price"
                                     value={bundle.admin_buying_price}
@@ -458,12 +464,12 @@ const BundlePage = () => {
                                         'p-invalid': submitted && !bundle.admin_buying_price
                                     })}
                                 />
-                                {submitted && !bundle.admin_buying_price && <small className="p-invalid">Admin Buying Price is required.</small>}
+                                {submitted && !bundle.admin_buying_price && <small className="p-invalid" style={{ color: 'red' }}>Admin Buying Price is required.</small>}
                             </div>
 
                             <div className="field col">
 
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.BUYINGPRICE')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.BUYINGPRICE')}</label>
                                 <InputText
                                     id="buying_price"
                                     value={bundle.buying_price}
@@ -480,14 +486,14 @@ const BundlePage = () => {
                                         'p-invalid': submitted && !bundle.buying_price
                                     })}
                                 />
-                                {submitted && !bundle.buying_price && <small className="p-invalid">Buying Price is required.</small>}
+                                {submitted && !bundle.buying_price && <small className="p-invalid" style={{ color: 'red' }}>Buying Price is required.</small>}
                             </div>
                         </div>
 
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.SELLINGPRICE')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.SELLINGPRICE')}</label>
                                 <InputText
                                     id="selling_price"
                                     value={bundle.selling_price}
@@ -504,10 +510,10 @@ const BundlePage = () => {
                                         'p-invalid': submitted && !bundle.selling_price
                                     })}
                                 />
-                                {submitted && !bundle.selling_price && <small className="p-invalid">Selling Price is required.</small>}
+                                {submitted && !bundle.selling_price && <small className="p-invalid" style={{ color: 'red' }}>Selling Price is required.</small>}
                             </div>
                             <div className="field col">
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.VALIDITYTYPE')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.VALIDITYTYPE')}</label>
                                 <Dropdown
                                     id="validity_type"
                                     value={bundle.validity_type}
@@ -534,7 +540,7 @@ const BundlePage = () => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.SERVICENAME')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.SERVICENAME')}</label>
                                 <Dropdown
                                     id="service"
                                     value={bundle.service}
@@ -558,7 +564,7 @@ const BundlePage = () => {
                                 />
                             </div>
                             <div className="field col">
-                                <label htmlFor="name">{t('BUNDLE.FORM.INPUT.CURRENCY')}</label>
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
                                     id="currency"
                                     value={bundle.currency}
@@ -576,6 +582,7 @@ const BundlePage = () => {
                                 />
 
                             </div>
+                        </div>
                         </div>
 
                     </Dialog>

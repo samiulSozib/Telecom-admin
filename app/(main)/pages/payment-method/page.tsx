@@ -120,7 +120,7 @@ const PaymentMethodPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('PAYMENTMETHOD.TABLE.CREATEPAYMENTMETHOD')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -130,12 +130,17 @@ const PaymentMethodPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -221,20 +226,20 @@ const PaymentMethodPage = () => {
 
     const methodDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveMethod} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveMethod} />
         </>
     );
     const deleteMethodDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteMethodDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteMethod} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteMethodDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteMethod} />
         </>
     );
     const deleteMethodsDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteMethodsDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteMethodsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -274,89 +279,92 @@ const PaymentMethodPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={methodDialog}  style={{ width: '550px' }} header="Method Details" modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>
-                        {paymentMethod.account_image && (
-                            <img
-                                src={
-                                    paymentMethod.account_image instanceof File
-                                        ? URL.createObjectURL(paymentMethod.account_image) // Temporary preview for file
-                                        : paymentMethod.account_image // Direct URL for existing logo
-                                }
-                                alt="Uploaded Preview"
-                                width="150"
-                                className="mt-0 mx-auto mb-5 block shadow-2"
+                    <Dialog visible={methodDialog}  style={{ width: '700px',padding:'5px' }} header="Method Details" modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}>
+                            {paymentMethod.account_image && (
+                                <img
+                                    src={
+                                        paymentMethod.account_image instanceof File
+                                            ? URL.createObjectURL(paymentMethod.account_image) // Temporary preview for file
+                                            : paymentMethod.account_image // Direct URL for existing logo
+                                    }
+                                    alt="Uploaded Preview"
+                                    width="150"
+                                    className="mt-0 mx-auto mb-5 block shadow-2"
+                                />
+                            )}
+                            <FileUpload
+                            mode='basic'
+                                name="account_image"
+                                accept="image/*"
+                                customUpload
+                                onSelect={(e) => setPaymentMethod((prev) => ({
+                                    ...prev,
+                                    account_image: e.files[0],
+                                }))}
+                                style={{textAlign:'center',marginBottom:'10px'}}
                             />
-                        )}
-                        <FileUpload
-                            name="account_image"
-                            accept="image/*"
-                            customUpload
-                            onSelect={(e) => setPaymentMethod((prev) => ({
-                                ...prev,
-                                account_image: e.files[0],
-                            }))}
-                        />
-                        <div className="field">
-                            <label htmlFor="name">{t('PAYMENTMETHOD.FORM.INPUT.METHODNAME')}</label>
-                            <InputText
-                                id="method_name"
-                                value={paymentMethod?.method_name}
-                                onChange={(e) =>
-                                    setPaymentMethod((prev) => ({
-                                        ...prev,
-                                        method_name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('PAYMENTMETHOD.FORM.INPUT.METHODNAME')}
-                                className={classNames({
-                                    'p-invalid': submitted && !paymentMethod.method_name
-                                })}
-                            />
-                            {submitted && !paymentMethod.method_name && <small className="p-invalid">Name is required.</small>}
+                            <div className="field">
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('PAYMENTMETHOD.FORM.INPUT.METHODNAME')}</label>
+                                <InputText
+                                    id="method_name"
+                                    value={paymentMethod?.method_name}
+                                    onChange={(e) =>
+                                        setPaymentMethod((prev) => ({
+                                            ...prev,
+                                            method_name: e.target.value,
+                                        }))
+                                    }
+                                    required
+                                    autoFocus
+                                    placeholder={t('PAYMENTMETHOD.FORM.INPUT.METHODNAME')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !paymentMethod.method_name
+                                    })}
+                                />
+                                {submitted && !paymentMethod.method_name && <small className="p-invalid" style={{ color: 'red' }}>Name is required.</small>}
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="status" style={{fontWeight:'bold'}}>{t('PAYMENTMETHOD.FORM.INPUT.STATUS')}</label>
+                                <Dropdown
+                                    id="status"
+                                    value={paymentMethod.status}
+                                    options={[
+                                        { label: 'Active', value: 1 },
+                                        { label: 'Inactive', value: 0 },
+                                    ]}
+                                    onChange={(e) =>
+                                        setPaymentMethod((prev) => ({
+                                            ...prev,
+                                            status: e.value,
+                                        }))
+                                    }
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Choose a status"
+                                    className="w-full"
+                                />
+                            </div>
+
+
+                            <div className="field">
+                                <label htmlFor="account_details" style={{fontWeight:'bold'}}>{t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}</label>
+                                <textarea
+                                    id="account_details"
+                                    value={paymentMethod.account_details || ''}
+                                    onChange={(e) =>
+                                        setPaymentMethod((prev) => ({
+                                            ...prev,
+                                            account_details: e.target.value,
+                                        }))
+                                    }
+                                    placeholder={t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}
+                                    className="w-full p-2 border rounded"
+                                    rows={4} // Adjust the number of visible rows as needed
+                                />
+                            </div>
                         </div>
-
-                        <div className="field">
-                            <label htmlFor="status">{t('PAYMENTMETHOD.FORM.INPUT.STATUS')}</label>
-                            <Dropdown
-                                id="status"
-                                value={paymentMethod.status}
-                                options={[
-                                    { label: 'Active', value: 1 },
-                                    { label: 'Inactive', value: 0 },
-                                ]}
-                                onChange={(e) =>
-                                    setPaymentMethod((prev) => ({
-                                        ...prev,
-                                        status: e.value,
-                                    }))
-                                }
-                                optionLabel="label"
-                                optionValue="value"
-                                placeholder="Choose a status"
-                                className="w-full"
-                            />
-                        </div>
-
-
-                        <div className="field">
-                            <label htmlFor="telegram_chat_id">{t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}</label>
-                            <textarea
-                                id="account_details"
-                                value={paymentMethod.account_details || ''}
-                                onChange={(e) =>
-                                    setPaymentMethod((prev) => ({
-                                        ...prev,
-                                        account_details: e.target.value,
-                                    }))
-                                }
-                                placeholder={t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}
-                                className="w-full p-2 border rounded"
-                                rows={4} // Adjust the number of visible rows as needed
-                            />
-                        </div>
-
 
                     </Dialog>
 

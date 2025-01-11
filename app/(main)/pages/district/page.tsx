@@ -123,7 +123,7 @@ const DistrictPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('DISTRICT.TABLE.CREATEDISTRICT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -133,12 +133,17 @@ const DistrictPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -190,20 +195,20 @@ const DistrictPage = () => {
 
     const districtDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveDistrict} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveDistrict} />
         </>
     );
     const deleteDistrictDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteDistrictDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteDistrict} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteDistrictDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteDistrict} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteDistrictsDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteDistrictsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -241,50 +246,50 @@ const DistrictPage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={districtDialog}  style={{ width: '550px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
-                        <div className="field">
-                            <label htmlFor="district_name">{t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')}</label>
-                            <InputText
-                                id="district_name"
-                                value={district.district_name}
-                                onChange={(e) =>
-                                    setDistrict((prevDistrict) => ({
-                                        ...prevDistrict,
-                                        district_name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('DISTRICT.FORM.PLACEHOLDER.DISTRICTNAME')}
-                                className={classNames({
-                                    'p-invalid': submitted && !district.district_name
-                                })}
-                            />
-                            {submitted && !district.district_name && <small className="p-invalid">District Name is required.</small>}
-                        </div>
-
-
-
-                        <div className="field col">
-                                <label htmlFor="province_id">{t('DISTRICT.FORM.INPUT.PROVINCE')}</label>
-                                <Dropdown
-                                    id="province"
-                                    value={district.province}
-                                    options={provinces}
+                    <Dialog visible={districtDialog}  style={{ width: '700px',padding:'5px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:"40px"}}>
+                            <div className="field">
+                                <label htmlFor="district_name" style={{fontWeight:'bold'}}>{t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')}</label>
+                                <InputText
+                                    id="district_name"
+                                    value={district.district_name}
                                     onChange={(e) =>
-                                        setDistrict((prev) => ({
-
-                                            ...prev,
-                                            province: e.value,
+                                        setDistrict((prevDistrict) => ({
+                                            ...prevDistrict,
+                                            district_name: e.target.value,
                                         }))
                                     }
-                                    optionLabel='province_name'
-                                    // optionValue='id'
-                                    placeholder={t('DISTRICT.FORM.PLACEHOLDER.PROVINCE')}
-                                    className="w-full"
+                                    required
+                                    autoFocus
+                                    placeholder={t('DISTRICT.FORM.PLACEHOLDER.DISTRICTNAME')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !district.district_name
+                                    })}
                                 />
+                                {submitted && !district.district_name && <small className="p-invalid" style={{ color: 'red' }}>District Name is required.</small>}
+                            </div>
+
+                            <div className="field col">
+                                    <label htmlFor="province_id" style={{fontWeight:'bold'}}>{t('DISTRICT.FORM.INPUT.PROVINCE')}</label>
+                                    <Dropdown
+                                        id="province"
+                                        value={district.province}
+                                        options={provinces}
+                                        onChange={(e) =>
+                                            setDistrict((prev) => ({
+
+                                                ...prev,
+                                                province: e.value,
+                                            }))
+                                        }
+                                        optionLabel='province_name'
+                                        // optionValue='id'
+                                        placeholder={t('DISTRICT.FORM.PLACEHOLDER.PROVINCE')}
+                                        className="w-full"
+                                    />
 
                             </div>
+                        </div>
                     </Dialog>
 
                     <Dialog visible={deleteDistrictDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteDistrictDialogFooter} onHide={hideDeleteDistrictDialog}>

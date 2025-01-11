@@ -140,7 +140,7 @@ const PaymentPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label="Add Payment" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -150,12 +150,17 @@ const PaymentPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -280,20 +285,20 @@ const PaymentPage = () => {
 
     const paymentDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={savePayment} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={savePayment} />
         </>
     );
     const deletePaymentDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePaymentDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deletePayment} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeletePaymentDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deletePayment} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeletePaymentsDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeletePaymentsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -337,11 +342,11 @@ const PaymentPage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={paymentDialog}  style={{ width: '750px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={paymentDialog}  style={{ width: '900px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
                     <div className="card flex flex-column md:flex-row gap-3">
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="reseller">{t('PAYMENT.FORM.INPUT.RESELLER')}</label>
+                                <label htmlFor="reseller" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.RESELLER')}</label>
                                 <Dropdown
                                     id="reseller"
                                     value={payment.reseller}
@@ -361,7 +366,7 @@ const PaymentPage = () => {
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="email">{t('PAYMENT.FORM.INPUT.AMOUNT')}</label>
+                                <label htmlFor="email" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.AMOUNT')}</label>
                                 <InputText
                                     id="amount"
                                     value={payment.amount}
@@ -378,10 +383,10 @@ const PaymentPage = () => {
                                         'p-invalid': submitted && !payment.amount
                                     })}
                                 />
-                                {submitted && !payment.amount && <small className="p-invalid">Amount is required.</small>}
+                                {submitted && !payment.amount && <small className="p-invalid" style={{ color: 'red' }}>Amount is required.</small>}
                             </div>
                             <div className="field col flex-1">
-                                <label htmlFor="notes">{t('PAYMENT.FORM.INPUT.NOTES')}</label>
+                                <label htmlFor="notes" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.NOTES')}</label>
                                 <InputTextarea
                                 value={payment.notes}
                                 onChange={(e) =>
@@ -398,7 +403,7 @@ const PaymentPage = () => {
                         <br />
                         <div>
                             <div className="field col flex-1">
-                                <label htmlFor="payment_method">{t('PAYMENT.FORM.INPUT.PAYMENTMETHOD')}</label>
+                                <label htmlFor="payment_method" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.PAYMENTMETHOD')}</label>
                                 <Dropdown
                                     id="payment_method"
                                     value={payment.payment_method}
@@ -418,7 +423,7 @@ const PaymentPage = () => {
                             </div>
 
                             <div className="field col flex-1">
-                                <label htmlFor="currency">{t('PAYMENT.FORM.INPUT.CURRENCY')}</label>
+                                <label htmlFor="currency" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
                                     id="currency"
                                     value={payment.currency}
@@ -437,7 +442,7 @@ const PaymentPage = () => {
                                 />
                             </div>
                             <div className="field col flex-1">
-                                <label htmlFor="payment_date">{t('PAYMENT.FORM.INPUT.PAYMENTDATE')}</label>
+                                <label htmlFor="payment_date" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.PAYMENTDATE')}</label>
                                 <InputText
                                     id="payment_date"
                                     value={payment.payment_date}

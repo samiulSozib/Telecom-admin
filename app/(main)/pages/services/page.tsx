@@ -123,7 +123,7 @@ const Services = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('SERVICE.TABLE.CREATESERVICE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -133,12 +133,17 @@ const Services = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -203,20 +208,20 @@ const Services = () => {
 
     const companyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveService} />
         </>
     );
     const deleteCompanyDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServiceDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteService} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteServiceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteService} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteServicesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteServicesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -255,70 +260,72 @@ const Services = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={serviceDialog}  style={{ width: '550px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
-                        <div className="field">
-                            <label htmlFor="name">{t('SERVICE.FORM.INPUT.SERVICENAME')}</label>
-                            <InputText
-                                id="service"
-                                value={service.service_name}
-                                onChange={(e) =>
-                                    setService((perv) => ({
-                                        ...perv,
-                                        service_name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                placeholder={t('SERVICE.FORM.PLACEHOLDER.SERVICENAME')}
-                                className={classNames({
-                                    'p-invalid': submitted && !service.service_name
-                                })}
-                            />
-                            {submitted && !service.service_name && <small className="p-invalid">Service Name is required.</small>}
-                        </div>
-
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="country_id">{t('SERVICE.FORM.INPUT.COMPANY')}</label>
-                                <Dropdown
-                                    id="company"
-                                    value={service.company}
-                                    options={companies}
+                    <Dialog visible={serviceDialog}  style={{ width: '700px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}>
+                            <div className="field">
+                                <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SERVICE.FORM.INPUT.SERVICENAME')}</label>
+                                <InputText
+                                    id="service"
+                                    value={service.service_name}
                                     onChange={(e) =>
                                         setService((perv) => ({
-
                                             ...perv,
-                                            company: e.value,
+                                            service_name: e.target.value,
                                         }))
                                     }
-                                    optionLabel='company_name'
-                                    // optionValue='id'
-                                    placeholder={t('SERVICE.FORM.PLACEHOLDER.COMPANY')}
-                                    className="w-full"
+                                    required
+                                    autoFocus
+                                    placeholder={t('SERVICE.FORM.PLACEHOLDER.SERVICENAME')}
+                                    className={classNames({
+                                        'p-invalid': submitted && !service.service_name
+                                    })}
                                 />
-
+                                {submitted && !service.service_name && <small className="p-invalid" style={{ color: 'red' }}>Service Name is required.</small>}
                             </div>
-                        </div>
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="country_id">{t('SERVICE.FORM.INPUT.SERVICECATEGORY')}</label>
-                                <Dropdown
-                                    id="service_category"
-                                    value={service.service_category}
-                                    options={serviceCategories}
-                                    onChange={(e) =>
-                                        setService((perv) => ({
 
-                                            ...perv,
-                                            service_category: e.value,
-                                        }))
-                                    }
-                                    optionLabel='category_name'
-                                    // optionValue='id'
-                                    placeholder={t('SERVICE.FORM.PLACEHOLDER.ServiceCategory')}
-                                    className="w-full"
-                                />
+                            <div className="formgrid grid">
+                                <div className="field col">
+                                    <label htmlFor="country_id" style={{fontWeight:'bold'}}>{t('SERVICE.FORM.INPUT.COMPANY')}</label>
+                                    <Dropdown
+                                        id="company"
+                                        value={service.company}
+                                        options={companies}
+                                        onChange={(e) =>
+                                            setService((perv) => ({
 
+                                                ...perv,
+                                                company: e.value,
+                                            }))
+                                        }
+                                        optionLabel='company_name'
+                                        // optionValue='id'
+                                        placeholder={t('SERVICE.FORM.PLACEHOLDER.COMPANY')}
+                                        className="w-full"
+                                    />
+
+                                </div>
+                            </div>
+                            <div className="formgrid grid">
+                                <div className="field col">
+                                    <label htmlFor="country_id" style={{fontWeight:'bold'}}>{t('SERVICE.FORM.INPUT.SERVICECATEGORY')}</label>
+                                    <Dropdown
+                                        id="service_category"
+                                        value={service.service_category}
+                                        options={serviceCategories}
+                                        onChange={(e) =>
+                                            setService((perv) => ({
+
+                                                ...perv,
+                                                service_category: e.value,
+                                            }))
+                                        }
+                                        optionLabel='category_name'
+                                        // optionValue='id'
+                                        placeholder={t('SERVICE.FORM.PLACEHOLDER.ServiceCategory')}
+                                        className="w-full"
+                                    />
+
+                                </div>
                             </div>
                         </div>
                     </Dialog>

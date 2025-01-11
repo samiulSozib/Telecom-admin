@@ -129,7 +129,7 @@ const CountryPage = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <div className="my-2">
+                <div className="flex justify-end items-center space-x-2">
                     <Button label={t('COUNTRY.TABLE.CREATECOUNTRY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
                     <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
@@ -139,12 +139,17 @@ const CountryPage = () => {
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <div className="flex items-center">
+                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')} />
-            </span>
-            </React.Fragment>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+                        className="w-full md:w-auto"
+                    />
+                </span>
+            </div>
         );
     };
 
@@ -219,20 +224,20 @@ const CountryPage = () => {
 
     const countryDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveCountry} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveCountry} />
         </>
     );
     const deleteCountryDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCountryDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteCountry} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCountryDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteCountry} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteCountrysDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteCountrysDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -273,7 +278,8 @@ const CountryPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={countryDialog}  style={{ width: '550px' }} header="Country Details" modal className="p-fluid" footer={countryDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={countryDialog}  style={{ width: '700px',padding:'5px' }} header="Country Details" modal className="p-fluid" footer={countryDialogFooter} onHide={hideDialog}>
+                        <div style={{padding:'40px'}}>
                         {country.country_flag_image_url && (
                             <img
                                 src={
@@ -287,6 +293,7 @@ const CountryPage = () => {
                             />
                         )}
                         <FileUpload
+                        mode='basic'
                             name="company_logo"
                             accept="image/*"
                             customUpload
@@ -294,9 +301,10 @@ const CountryPage = () => {
                                 ...prev,
                                 country_flag_image_url: e.files[0],
                             }))}
+                            style={{textAlign:'center',marginBottom:'10px'}}
                         />
                         <div className="field">
-                            <label htmlFor="country_name">{t('COUNTRY.FORM.INPUT.COUNTRYNAME')}</label>
+                            <label htmlFor="country_name" style={{fontWeight:'bold'}}>{t('COUNTRY.FORM.INPUT.COUNTRYNAME')}</label>
                             <InputText
                                 id="country_name"
                                 value={country.country_name}
@@ -313,11 +321,11 @@ const CountryPage = () => {
                                     'p-invalid': submitted && !country.country_name
                                 })}
                             />
-                            {submitted && !country.country_name && <small className="p-invalid">Country Name is required.</small>}
+                            {submitted && !country.country_name && <small className="p-invalid" style={{ color: 'red' }}>Country Name is required.</small>}
                         </div>
 
                         <div className="field">
-                            <label htmlFor="country_telecom_code">{t('COUNTRY.FORM.INPUT.COUNTRYTELECOMCODE')}</label>
+                            <label htmlFor="country_telecom_code" style={{fontWeight:'bold'}}>{t('COUNTRY.FORM.INPUT.COUNTRYTELECOMCODE')}</label>
                             <InputText
                                 id="country_telecom_code"
                                 value={country.country_telecom_code}
@@ -334,11 +342,11 @@ const CountryPage = () => {
                                     'p-invalid': submitted && !country.country_telecom_code
                                 })}
                             />
-                            {submitted && !country.country_telecom_code && <small className="p-invalid">Country Code is required.</small>}
+                            {submitted && !country.country_telecom_code && <small className="p-invalid" style={{ color: 'red' }}>Country Code is required.</small>}
                         </div>
 
                         <div className="field">
-                            <label htmlFor="phone_number_length">{t('COUNTRY.FORM.INPUT.PHONENUMBERLENGTH')}</label>
+                            <label htmlFor="phone_number_length" style={{fontWeight:'bold'}}>{t('COUNTRY.FORM.INPUT.PHONENUMBERLENGTH')}</label>
                             <InputText
                                 id="phone_number_length"
                                 value={country.phone_number_length}
@@ -355,11 +363,11 @@ const CountryPage = () => {
                                     'p-invalid': submitted && !country.phone_number_length
                                 })}
                             />
-                            {submitted && !country.phone_number_length && <small className="p-invalid">Phone Number Length is required.</small>}
+                            {submitted && !country.phone_number_length && <small className="p-invalid" style={{ color: 'red' }}>Phone Number Length is required.</small>}
                         </div>
 
                         <div className="field col">
-                                <label htmlFor="currency">{t('COUNTRY.FORM.INPUT.CURRENCY')}</label>
+                                <label htmlFor="currency" style={{fontWeight:'bold'}}>{t('COUNTRY.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
                                     id="currency"
                                     value={country.currency}
@@ -380,7 +388,7 @@ const CountryPage = () => {
                             </div>
 
                             <div className="field col">
-                                <label htmlFor="language">{t('COUNTRY.FORM.INPUT.LANGUAGE')}</label>
+                                <label htmlFor="language" style={{fontWeight:'bold'}}>{t('COUNTRY.FORM.INPUT.LANGUAGE')}</label>
                                 <Dropdown
                                     id="language"
                                     value={country.language}
@@ -399,6 +407,7 @@ const CountryPage = () => {
                                 />
 
                             </div>
+                        </div>
                     </Dialog>
 
                     <Dialog visible={deleteCountryDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCountryDialogFooter} onHide={hideDeleteCountryDialog}>
