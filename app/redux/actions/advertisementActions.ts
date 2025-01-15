@@ -63,7 +63,7 @@ export const _addAdvertisement = (advertisementData: Advertisement,toast: React.
                 },
             }
         );
-        console.log(response)
+        //console.log(response)
         dispatch({ type: ADD_ADVERTISEMENT_SUCCESS, payload: response.data.data.advertisement });
 
         toast.current?.show({

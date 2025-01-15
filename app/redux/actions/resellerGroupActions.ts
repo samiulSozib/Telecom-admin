@@ -70,7 +70,7 @@ export const _addResellerGroup =
         type: ADD_RESELLER_GROUP_FAIL,
         payload: error.response?.data?.message || error.message,
       });
-      console.log(error)
+      //console.log(error)
       toast.current?.show({
         severity: "error",
         summary: "Error",
@@ -84,8 +84,8 @@ export const _addResellerGroup =
 export const _editResellerGroup =
   (id: number, groupData: ResellerGroup, toast: React.RefObject<Toast>) => async (dispatch: any) => {
     dispatch({ type: EDIT_RESELLER_GROUP_REQUEST });
-    console.log(id)
-    console.log(groupData)
+    //console.log(id)
+    //console.log(groupData)
     try {
       const token = getAuthToken();
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/reseller-groups/${id}`, groupData, {
@@ -111,7 +111,7 @@ export const _editResellerGroup =
         type: EDIT_RESELLER_GROUP_FAIL,
         payload: error.response?.data?.message || error.message,
       });
-      console.log(error)
+      //console.log(error)
 
       toast.current?.show({
         severity: "error",
@@ -133,7 +133,7 @@ export const _deleteResellerGroup =
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response)
+      //console.log(response)
       dispatch({
         type: DELETE_RESELLER_GROUP_SUCCESS,
         payload: id,
@@ -150,7 +150,7 @@ export const _deleteResellerGroup =
         type: DELETE_RESELLER_GROUP_FAIL,
         payload: error.message,
       });
-      console.log(error)
+      //console.log(error)
       toast.current?.show({
         severity: "error",
         summary: "Error",

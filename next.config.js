@@ -6,7 +6,7 @@ const nextConfig = {
         defaultLocale: 'en', // Set the default locale
         localeDetection: true,
     },
-    reactStrictMode: true,
+    reactStrictMode: false,
     localePath: path.resolve('./public/locales'),
     experimental: {
         metadataBase: 'http://localhost:3000', // Replace with your actual domain

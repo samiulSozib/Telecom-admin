@@ -51,7 +51,7 @@ export const _addPayment = (paymentData: Payment,toast: React.RefObject<Toast>) 
         notes:paymentData.notes,
         payment_date:paymentData.payment_date
     }
-    console.log(body)
+    //console.log(body)
     //return
     try {
         const token = getAuthToken();
@@ -110,7 +110,7 @@ export const _editPayment = (paymentId: number, paymentData: Payment,toast: Reac
           });
     } catch (error: any) {
         dispatch({ type: EDIT_PAYMENT_FAIL, payload: error.message });
-        console.log(error)
+        //console.log(error)
         toast.current?.show({
             severity: "error",
             summary: "Error",

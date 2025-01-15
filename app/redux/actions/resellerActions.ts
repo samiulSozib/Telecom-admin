@@ -14,9 +14,22 @@ import {
     DELETE_RESELLER_REQUEST,
     DELETE_RESELLER_SUCCESS,
     DELETE_RESELLER_FAIL,
+    CHANGE_RESELLER_STATUS_REQUEST,
+    CHANGE_RESELLER_STATUS_SUCCESS,
+    CHANGE_RESELLER_STATUS_FAIL,
+    GET_RESELLER_BY_ID_REQUEST,
+    GET_RESELLER_BY_ID_SUCCESS,
+    GET_RESELLER_BY_ID_FAIL,
+    CHANGE_RESELLER_PASSWORD_REQUEST,
+    CHANGE_RESELLER_PASSWORD_SUCCESS,
+    CHANGE_RESELLER_PASSWORD_FAIL,
+    CHANGE_RESELLER_PIN_REQUEST,
+    CHANGE_RESELLER_PIN_SUCCESS,
+    CHANGE_RESELLER_PIN_FAIL,
 } from "../constants/resellerConstants";
 import { Toast } from "primereact/toast";
 import { Reseller } from "@/types/interface";
+import Swal from "sweetalert2";
 
 const getAuthToken = () => {
     return localStorage.getItem("api_token") || ""; // Fetch token from localStorage
@@ -47,21 +60,29 @@ export const _addReseller = (resellerData: Reseller,toast: React.RefObject<Toast
         const token = getAuthToken();
         const formData = new FormData();
 
+
         formData.append('reseller_name', resellerData.reseller_name);
         formData.append('contact_name', resellerData.contact_name);
         formData.append('email', resellerData.email);
         formData.append('phone', resellerData.phone);
-        formData.append('account_password', resellerData.account_password);
-        formData.append('country_id', String(resellerData.country?.id));
-        formData.append('province_id', String(resellerData.province?.id));
-        formData.append('districts_id', String(resellerData.district?.id));
-        formData.append('currency_preference_id', resellerData.code);
+        formData.append('password', resellerData.account_password);
+        formData.append('country_id', String(resellerData.country_id));
+        formData.append('province_id', String(resellerData.province_id));
+        formData.append('districts_id', String(resellerData.districts_id));
+        formData.append('currency_preference_id', resellerData.code.toString());
+        formData.append('balance',resellerData.balance.toString());
+        formData.append('reseller_group_id',String(resellerData.reseller_group_id));
+        formData.append('can_create_sub_resellers',resellerData.can_create_sub_resellers.toString());
+        formData.append('sub_reseller_limit',resellerData.sub_reseller_limit.toString());
+        formData.append('sub_resellers_can_create_sub_resellers',resellerData.sub_resellers_can_create_sub_resellers.toString())
 
         if (resellerData.profile_image_url && typeof resellerData.profile_image_url !== 'string') {
             formData.append('profile_image_url', resellerData.profile_image_url);
         }
 
-
+        // formData.forEach((value, key) => {
+        //     console.log(key, value);
+        // });
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/resellers`,
             formData,
@@ -72,6 +93,7 @@ export const _addReseller = (resellerData: Reseller,toast: React.RefObject<Toast
                 },
             }
         );
+        //console.log(response)
         const newData={...resellerData,id:response.data.data.reseller.id}
         dispatch({ type: ADD_RESELLER_SUCCESS, payload: newData });
         toast.current?.show({
@@ -81,7 +103,7 @@ export const _addReseller = (resellerData: Reseller,toast: React.RefObject<Toast
             life: 3000,
           });
     } catch (error: any) {
-        console.log(error)
+        //console.log(error)
         dispatch({ type: ADD_RESELLER_FAIL, payload: error.message });
         toast.current?.show({
             severity: "error",
@@ -104,16 +126,25 @@ export const _editReseller = (id: number, resellerData: Reseller,toast: React.Re
         formData.append('contact_name', resellerData.contact_name);
         formData.append('email', resellerData.email);
         formData.append('phone', resellerData.phone);
-        formData.append('account_password', resellerData.account_password);
-        formData.append('country_id', String(resellerData.country?.id));
-        formData.append('province_id', String(resellerData.province?.id));
-        formData.append('districts_id', String(resellerData.district?.id));
-        formData.append('currency_preference_id', resellerData.code);
+        formData.append('password', resellerData.account_password);
+        formData.append('country_id', String(resellerData.country_id));
+        formData.append('province_id', String(resellerData.province_id));
+        formData.append('districts_id', String(resellerData.districts_id));
+        formData.append('currency_preference_id', resellerData.code.toString());
+        formData.append('balance',resellerData.balance.toString());
+        formData.append('reseller_group_id',String(resellerData.reseller_group_id));
+        formData.append('can_create_sub_resellers',resellerData.can_create_sub_resellers.toString());
+        formData.append('sub_reseller_limit',resellerData.sub_reseller_limit.toString());
+        formData.append('sub_resellers_can_create_sub_resellers',resellerData.sub_resellers_can_create_sub_resellers.toString())
+        formData.append('is_reseller_verified',resellerData.is_reseller_verified.toString())
+        formData.append('status',resellerData.status.toString())
+        formData.append('loan_balance',resellerData.loan_balance)
+        formData.append('total_payments_received',resellerData.total_payments_received)
+        formData.append('total_balance_sent',resellerData.total_balance_sent)
 
         if (resellerData.profile_image_url && typeof resellerData.profile_image_url !== 'string') {
             formData.append('profile_image_url', resellerData.profile_image_url);
         }
-        console.log(resellerData)
         //return
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/resellers/${id}`,
@@ -135,7 +166,7 @@ export const _editReseller = (id: number, resellerData: Reseller,toast: React.Re
           });
     } catch (error: any) {
         dispatch({ type: EDIT_RESELLER_FAIL, payload: error.message });
-        console.log(error)
+        //console.log(error)
         toast.current?.show({
             severity: "error",
             summary: "Error",
@@ -173,3 +204,140 @@ export const _deleteReseller = (id: number,toast: React.RefObject<Toast>) => asy
           });
     }
 };
+
+
+export const _changeResellerStatus = (id: number,status: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+    dispatch({ type: CHANGE_RESELLER_STATUS_REQUEST });
+    //console.log(id)
+    try {
+        const token = getAuthToken();
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/resellers/change-reseller-status/${id}`,
+             // Send the new status in the request body
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        //console.log(response)
+        dispatch({
+            type: CHANGE_RESELLER_STATUS_SUCCESS,
+            payload: { id, status: status==1?0:1 },
+        });
+
+        toast.current?.show({
+            severity: "success",
+            summary: "Successful",
+            detail: `Reseller status changed to ${status === 1 ? "De-Active" : "Active"}`,
+            life: 3000,
+        });
+    } catch (error: any) {
+        dispatch({
+            type: CHANGE_RESELLER_STATUS_FAIL,
+            payload: error.message,
+        });
+
+        toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Failed to change reseller status",
+            life: 3000,
+        });
+    }
+};
+
+
+export const _getResellerById = (id: number) => async (dispatch: Dispatch) => {
+    dispatch({ type: GET_RESELLER_BY_ID_REQUEST });
+
+    try {
+        const token = getAuthToken(); // Assuming getAuthToken retrieves the token
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/resellers/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        dispatch({
+            type: GET_RESELLER_BY_ID_SUCCESS,
+            payload: response.data.data.reseller,
+        });
+    } catch (error: any) {
+        dispatch({
+            type: GET_RESELLER_BY_ID_FAIL,
+            payload: error.response?.data?.message || error.message,
+        });
+    }
+};
+
+
+export const _changeResellerPassword = (bodyData: any, toast: React.RefObject<Toast>) =>
+    async (dispatch: Dispatch) => {
+        dispatch({ type: CHANGE_RESELLER_PASSWORD_REQUEST });
+
+        try {
+            const token = getAuthToken();
+            //console.log(bodyData)
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/resellers/set-reseller-password`,
+                bodyData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            dispatch({ type: CHANGE_RESELLER_PASSWORD_SUCCESS });
+            Swal.fire({
+                title: "Good job!",
+                text: response.data.message,
+                icon: "success"
+              });
+        } catch (error: any) {
+            dispatch({ type: CHANGE_RESELLER_PASSWORD_FAIL, payload: error.message });
+            Swal.fire({
+                title: "Error!",
+                text: error.response.data.message,
+                icon: "error"
+              });
+        }
+    };
+
+// Change PIN
+export const _changeResellerPin = (bodyData: any, toast: React.RefObject<Toast>) =>
+    async (dispatch: Dispatch) => {
+        dispatch({ type: CHANGE_RESELLER_PIN_REQUEST });
+
+        try {
+            const token = getAuthToken();
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/resellers/set-reseller-pin`,
+                bodyData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            dispatch({ type: CHANGE_RESELLER_PIN_SUCCESS });
+            Swal.fire({
+                title: "Good job!",
+                text: response.data.message,
+                icon: "success"
+              });
+        } catch (error: any) {
+            dispatch({ type: CHANGE_RESELLER_PIN_FAIL, payload: error.message });
+            Swal.fire({
+                title: "Error!",
+                text: error.response.data.message,
+                icon: "error"
+              });
+        }
+    };

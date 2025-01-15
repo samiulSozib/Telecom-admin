@@ -187,13 +187,13 @@ export interface Reseller {
     profile_image_url: string|File;
     email: string;
     phone: string;
-    country_id: string;
-    province_id: string;
-    districts_id: string;
+    country_id: number|string;
+    province_id: number|string;
+    districts_id: number|string;
     is_reseller_verified: number;
     status: number;
     payment: string;
-    balance: string;
+    balance: number;
     loan_balance: string;
     total_payments_received: string;
     total_balance_sent: string;
@@ -203,10 +203,14 @@ export interface Reseller {
     updated_at: string;
     deleted_at: string | null;
     user: User|null;
-    code:string,
-    country:Country|null
-    province:Province|null,
-    district:District|null
+    code:string|number,
+    country:string | null;
+    province:string | null;
+    district:string | null;
+    reseller_group_id:number,
+    can_create_sub_resellers:number,
+    sub_reseller_limit:number|string,
+    sub_resellers_can_create_sub_resellers:number
 }
 
 export interface User {
@@ -363,12 +367,18 @@ export interface Balance{
     payment_id:number|null,
     amount:string,
     remaining_balance:string,
-    currency_id:number|null,
+    currency_id:number,
     description:string,
     created_at:string,
     updated_at:string,
     reseller:Reseller|null,
-    currency:Currency|null
+    currency:Currency|null,
+    payment_method_id?:number|null,
+    payment_amount?:string,
+    payment_currency_id?:number,
+    payment_status?:string,
+    payment_notes?:string,
+    payment_date?:Date|null
 }
 
 export interface Payment{

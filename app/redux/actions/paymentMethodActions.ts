@@ -37,7 +37,7 @@ export const _fetchPaymentMethods = () => async (dispatch: Dispatch) => {
       type: FETCH_PAYMENT_METHOD_LIST_SUCCESS,
       payload: response.data.data.paymentmethods,
     });
-    console.log(response)
+    //console.log(response)
   } catch (error: any) {
     dispatch({
       type: FETCH_PAYMENT_METHOD_LIST_FAIL,

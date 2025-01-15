@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
-import { Country } from '@/types/interface';
+import { Country, Currency } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addCountry, _deleteCountry, _editCountry, _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
@@ -73,14 +73,17 @@ const CountryPage = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setCountryDialog(false);
+        setCountry(emptyCountry);
     };
 
     const hideDeleteCountryDialog = () => {
         setDeleteCountryDialog(false);
+        setCountry(emptyCountry);
     };
 
     const hideDeleteCountrysDialog = () => {
         setDeleteCountrysDialog(false);
+        setCountry(emptyCountry);
     };
 
 
@@ -241,7 +244,18 @@ const CountryPage = () => {
         </>
     );
 
+    useEffect(() => {
+        if (country.currency_id) {
+            const selectedCurrency = currencies.find((currency:Currency) => currency.id === country.currency_id);
 
+            if (selectedCurrency) {
+                setCountry((prev) => ({
+                    ...prev,
+                    currency: selectedCurrency, // Update with the selected company object
+                }));
+            }
+        }
+    }, [country.currency_id, currencies]);
 
 
     return (

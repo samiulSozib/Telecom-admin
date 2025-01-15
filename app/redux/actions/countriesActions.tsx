@@ -72,7 +72,7 @@ export const _addCountry = (countryData: Country,toast: React.RefObject<Toast>) 
 
         //console.log(response)
         const newData={...countryData,id:response.data.data.country.id}
-        console.log(newData)
+        //console.log(newData)
         dispatch({
             type: ADD_COUNTRY_SUCCESS,
             payload: newData,
@@ -141,7 +141,7 @@ export const _editCountry = (countryId: number, updatedData: any,toast: React.Re
             detail: "Failed to edit country",
             life: 3000,
           });
-          console.log(error)
+          //console.log(error)
     }
 };
 

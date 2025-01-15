@@ -59,7 +59,7 @@ const CompanyPage = () => {
     },[dispatch])
 
     useEffect(()=>{
-        console.log(company)
+        //console.log(company)
     },[company])
 
     const openNew = () => {
@@ -71,14 +71,17 @@ const CompanyPage = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setCompanyDialog(false);
+        setCompany(emptyCompany);
     };
 
     const hideDeleteCompanyDialog = () => {
         setDeleteCompanyDialog(false);
+        setCompany(emptyCompany);
     };
 
     const hideDeleteCompaniesDialog = () => {
         setDeleteCompaniesDialog(false);
+        setCompany(emptyCompany);
     };
 
 
@@ -185,12 +188,12 @@ const CompanyPage = () => {
         return (
             <>
                 <span className="p-column-title">Image</span>
-                <img src={`${rowData.company_logo}`} alt={rowData.company_name.toString()} className="shadow-2 border-round"
+                <img src={`${rowData.company_logo}`} alt={rowData.company_name.toString()} className="shadow-2"
                 style={{
-                    padding:"5px",
-                    height: '50px',
-                    width: '65px',
-                    objectFit: 'fill',
+                    width: '55px',
+                    height: '55px',
+                    borderRadius: '50%', // Makes the image circular
+                    objectFit: 'cover', // Ensures the image is cropped correctly within the circle
                 }}/>
             </>
         );
@@ -265,6 +268,19 @@ const CompanyPage = () => {
             <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
+
+    useEffect(() => {
+            if (company.country_id) {
+                const selectedCountry = countries.find((country:Country) => country.id === company.country_id);
+
+                if (selectedCountry) {
+                    setCompany((prev) => ({
+                        ...prev,
+                        country: selectedCountry, // Update with the selected company object
+                    }));
+                }
+            }
+        }, [company.country_id, countries]);
 
 
 

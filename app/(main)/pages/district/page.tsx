@@ -15,7 +15,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
-import { District } from '@/types/interface';
+import { District, Province } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addDistrict, _deleteDistrict, _editDistrict, _fetchDistricts } from '@/app/redux/actions/districtActions';
 import { provinceReducer } from '../../../redux/reducers/provinceReducer';
@@ -67,14 +67,17 @@ const DistrictPage = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setDistrictDialog(false);
+        setDistrict(emptyDistrict);
     };
 
     const hideDeleteDistrictDialog = () => {
         setDeleteDistrictDialog(false);
+        setDistrict(emptyDistrict);
     };
 
     const hideDeleteDistrictsDialog = () => {
         setDeleteDistrictsDialog(false);
+        setDistrict(emptyDistrict);
     };
 
 
@@ -212,7 +215,18 @@ const DistrictPage = () => {
         </>
     );
 
+    useEffect(() => {
+        if (district.province_id) {
+            const selectedProvince = provinces.find((province:Province) => province.id === district.province_id);
 
+            if (selectedProvince) {
+                setDistrict((prev) => ({
+                    ...prev,
+                    province: selectedProvince, // Update with the selected company object
+                }));
+            }
+        }
+    }, [district.province_id, provinces]);
 
 
     return (
@@ -302,6 +316,8 @@ const DistrictPage = () => {
                             )}
                         </div>
                     </Dialog>
+
+
 
                     <Dialog visible={deleteDistrictsDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteDistrictsDialog}>
                         <div className="flex align-items-center justify-content-center">

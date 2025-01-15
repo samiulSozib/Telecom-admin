@@ -16,7 +16,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { _addService, _deleteService, _editService, _fetchServiceList } from '@/app/redux/actions/serviceActions';
 import { _fetchServiceCategories } from '@/app/redux/actions/serviceCategoryActions';
 import { AppDispatch } from '@/app/redux/store';
-import { Service } from '@/types/interface';
+import { Company, Service } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
@@ -67,14 +67,17 @@ const Services = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setServiceDialog(false);
+        setService(emptyService);
     };
 
     const hideDeleteServiceDialog = () => {
         setDeleteServiceDialog(false);
+        setService(emptyService);
     };
 
     const hideDeleteServicesDialog = () => {
         setDeleteServicesDialog(false);
+        setService(emptyService);
     };
 
 
@@ -165,7 +168,12 @@ const Services = () => {
                         src={`${rowData.company?.company_logo}`}
                         alt={rowData.company?.company_logo.toString()}
                         className="shadow-2"
-                        width="60"
+                        style={{
+                            width: '55px',
+                            height: '55px',
+                            borderRadius: '50%', // Makes the image circular
+                            objectFit: 'cover', // Ensures the image is cropped correctly within the circle
+                        }}
                     />
                     <div style={{display:'flex',flexDirection:'column', textAlign:'start'}}>
                         <span style={{fontWeight:'bold'}}>{rowData.company?.company_name}</span>
@@ -225,7 +233,18 @@ const Services = () => {
         </>
     );
 
+    useEffect(() => {
+        if (service.company_id) {
+            const selectedCompany = companies.find((company:Company) => company.id === service.company_id);
 
+            if (selectedCompany) {
+                setService((prev) => ({
+                    ...prev,
+                    company: selectedCompany, // Update with the selected company object
+                }));
+            }
+        }
+    }, [service.company_id, companies]);
 
 
     return (

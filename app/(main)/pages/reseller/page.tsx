@@ -15,9 +15,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
-import {Reseller } from '@/types/interface';
+import {Country, Currency, Reseller } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
-import { _addReseller, _deleteReseller, _editReseller, _fetchResellers } from '@/app/redux/actions/resellerActions';
+import { _addReseller, _changeResellerStatus, _deleteReseller, _editReseller, _fetchResellers, _getResellerById } from '@/app/redux/actions/resellerActions';
 import { FileUpload } from 'primereact/fileupload';
 import { Password } from 'primereact/password';
 import { _fetchDistricts } from '@/app/redux/actions/districtActions';
@@ -25,6 +25,11 @@ import { _fetchProvinces } from '@/app/redux/actions/provinceActions';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { resellerGroupReducer } from '@/app/redux/reducers/resellerGroupReducer';
+import { _fetchResellerGroups } from '@/app/redux/actions/resellerGroupActions';
+import { InputSwitch } from 'primereact/inputswitch';
+import { SplitButton } from 'primereact/splitbutton';
+import { useRouter } from 'next/navigation';
 
 const ResellerPage = () => {
 
@@ -44,32 +49,37 @@ const ResellerPage = () => {
         profile_image_url: '',
         email: '',
         phone: '',
-        country_id: '',
-        province_id: '',
-        districts_id: '',
+        country_id: 0,
+        province_id: 0,
+        districts_id: 0,
         is_reseller_verified: 0,
         status: 0,
-        payment: '',
-        balance: '',
-        loan_balance: '',
-        total_payments_received: '',
-        total_balance_sent: '',
-        net_payment_balance: '',
+        payment: '0.00000',
+        balance: 0,
+        loan_balance: '0.00000',
+        total_payments_received: '0.00000',
+        total_balance_sent: '0.00000',
+        net_payment_balance: '0.00000',
         fcm_token: null,
         created_at: '',
         updated_at: '',
         deleted_at: null,
         user: null,
         code:'',
-        country:null,
-        province:null,
-        district:null
+        country:'',
+        province:'',
+        district:'',
+        reseller_group_id:0,
+        can_create_sub_resellers:0,
+        sub_reseller_limit:0,
+        sub_resellers_can_create_sub_resellers:0
       };
 
 
     const [resellerDialog, setResellerDialog] = useState(false);
     const [deleteResellerDialog, setDeleteResellerDialog] = useState(false);
     const [deleteResellersDialog, setDeleteResellersDialog] = useState(false);
+    const [statusResellerDialog,setStatusResellerDialog]=useState(false)
     const [reseller,setReseller]=useState<Reseller>(emptyReseller)
     const [selectedCompanies, setSelectedCompanies] = useState(null);
     const [submitted, setSubmitted] = useState(false);
@@ -77,12 +87,14 @@ const ResellerPage = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
-    const {resellers,loading}=useSelector((state:any)=>state.resellerReducer)
+    const {resellers,loading,singleReseller}=useSelector((state:any)=>state.resellerReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
     const {districts}=useSelector((state:any)=>state.districtReducer)
     const {provinces}=useSelector((state:any)=>state.provinceReducer)
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {reseller_groups}=useSelector((state:any)=>state.resellerGroupReducer)
     const {t}=useTranslation()
+    const router=useRouter()
 
 
     useEffect(()=>{
@@ -91,8 +103,12 @@ const ResellerPage = () => {
         dispatch(_fetchDistricts())
         dispatch(_fetchProvinces())
         dispatch(_fetchCurrencies())
+        dispatch(_fetchResellerGroups())
     },[dispatch])
 
+    useEffect(()=>{
+        //console.log(resellers)
+    },[dispatch,resellers])
 
 
     const openNew = () => {
@@ -110,6 +126,10 @@ const ResellerPage = () => {
         setDeleteResellerDialog(false);
     };
 
+    const hideStatusResellerDialog = () => {
+        setStatusResellerDialog(false);
+    };
+
     const hideDeleteResellersDialog = () => {
         setDeleteResellersDialog(false);
     };
@@ -118,6 +138,8 @@ const ResellerPage = () => {
 
     const saveReseller = () => {
         setSubmitted(true);
+        //console.log(reseller.code)
+        //return
         if (reseller.id && reseller.id !== 0) {
             dispatch(_editReseller(reseller.id,reseller,toast));
 
@@ -130,7 +152,12 @@ const ResellerPage = () => {
     };
 
     const editReseller = (reseller: Reseller) => {
-        setReseller({ ...reseller});
+        //console.log(reseller)
+        setReseller({ ...reseller,
+            country_id:parseInt(reseller.country_id?.toString()),
+            province_id:parseInt(reseller.province_id?.toString()),
+            districts_id:parseInt(reseller.districts_id?.toString()),
+        });
 
         setResellerDialog(true);
     };
@@ -155,6 +182,28 @@ const ResellerPage = () => {
         setDeleteResellersDialog(true);
     };
 
+    const confirmChangeStatus=(reseller:Reseller)=>{
+        setReseller(reseller)
+        setStatusResellerDialog(true)
+    }
+
+    const changeResellerStatus=()=>{
+        if (!reseller?.id) {
+            console.error("Reseller ID is undefined.");
+            return;
+        }
+        dispatch(_changeResellerStatus(reseller?.id,reseller.status,toast))
+        setStatusResellerDialog(false);
+    }
+
+    const viewResellerDetails=(reseller:Reseller)=>{
+        //dispatch(_getResellerById(reseller.id))
+        router.push(`/pages/reseller/${reseller.id}`);
+    }
+
+    useEffect(()=>{
+        //console.log(singleReseller)
+    },[dispatch,singleReseller])
 
 
     const rightToolbarTemplate = () => {
@@ -194,7 +243,12 @@ const ResellerPage = () => {
                         src={`${rowData.profile_image_url}`}
                         alt={rowData.reseller_name}
                         className="shadow-2"
-                        width="55"
+                        style={{
+                            width: '55px',
+                            height: '55px',
+                            borderRadius: '50%', // Makes the image circular
+                            objectFit: 'cover', // Ensures the image is cropped correctly within the circle
+                        }}
                     />
                     <div style={{display:'flex',flexDirection:'column', textAlign:'start'}}>
                         <span style={{fontWeight:'bold'}}>{rowData.email}</span>
@@ -288,14 +342,55 @@ const ResellerPage = () => {
 
 
 
-    const actionBodyTemplate = (rowData: Reseller) => {
-        return (
-            <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editReseller(rowData)}/>
-                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteReseller(rowData)} />
-            </>
-        );
-    };
+
+
+        const actionBodyTemplate = (rowData: Reseller) => {
+            //const menuType = rowData.menuType; // Assuming `menuType` is part of your data
+
+            // Define the dropdown actions
+            const items = [
+                {
+                    label: 'Edit',
+                    icon: 'pi pi-pencil',
+                    command: () => editReseller(rowData),
+                    //disabled: menuType === 'guest', // Example condition
+                },
+                {
+                    label: 'Delete',
+                    icon: 'pi pi-trash',
+                    command: () => confirmDeleteReseller(rowData),
+                    //disabled: menuType !== 'admin', // Example condition
+                },
+                {
+                    label: 'Activate',
+                    icon: 'pi pi-check',
+                    command: () => confirmChangeStatus(rowData),
+                    visible: rowData.status === 0, // Disable if already active
+                },
+                {
+                    label: 'Deactivate',
+                    icon: 'pi pi-times',
+                    command: () => confirmChangeStatus(rowData),
+                    visible: rowData.status === 1, // Disable if already inactive
+                },
+                {
+                    label: 'View Details',
+                    icon: 'pi pi-info-circle',
+                    command: () => viewResellerDetails(rowData),
+                },
+            ];
+
+            return (
+                <SplitButton
+                    label="Actions"
+                    icon="pi pi-cog"
+                    model={items}
+                    className="p-button-rounded"
+                    severity="info" // Optional: change severity or style
+                />
+            );
+        };
+
 
     // const header = (
     //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -319,6 +414,13 @@ const ResellerPage = () => {
             <Button label={t('FORM.GENERAL.SUBMIT')}  icon="pi pi-check" severity="success" onClick={deleteReseller} />
         </>
     );
+
+    const statusResellerDialogFooter = (
+        <>
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideStatusResellerDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')}  icon="pi pi-check" severity="success" onClick={changeResellerStatus} />
+        </>
+    );
     const deleteResellersDialogFooter = (
         <>
             <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteResellersDialog} />
@@ -327,6 +429,20 @@ const ResellerPage = () => {
     );
 
 
+
+
+useEffect(() => {
+        if (reseller.code) {
+            const selectedCode = currencies.find((currency:Currency) => currency.code === reseller.code);
+
+            if (selectedCode) {
+                setReseller((prev) => ({
+                    ...prev,
+                    code: selectedCode.id, // Update with the selected company object
+                }));
+            }
+        }
+    }, [reseller.code, currencies]);
 
 
     return (
@@ -385,7 +501,7 @@ const ResellerPage = () => {
                             name="company_logo"
                             accept="image/*"
                             customUpload
-                            onSelect={(e) => setReseller((prev) => ({
+                            onSelect={(e) => setReseller((prev:Reseller) => ({
                                 ...prev,
                                 profile_image_url: e.files[0],
                             }))}
@@ -398,7 +514,7 @@ const ResellerPage = () => {
                                     id="reseller_name"
                                     value={reseller?.reseller_name}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
                                             ...prev,
                                             reseller_name: e.target.value,
                                         }))
@@ -419,7 +535,7 @@ const ResellerPage = () => {
                                     id="contact_name"
                                     value={reseller.contact_name || ''}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
                                             ...prev,
                                             contact_name: e.target.value,
                                         }))
@@ -440,7 +556,7 @@ const ResellerPage = () => {
                                     id="email"
                                     value={reseller?.email}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
                                             ...prev,
                                             email: e.target.value,
                                         }))
@@ -461,7 +577,7 @@ const ResellerPage = () => {
                                     id="phone"
                                     value={reseller.phone || ''}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
                                             ...prev,
                                             phone: e.target.value,
                                         }))
@@ -475,46 +591,46 @@ const ResellerPage = () => {
                                 {submitted && !reseller.phone && <small className="p-invalid" style={{ color: 'red' }}>Phone is required.</small>}
                             </div>
                         </div>
+                        {reseller.id === 0 && (
+                            <div className='formgrid grid'>
+                                <div className="field col">
+                                    <label style={{fontWeight:'bold'}} htmlFor="password">Password</label>
+                                    <Password
+                                        id="account_password"
+                                        value={reseller?.account_password}
+                                        onChange={(e) =>
+                                            setReseller((prev:Reseller) => ({
+                                                ...prev,
+                                                account_password: e.target.value,
+                                            }))
+                                        }
+                                        required
+                                        autoFocus
+                                        className={classNames({
+                                            'p-invalid': submitted && !reseller.account_password
+                                        })}
+                                    />
+                                    {submitted && !reseller.account_password && <small className="p-invalid" style={{ color: 'red' }}>Password is required.</small>}
+                                </div>
 
-                        <div className='formgrid grid'>
-                            <div className="field col">
-                                <label style={{fontWeight:'bold'}} htmlFor="password">Password</label>
-                                <Password
-                                    id="account_password"
-                                    value={reseller?.account_password}
-                                    onChange={(e) =>
-                                        setReseller((prev) => ({
-                                            ...prev,
-                                            account_password: e.target.value,
-                                        }))
-                                    }
-                                    required
-                                    autoFocus
-                                    className={classNames({
-                                        'p-invalid': submitted && !reseller.account_password
-                                    })}
-                                />
-                                {submitted && !reseller.account_password && <small className="p-invalid" style={{ color: 'red' }}>Password is required.</small>}
                             </div>
-
-                        </div>
-
+                        )}
                         <div className="formgrid grid">
                             <div className="field col">
                                 <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.COUNTRY')}</label>
                                 <Dropdown
-                                    id="country"
-                                    value={reseller.country}
+                                    id="country_id"
+                                    value={reseller.country_id}
                                     options={countries}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
 
                                             ...prev,
-                                            country: e.value,
+                                            country_id: e.value,
                                         }))
                                     }
                                     optionLabel='country_name'
-                                    // optionValue='id'
+                                    optionValue='id'
                                     placeholder="Choose a country"
                                     className="w-full"
                                 />
@@ -523,18 +639,18 @@ const ResellerPage = () => {
                             <div className="field col">
                                 <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.PROVINCE')}</label>
                                 <Dropdown
-                                    id="province"
-                                    value={reseller.province}
+                                    id="province_id"
+                                    value={reseller.province_id}
                                     options={provinces}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
 
                                             ...prev,
-                                            province: e.value,
+                                            province_id: e.value,
                                         }))
                                     }
                                     optionLabel='province_name'
-                                    // optionValue='id'
+                                    optionValue='id'
                                     placeholder="Choose a province"
                                     className="w-full"
                                 />
@@ -548,18 +664,18 @@ const ResellerPage = () => {
                             <div className="field col">
                                 <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.DISTRICT')}</label>
                                 <Dropdown
-                                    id="district"
-                                    value={reseller.district}
+                                    id="districts_id"
+                                    value={reseller.districts_id}
                                     options={districts}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
 
                                             ...prev,
-                                            district: e.value,
+                                            districts_id: e.value,
                                         }))
                                     }
                                     optionLabel='district_name'
-                                    // optionValue='id'
+                                    optionValue='id'
                                     placeholder="Choose a district"
                                     className="w-full"
                                 />
@@ -572,7 +688,7 @@ const ResellerPage = () => {
                                     value={reseller.code}
                                     options={currencies}
                                     onChange={(e) =>
-                                        setReseller((prev) => ({
+                                        setReseller((prev:Reseller) => ({
 
                                             ...prev,
                                             code: e.value,
@@ -586,8 +702,89 @@ const ResellerPage = () => {
 
                             </div>
 
+                        </div>
+
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label style={{fontWeight:'bold'}} htmlFor="name">Reseller Group</label>
+                                <Dropdown
+                                    id="reseller_group_id"
+                                    value={reseller.reseller_group_id}
+                                    options={reseller_groups}
+                                    onChange={(e) =>
+                                        setReseller((prev:Reseller) => ({
+
+                                            ...prev,
+                                            reseller_group_id: e.value,
+                                        }))
+                                    }
+                                    optionLabel='name'
+                                    optionValue='id'
+                                    placeholder="Choose a group"
+                                    className="w-full"
+                                />
+
+                            </div>
+                            <div className="field col">
+                                <label style={{fontWeight:'bold'}} htmlFor="name">Sub Reseller Limit</label>
+                                <InputText
+                                    id="sub_reseller_limit"
+                                    value={reseller.sub_reseller_limit.toString()}
+                                    onChange={(e) =>
+                                        setReseller((prev:Reseller) => ({
+                                            ...prev,
+                                            sub_reseller_limit: e.target.value,
+                                        }))
+                                    }
+                                    placeholder='Sub Reseller limit'
+                                    className={classNames({
+                                        'p-invalid': submitted && !reseller.phone
+                                    })}
+
+                                />
+
+                            </div>
 
                         </div>
+
+                        <div className="formgrid grid">
+                            <div className="field col flex align-items-center gap-2" >
+
+                                <InputSwitch
+                                    id="can_create_sub_resellers"
+                                    checked={reseller.can_create_sub_resellers===1} // Replace logic as needed
+                                    onChange={(e) =>
+                                        setReseller((prev: Reseller) => ({
+                                        ...prev,
+                                        can_create_sub_resellers: e.value ? 1 : 0, // Adjust values based on your requirements
+                                        }))
+                                    }
+                                    className="w-small"
+                                />
+                                <label style={{ fontWeight: 'bold' }} htmlFor="inputSwitch1">Can Create Sub Reseller</label>
+                            </div>
+
+                            <div className="field col flex align-items-center gap-2">
+
+                                <InputSwitch
+                                    id="sub_resellers_can_create_sub_resellers"
+                                    checked={reseller.sub_resellers_can_create_sub_resellers===1} // Replace logic as needed
+                                    onChange={(e) =>
+                                        setReseller((prev: Reseller) => ({
+                                        ...prev,
+                                        sub_resellers_can_create_sub_resellers: e.value ? 1 : 0, // Adjust values based on your requirements
+                                        }))
+                                    }
+                                    className="w-small"
+                                />
+                                <label style={{ fontWeight: 'bold' }} htmlFor="inputSwitch1">Sub Reseller Can Create Sub Reseller</label>
+                            </div>
+
+
+                        </div>
+
+
+
                         </div>
 
 
@@ -599,6 +796,17 @@ const ResellerPage = () => {
                             {reseller && (
                                 <span>
                                     Are you sure you want to delete <b>{reseller.reseller_name}</b>?
+                                </span>
+                            )}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={statusResellerDialog} style={{ width: '450px' }} header="Confirm" modal footer={statusResellerDialogFooter} onHide={hideStatusResellerDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {reseller && (
+                                <span>
+                                    Are you sure you want to change status <b>{reseller.reseller_name}</b>?
                                 </span>
                             )}
                         </div>

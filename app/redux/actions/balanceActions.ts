@@ -45,13 +45,29 @@ export const _addBalance = (balanceData: Balance,toast: React.RefObject<Toast>) 
 
     try {
         const token = getAuthToken();
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/balances`, balanceData, {
+        const formData=new FormData()
+        formData.append("reseller_id", balanceData.reseller_id.toString());
+        formData.append("transaction_type", balanceData.transaction_type);
+        formData.append("balance_amount", balanceData.amount);
+        formData.append("currency_id", balanceData.currency_id?.toString());
+        formData.append("description", balanceData.description);
+        formData.append("payment_method_id", balanceData.payment_method_id?balanceData.payment_method_id.toString():''); // Empty string for no value
+        formData.append("payment_amount", balanceData.payment_amount?balanceData.payment_amount:'');
+        formData.append("payment_currency_id", balanceData.payment_currency_id?balanceData.payment_currency_id.toString():'');
+        formData.append("payment_status", "completed");
+        formData.append("payment_notes", balanceData.payment_notes?balanceData.payment_notes:''); // Empty string for no value
+        formData.append("payment_date", balanceData.payment_date?balanceData.payment_date.toString():'');
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/balances`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
             },
         });
 
-        dispatch({ type: ADD_BALANCE_SUCCESS, payload: response.data.data.balance });
+        const newData={...balanceData,id:response.data.data.balance.id}
+
+        dispatch({ type: ADD_BALANCE_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",
@@ -75,17 +91,31 @@ export const _editBalance = (balanceId: number, balanceData: Balance,toast: Reac
 
     try {
         const token = getAuthToken();
-        const response = await axios.put(
+        const formData=new FormData()
+        formData.append("reseller_id", balanceData.reseller_id.toString());
+        formData.append("transaction_type", balanceData.transaction_type);
+        formData.append("balance_amount", balanceData.amount);
+        formData.append("currency_id", balanceData.currency_id?.toString());
+        formData.append("description", balanceData.description);
+        formData.append("payment_method_id", balanceData.payment_method_id?balanceData.payment_method_id.toString():''); // Empty string for no value
+        formData.append("payment_amount", balanceData.payment_amount?balanceData.payment_amount:'');
+        formData.append("payment_currency_id", balanceData.payment_currency_id?balanceData.payment_currency_id.toString():'');
+        formData.append("payment_status", "completed");
+        formData.append("payment_notes", balanceData.payment_notes?balanceData.payment_notes:''); // Empty string for no value
+        formData.append("payment_date", balanceData.payment_date?balanceData.payment_date.toString():'');
+
+        const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/balances/${balanceId}`,
-            balanceData,
+            formData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             }
         );
-
-        dispatch({ type: EDIT_BALANCE_SUCCESS, payload: response.data.data.balance });
+        const newData={...balanceData,id:response.data.data.balance.id}
+        dispatch({ type: EDIT_BALANCE_SUCCESS, payload: newData });
         toast.current?.show({
             severity: "success",
             summary: "Successful",
@@ -93,6 +123,7 @@ export const _editBalance = (balanceId: number, balanceData: Balance,toast: Reac
             life: 3000,
           });
     } catch (error: any) {
+        //console.log(error)
         dispatch({ type: EDIT_BALANCE_FAIL, payload: error.message });
         toast.current?.show({
             severity: "error",

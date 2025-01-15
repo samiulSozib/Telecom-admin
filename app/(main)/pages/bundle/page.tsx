@@ -20,7 +20,7 @@ import { Paginator } from 'primereact/paginator';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
 import { AppDispatch } from '@/app/redux/store';
-import { Bundle } from '@/types/interface';
+import { Bundle, Service } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
@@ -92,14 +92,17 @@ const BundlePage = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setServiceDialog(false);
+        setBundle(emptyBundle);
     };
 
     const hideDeleteServiceDialog = () => {
         setDeleteServiceDialog(false);
+        setBundle(emptyBundle);
     };
 
     const hideDeleteServicesDialog = () => {
         setDeleteServicesDialog(false);
+        setBundle(emptyBundle);
     };
 
 
@@ -350,6 +353,19 @@ const BundlePage = () => {
         const page = event.page + 1;
         dispatch(_fetchBundleList(page));
     };
+
+    useEffect(() => {
+        if (bundle.service_id) {
+            const selectedService = services.find((service:Service) => service.id === bundle.service_id);
+
+            if (selectedService) {
+                setBundle((prev) => ({
+                    ...prev,
+                    service: selectedService, // Update with the selected company object
+                }));
+            }
+        }
+    }, [bundle.service_id, services]);
 
 
     return (

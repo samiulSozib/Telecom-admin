@@ -80,7 +80,7 @@ const TransactionPage = () => {
     },[dispatch])
 
     useEffect(()=>{
-        console.log(transactions)
+        //console.log(transactions)
     },[dispatch,transactions])
 
 

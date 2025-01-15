@@ -17,7 +17,7 @@ import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { _addCompanyCode, _deleteCompanyCode, _editCompanyCode, _fetchCompanyCodes } from '@/app/redux/actions/companyCodeActions';
 import { AppDispatch } from '@/app/redux/store';
-import { CompanyCode } from '@/types/interface';
+import { Company, CompanyCode } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
@@ -64,14 +64,17 @@ const CompanyCodePage = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setCompanyCodeDialog(false);
+        setCompanyCode(emptyCompanyCode)
     };
 
     const hideDeleteCompanyCodeDialog = () => {
         setDeleteCompanyCodeDialog(false);
+        setCompanyCode(emptyCompanyCode)
     };
 
     const hideDeleteCompanyCodesDialog = () => {
         setDeleteCompanyCodesDialog(false);
+        setCompanyCode(emptyCompanyCode)
     };
 
 
@@ -90,7 +93,7 @@ const CompanyCodePage = () => {
     };
 
     const editCompanyCode = (companyCode: CompanyCode) => {
-        console.log(companyCode)
+        //console.log(companyCode.company)
         setCompanyCode({ ...companyCode});
 
         setCompanyCodeDialog(true);
@@ -226,6 +229,18 @@ const CompanyCodePage = () => {
         </>
     );
 
+    useEffect(() => {
+        if (companyCode.company_id) {
+            const selectedCompany = companies.find((company:Company) => company.id === companyCode.company_id);
+
+            if (selectedCompany) {
+                setCompanyCode((prev) => ({
+                    ...prev,
+                    company: selectedCompany, // Update with the selected company object
+                }));
+            }
+        }
+    }, [companyCode.company_id, companies]);
 
 
 

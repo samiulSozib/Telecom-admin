@@ -38,7 +38,7 @@ export const _fetchPurchasedProducts = () => async (dispatch: Dispatch) => {
       type: FETCH_PURCHASED_PRODUCTS_SUCCESS,
       payload: response.data.data.purchasedproducts,
     });
-    console.log(response)
+    //console.log(response)
   } catch (error: any) {
     dispatch({
       type: FETCH_PURCHASED_PRODUCTS_FAIL,
@@ -68,7 +68,7 @@ export const _addPurchasedProduct = (newProduct: PurchasedProduct,toast: React.R
       type: ADD_PURCHASED_PRODUCT_SUCCESS,
       payload: newData,
     });
-    console.log(response)
+    //console.log(response)
     toast.current?.show({
         severity: "success",
         summary: "Successful",

@@ -15,7 +15,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { _fetchCountries } from '@/app/redux/actions/countriesActions';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
-import { Province } from '@/types/interface';
+import { Country, Province } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addProvince, _deleteProvince, _editProvince, _fetchProvinces } from '@/app/redux/actions/provinceActions';
 import { countriesReducer } from '../../../redux/reducers/countriesReducer';
@@ -64,14 +64,17 @@ const ProvincePage = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setProvinceDialog(false);
+        setProvince(emptyProvince);
     };
 
     const hideDeleteProvinceDialog = () => {
         setDeleteProvinceDialog(false);
+        setProvince(emptyProvince);
     };
 
     const hideDeleteProvincesDialog = () => {
         setDeleteProvincesDialog(false);
+        setProvince(emptyProvince);
     };
 
 
@@ -209,6 +212,19 @@ const ProvincePage = () => {
         </>
     );
 
+
+useEffect(() => {
+        if (province.country_id) {
+            const selectedCountry = countries.find((country:Country) => country.id === province.country_id);
+
+            if (selectedCountry) {
+                setProvince((prev) => ({
+                    ...prev,
+                    country: selectedCountry, // Update with the selected company object
+                }));
+            }
+        }
+    }, [province.country_id, countries]);
 
 
 

@@ -292,40 +292,42 @@ const UserListGroupPage = () => {
                                 <div className="field col flex-1">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>First Name</label>
                                     <InputText
-                                        id="name"
-                                        value={user.name}
+                                        id="first_name"
+                                        value={user.first_name}
                                         onChange={(e) =>
                                             setUser((prev:any) => ({
                                                 ...prev,
-                                                name: e.target.value,
+                                                first_name: e.target.value,
                                             }))
                                         }
                                         required
                                         autoFocus
                                         className={classNames({
-                                            'p-invalid': submitted && !user.name
+                                            'p-invalid': submitted && !user.first_name
                                         })}
                                     />
                                 </div>
 
                                 <div className="field col flex-1">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Email</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Last Name</label>
                                     <InputText
-                                        id="discount_value"
-                                        value={user.email}
+                                        id="last_name"
+                                        value={user.last_name}
                                         onChange={(e) =>
                                             setUser((prev:any) => ({
                                                 ...prev,
-                                                email: e.target.value,
+                                                last_name: e.target.value,
                                             }))
                                         }
                                         required
                                         autoFocus
                                         className={classNames({
-                                            'p-invalid': submitted && !user.email
+                                            'p-invalid': submitted && !user.last_name
                                         })}
                                     />
                                 </div>
+
+
 
                                 <div className="field col flex-1">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Password</label>
@@ -370,20 +372,38 @@ const UserListGroupPage = () => {
                             <br />
                             <div>
                             <div className="field col flex-1">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Phone Number</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Email</label>
                                     <InputText
-                                        id="phone"
-                                        //value={user.phone.toString()}
+                                        id="discount_value"
+                                        value={user.email}
                                         onChange={(e) =>
                                             setUser((prev:any) => ({
                                                 ...prev,
-                                                phone: e.target.value,
+                                                email: e.target.value,
                                             }))
                                         }
                                         required
                                         autoFocus
                                         className={classNames({
-                                            'p-invalid': submitted && !user.phone
+                                            'p-invalid': submitted && !user.email
+                                        })}
+                                    />
+                                </div>
+                            <div className="field col flex-1">
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Phone Number</label>
+                                    <InputText
+                                        id="phone"
+                                        value={user.phone_number}
+                                        onChange={(e) =>
+                                            setUser((prev:any) => ({
+                                                ...prev,
+                                                phone_number: e.target.value,
+                                            }))
+                                        }
+                                        required
+                                        autoFocus
+                                        className={classNames({
+                                            'p-invalid': submitted && !user.phone_number
                                         })}
                                     />
                                 </div>
@@ -391,7 +411,7 @@ const UserListGroupPage = () => {
                                     <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Role</label>
                                     <Dropdown
                                         id="discount_type"
-                                        value={user.roles}
+                                        value={user.role}
                                         options={roles}
                                         onChange={(e) =>
                                             setUser((prev:any) => ({

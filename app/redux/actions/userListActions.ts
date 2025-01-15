@@ -46,20 +46,32 @@ export const _fetchUserList = () => async (dispatch: Dispatch) => {
 };
 
 // Add User
-export const _addUser = (newUserData: User, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+export const _addUser = (newUserData: any, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_USER_REQUEST });
   try {
+        const formData = new FormData();
 
+        // Append each property of the `body` object to the `FormData` instance
+        formData.append("first_name", newUserData.first_name);
+        formData.append("last_name", newUserData.last_name);
+        formData.append("email", newUserData.email);
+        formData.append("phone_number", newUserData.phone_number);
+        formData.append("role", newUserData.role);
+        formData.append("password", newUserData.password);
+        formData.append("confirm_password", newUserData.confirm_password);
+        formData.append("currency_preference_id", newUserData.currency_preference_id);
     const token = getAuthToken();
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, newUserData, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
-    const newData = { ...newUserData, id: response.data.data.user.id };
+    //console.log(response)
+    //const newData = { ...newUserData, id: response.data.data.user.id };
     dispatch({
       type: ADD_USER_SUCCESS,
-      payload: newData,
+      payload: response.data.data.user,
     });
     toast.current?.show({
       severity: "success",
@@ -68,6 +80,7 @@ export const _addUser = (newUserData: User, toast: React.RefObject<Toast>) => as
       life: 3000,
     });
   } catch (error: any) {
+    //console.log(error)
     dispatch({
       type: ADD_USER_FAIL,
       payload: error.message,

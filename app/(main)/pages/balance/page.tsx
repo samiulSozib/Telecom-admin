@@ -20,6 +20,13 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _addBalance, _deleteBalance, _editBalance, _fetchBalances } from '@/app/redux/actions/balanceActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { resellerReducer } from '../../../redux/reducers/resellerReducer';
+import { _fetchResellers } from '@/app/redux/actions/resellerActions';
+import { currenciesReducer } from '../../../redux/reducers/currenciesReducer';
+import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
+import { paymentMethodsReducer } from '../../../redux/reducers/paymentMethodReducer';
+import { _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
+import { Calendar } from 'primereact/calendar';
 
 const BalancePage = () => {
 
@@ -27,7 +34,7 @@ const BalancePage = () => {
         id:0,
         reseller_id:0,
         transaction_type:'',
-        payment_id:0,
+        payment_id:null,
         amount:'',
         remaining_balance:'',
         currency_id:0,
@@ -35,7 +42,13 @@ const BalancePage = () => {
         created_at:'',
         updated_at:'',
         reseller:null,
-        currency:null
+        currency:null,
+        payment_method_id:null,
+        payment_amount:'',
+        payment_currency_id:0,
+        payment_status:'',
+        payment_notes:'',
+        payment_date:null
     }
 
 
@@ -50,13 +63,17 @@ const BalancePage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {balances,loading}=useSelector((state:any)=>state.balanceReducer)
-    const {countries}=useSelector((state:any)=>state.countriesReducer)
+    const {currencies}=useSelector((state:any)=>state.currenciesReducer)
+    const {resellers}=useSelector((state:any)=>state.resellerReducer)
+    const {paymentMethods}=useSelector((state:any)=>state.paymentMethodsReducer)
     const {t}=useTranslation()
 
 
     useEffect(()=>{
         dispatch(_fetchBalances())
-        dispatch(_fetchCountries())
+        dispatch(_fetchCurrencies())
+        dispatch(_fetchResellers())
+        dispatch(_fetchPaymentMethods())
     },[dispatch])
 
     const openNew = () => {
@@ -255,20 +272,20 @@ const BalancePage = () => {
 
     const balanceDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={saveBalance} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveBalance} />
         </>
     );
     const deleteBalanceDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteBalanceDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text onClick={deleteBalance} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteBalanceDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteBalance} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" text onClick={hideDeleteBalancesDialog} />
-            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" text  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteBalancesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -311,49 +328,212 @@ const BalancePage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={balanceDialog}  style={{ width: '550px' }} header={t('BALANCE.DETAILS.TITLE')} modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>
-                        {/* <div className="field">
-                            <label htmlFor="balance_name">Reseller</label>
-                            <InputText
-                                id="balance_name"
-                                value={balance.balance_name}
-                                onChange={(e) =>
-                                    setBalance((prevBalance) => ({
-                                        ...prevBalance,
-                                        balance_name: e.target.value,
-                                    }))
-                                }
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !balance.balance_name
-                                })}
-                            />
-                            {submitted && !balance.balance_name && <small className="p-invalid">Balance Name is required.</small>}
+                    <Dialog visible={balanceDialog}  style={{ width: '900px',padding:'5px' }} header={t('BALANCE.DETAILS.TITLE')} modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>
+                        <div className="flex flex-wrap p-fluid mt-3 gap-4">
+                            {/* Balance Details */}
+                            <div className="flex-1 col-12 lg:col-6">
+                                <div className="card">
+                                    <h5 className="mb-4">Balance Details</h5>
+
+                                    {/* Reseller */}
+                                    <div className="field">
+                                        <label htmlFor="reseller_id">Reseller *</label>
+                                        <Dropdown
+                                            id="reseller_id"
+                                            value={balance.reseller_id}
+                                            options={resellers}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    reseller_id: e.value,
+                                                }))
+                                            }
+                                            optionLabel="reseller_name"
+                                            optionValue="id"
+                                            placeholder="Select a reseller"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Transaction Type */}
+                                    <div className="field">
+                                        <label htmlFor="transaction_type">Transaction Type *</label>
+                                        <Dropdown
+                                            id="transaction_type"
+                                            value={balance.transaction_type}
+                                            options={[
+                                                { label: 'Credit', value: 'credit' },
+                                                { label: 'Debit', value: 'debit' },
+                                            ]}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    transaction_type: e.value,
+                                                }))
+                                            }
+                                            placeholder="Select transaction type"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    <div className="field">
+                                        <label htmlFor="amount">Balance Amount *</label>
+                                        <InputText
+                                            id="amount"
+                                            value={balance.amount}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    amount: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="0"
+                                            type="number"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Currency */}
+                                    <div className="field">
+                                        <label htmlFor="currency_id">Currency *</label>
+                                        <Dropdown
+                                            id="currency_id"
+                                            value={balance.currency_id}
+                                            options={currencies}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    currency_id: e.value,
+                                                }))
+                                            }
+                                            optionLabel="name"
+                                            optionValue="id"
+                                            placeholder="Select a currency"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Description */}
+                                    <div className="field">
+                                        <label htmlFor="description">Description *</label>
+                                        <InputText
+                                            id="description"
+                                            value={balance.description}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    description: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="Enter description"
+                                            className="w-full"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Payment Details */}
+                            <div className="flex-1 col-12 lg:col-6">
+                                <div className="card">
+                                    <h5 className="mb-4">Payment Details</h5>
+
+                                    {/* Payment Method */}
+                                    <div className="field">
+                                        <label htmlFor="payment_method_id">Payment Method</label>
+                                        <Dropdown
+                                            id="payment_method_id"
+                                            value={balance.payment_method_id}
+                                            options={paymentMethods}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    payment_method_id: e.value,
+                                                }))
+                                            }
+                                            optionLabel="method_name"
+                                            optionValue="id"
+                                            placeholder="Select a payment method"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Payment Amount */}
+                                    <div className="field">
+                                        <label htmlFor="payment_amount">Payment Amount</label>
+                                        <InputText
+                                            id="payment_amount"
+                                            value={balance.payment_amount}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    payment_amount: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="0"
+                                            type="number"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Payment Currency */}
+                                    <div className="field">
+                                        <label htmlFor="payment_currency_id">Payment Currency</label>
+                                        <Dropdown
+                                            id="payment_currency_id"
+                                            value={balance.payment_currency_id}
+                                            options={currencies}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    payment_currency_id: e.value,
+                                                }))
+                                            }
+                                            optionLabel="name"
+                                            optionValue="id"
+                                            placeholder="Select a currency"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Payment Notes */}
+                                    <div className="field">
+                                        <label htmlFor="payment_notes">Payment Notes</label>
+                                        <InputText
+                                            id="payment_notes"
+                                            value={balance.payment_notes}
+                                            onChange={(e) =>
+                                                setBalance((prev) => ({
+                                                    ...prev,
+                                                    payment_notes: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="Enter payment notes"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* Payment Date */}
+                                    <div className="field">
+                                        <label htmlFor="payment_date">Payment Date</label>
+                                        <Calendar
+                                            id="payment_date"
+                                            value={balance.payment_date ? new Date(balance.payment_date) : null}
+                                            onChange={(e) =>
+                                                setBalance((prev:Balance) => ({
+                                                    ...prev,
+                                                    payment_date: e.value,
+                                                }))
+                                            }
+                                            placeholder="mm/dd/yyyy"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
 
 
-
-                        <div className="field col">
-                                <label htmlFor="country_id">Reseller</label>
-                                <Dropdown
-                                    id="country_id"
-                                    value={balance.country_id}
-                                    options={countries}
-                                    onChange={(e) =>
-                                        setBalance((prev) => ({
-
-                                            ...prev,
-                                            country_id: e.value,
-                                        }))
-                                    }
-                                    optionLabel='country_name'
-                                    optionValue='id'
-                                    placeholder="Choose a country"
-                                    className="w-full"
-                                />
-
-                        </div> */}
                     </Dialog>
 
                     <Dialog visible={deleteBalanceDialog} style={{ width: '450px' }} header={t('TABLE.GENERAL.CONFIRM')} modal footer={deleteBalanceDialogFooter} onHide={hideDeleteBalanceDialog}>

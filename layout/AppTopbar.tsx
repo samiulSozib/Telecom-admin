@@ -44,7 +44,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         i18n.changeLanguage(language.language_code) // Change language dynamically
             .then(() => {
                 setCurrentLanguage(language.language_code); // Update state
-                console.log(`Language changed to: ${language.language_code}`);
+                //console.log(`Language changed to: ${language.language_code}`);
                 router.refresh()
             })
             .catch((err) => {

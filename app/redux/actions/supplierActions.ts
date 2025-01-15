@@ -37,7 +37,7 @@ export const _fetchSuppliers = () => async (dispatch: Dispatch) => {
       type: FETCH_SUPPLIERS_SUCCESS,
       payload: response.data.data.suppliers,
     });
-    console.log(response)
+    //console.log(response)
   } catch (error: any) {
     dispatch({
       type: FETCH_SUPPLIERS_FAIL,

@@ -89,7 +89,7 @@ export const _editCurrency = (currencyId: number, currencyData: Currency,toast: 
                 },
             }
         );
-        console.log(response)
+        //console.log(response)
         dispatch({ type: EDIT_CURRENCY_SUCCESS, payload: response.data.data.currency });
         toast.current?.show({
             severity: "success",
@@ -98,7 +98,7 @@ export const _editCurrency = (currencyId: number, currencyData: Currency,toast: 
             life: 3000,
           });
     } catch (error: any) {
-        console.log(error)
+        //console.log(error)
         dispatch({ type: EDIT_CURRENCY_FAIL, payload: error.message });
         toast.current?.show({
             severity: "error",

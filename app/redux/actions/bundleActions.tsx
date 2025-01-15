@@ -136,7 +136,7 @@ export const _editBundle = (bundleId: number, updatedBundleData: Bundle, toast: 
       life: 3000,
     });
   } catch (error: any) {
-    console.log(error)
+    //console.log(error)
     dispatch({
       type: EDIT_BUNDLE_FAIL,
       payload: error.message,

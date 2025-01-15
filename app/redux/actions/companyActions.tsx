@@ -71,7 +71,7 @@ export const _deleteCompany = (companyId: number,toast: React.RefObject<Toast>) 
 // ADD COMPANY ACTION
 export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: ADD_COMPANY_REQUEST });
-    console.log(newCompany)
+    //console.log(newCompany)
     //return
     const formData = new FormData();
 
@@ -110,7 +110,7 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
             life: 3000
         });
     } catch (error: any) {
-        console.log(error)
+        //console.log(error)
         dispatch({
             type: ADD_COMPANY_FAIL,
             payload: error.message,
@@ -122,7 +122,7 @@ export const _addCompany = (newCompany: Company,toast: React.RefObject<Toast>) =
 // EDIT COMPANY ACTION
 export const _editCompany = (updatedCompany: Company,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
     dispatch({ type: EDIT_COMPANY_REQUEST });
-    console.log(updatedCompany)
+    //console.log(updatedCompany)
 
 
     const formData = new FormData();

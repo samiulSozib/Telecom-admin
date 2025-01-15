@@ -33,7 +33,7 @@ export const _fetchCompanyCodes = () => async (dispatch: Dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response)
+    //console.log(response)
     dispatch({ type: FETCH_COMPANY_CODE_LIST_SUCCESS, payload: response.data.data.company_codes });
   } catch (error: any) {
     dispatch({ type: FETCH_COMPANY_CODE_LIST_FAIL, payload: error.message });
@@ -74,7 +74,7 @@ export const _deleteCompanyCode = (codeId: number, toast: React.RefObject<Toast>
 // ADD COMPANY CODE ACTION
 export const _addCompanyCode = (newCode: CompanyCode, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_COMPANY_CODE_REQUEST });
-  console.log(newCode)
+  //console.log(newCode)
   //return
     const body={
         reserved_digit:newCode.reserved_digit,
@@ -111,7 +111,7 @@ export const _addCompanyCode = (newCode: CompanyCode, toast: React.RefObject<Toa
 // EDIT COMPANY CODE ACTION
 export const _editCompanyCode = (updatedCode: CompanyCode, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_COMPANY_CODE_REQUEST });
-  console.log(updatedCode)
+  //console.log(updatedCode)
   //return
   const body={
     reserved_digit:updatedCode.reserved_digit,
@@ -126,7 +126,7 @@ export const _editCompanyCode = (updatedCode: CompanyCode, toast: React.RefObjec
         'Content-Type': 'application/json',
       },
     });
-    console.log(response)
+    //console.log(response)
     const newData={...updatedCode,id:response.data.data.company_code.id}
     dispatch({ type: EDIT_COMPANY_CODE_SUCCESS, payload: newData });
     toast.current?.show({

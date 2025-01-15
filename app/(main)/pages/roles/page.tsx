@@ -60,7 +60,7 @@ const RolesPage = () => {
     },[dispatch])
 
     dispatch(()=>{
-        console.log(selectedPermissions)
+        //console.log(selectedPermissions)
     },[dispatch,selectedPermissions])
 
     const openNew = () => {
@@ -103,7 +103,7 @@ const RolesPage = () => {
     };
 
     const editRole = (id: number) => {
-        console.log(id)
+        //console.log(id)
         dispatch(_fetchSingleRole(id))
         //setRole({ ...role,id:singleRole?.id,name:singleRole?.name,guard_name:singleRole?.guard_name,created_at:singleRole?.created_at,updated_at:singleRole?.updated_at});
         //setSelectedPermissions(singleRole.permissions)

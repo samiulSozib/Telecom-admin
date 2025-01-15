@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-
+"use client"
 import React, { useContext } from 'react';
 import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';

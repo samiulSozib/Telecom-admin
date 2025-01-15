@@ -94,7 +94,7 @@ export const _addRole = (newRoleData: Roles,permissions:Permission[], toast: Rea
         },
       }
     );
-    console.log(response)
+    //console.log(response)
     dispatch({
       type: ADD_ROLE_SUCCESS,
       payload: response.data.data.role,
