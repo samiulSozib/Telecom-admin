@@ -22,11 +22,11 @@ const getAuthToken = () => {
   };
 
 // Fetch Service List
-export const _fetchServiceList = () => async (dispatch: Dispatch) => {
+export const _fetchServiceList = (search:string='') => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_SERVICE_LIST_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/services`,{
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/services?search=${search}`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },

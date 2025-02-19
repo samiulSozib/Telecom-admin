@@ -23,12 +23,12 @@ const getAuthToken = () => {
 
 // Fetch Reseller Balance Transaction List
 export const _fetchMoneyTransactionsList =
-    (page: number = 1) => async (dispatch: Dispatch) => {
+    (page: number = 1,search:string='') => async (dispatch: Dispatch) => {
         dispatch({ type: FETCH_MONEY_TRANSACTIONS_LIST_REQUEST });
         try {
             const token = getAuthToken();
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/transactions?page=${page}&items_per_page=15`,
+                `${process.env.NEXT_PUBLIC_BASE_URL}/transactions?page=${page}&items_per_page=15&search=${search}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

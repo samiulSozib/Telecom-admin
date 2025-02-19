@@ -7,7 +7,7 @@ interface SimpleLayoutProps {
 }
 
 export const metadata: Metadata = {
-    title: 'Telecom Admin',
+    title: 'Bakhter Admin',
     description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.'
 };
 

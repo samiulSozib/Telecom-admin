@@ -21,6 +21,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _addPaymentMethod, _deletePaymentMethod, _editPaymentMethod, _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { InputTextarea } from 'primereact/inputtextarea';
 
 const PaymentMethodPage = () => {
 
@@ -78,6 +79,16 @@ const PaymentMethodPage = () => {
 
     const saveMethod = () => {
         setSubmitted(true);
+        if (!paymentMethod.method_name || !paymentMethod.status || !paymentMethod.account_details) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (paymentMethod.id && paymentMethod.id !== 0) {
             dispatch(_editPaymentMethod(paymentMethod.id,paymentMethod,toast));
 
@@ -87,6 +98,7 @@ const PaymentMethodPage = () => {
 
         setMethodDialog(false);
         setPaymentMethod(emptyPaymentMethod);
+        setSubmitted(false)
     };
 
     const editMethod = (paymentMethod: PaymentMethod) => {
@@ -128,21 +140,21 @@ const PaymentMethodPage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const nameBodyTemplate = (rowData: PaymentMethod) => {
@@ -167,7 +179,7 @@ const PaymentMethodPage = () => {
         return (
             <>
                 <span className="p-column-title">Image</span>
-                <img src={`${rowData.account_image}`} alt={rowData.account_image.toString()} className="shadow-2" width="60" />
+                <img src={`${rowData.account_image}`} alt={rowData.method_name.toString()} className="shadow-2" width="60" />
             </>
         );
     };
@@ -252,7 +264,7 @@ const PaymentMethodPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -280,7 +292,7 @@ const PaymentMethodPage = () => {
                     </DataTable>
 
                     <Dialog visible={methodDialog}  style={{ width: '700px',padding:'5px' }} header="Method Details" modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}>
+                        <div className='card' style={{padding:'40px'}}>
                             {paymentMethod.account_image && (
                                 <img
                                     src={
@@ -345,12 +357,14 @@ const PaymentMethodPage = () => {
                                     placeholder="Choose a status"
                                     className="w-full"
                                 />
+                                {submitted && !paymentMethod.status && <small className="p-invalid" style={{ color: 'red' }}>Status is required.</small>}
+
                             </div>
 
 
                             <div className="field">
                                 <label htmlFor="account_details" style={{fontWeight:'bold'}}>{t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}</label>
-                                <textarea
+                                <InputTextarea
                                     id="account_details"
                                     value={paymentMethod.account_details || ''}
                                     onChange={(e) =>
@@ -359,10 +373,14 @@ const PaymentMethodPage = () => {
                                             account_details: e.target.value,
                                         }))
                                     }
+                                    required
+                                    autoFocus
                                     placeholder={t('PAYMENTMETHOD.FORM.INPUT.ACCOUNTDETAILS')}
                                     className="w-full p-2 border rounded"
                                     rows={4} // Adjust the number of visible rows as needed
                                 />
+                                {submitted && !paymentMethod.account_details && <small className="p-invalid" style={{ color: 'red' }}>Account Details is required.</small>}
+
                             </div>
                         </div>
 

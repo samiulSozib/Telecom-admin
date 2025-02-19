@@ -24,12 +24,12 @@ const getAuthToken = () => {
 };
 
 // Fetch advertisements
-export const _fetchAdvertisements = () => async (dispatch: Dispatch) => {
+export const _fetchAdvertisements = (search:string='') => async (dispatch: Dispatch) => {
     dispatch({ type: FETCH_ADVERTISEMENTS_REQUEST });
 
     try {
         const token = getAuthToken();
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/advertisements`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/advertisements?search=${search}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

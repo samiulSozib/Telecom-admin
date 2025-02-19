@@ -137,21 +137,21 @@ const ResellerGroupPage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
 
@@ -196,7 +196,13 @@ const ResellerGroupPage = () => {
         return (
             <>
                 <span className="p-column-title">Can Add Sub-reseller</span>
-                {rowData.can_create_sub_resellers}
+                <span style={{borderRadius:'10px'}}
+                    className={`px-3 py-1 text-center font-semibold inline-block w-16 ${
+                        rowData.can_create_sub_resellers ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                    }`}
+                >
+                    {rowData.can_create_sub_resellers ? "Yes" : "No"}
+                </span>
             </>
         );
     };
@@ -205,19 +211,34 @@ const ResellerGroupPage = () => {
         return (
             <>
                 <span className="p-column-title">Can Sub-reseller Add Sub</span>
-                {rowData.can_sub_reseller_create_subs}
+                <span style={{borderRadius:'10px'}}
+                    className={`px-3 py-1 text-center font-semibold inline-block w-16 ${
+                        rowData.can_sub_reseller_create_subs ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                    }`}
+                >
+                    {rowData.can_sub_reseller_create_subs ? "Yes" : "No"}
+                </span>
             </>
         );
     };
+
 
     const statusBodyTemplate = (rowData: ResellerGroup) => {
         return (
             <>
                 <span className="p-column-title">Status</span>
-                {rowData.status}
+                <span style={{borderRadius:'10px' ,textAlign:'center'}}
+                    className={`px-2 py-2  text-center text-white font-semibold inline-block w-24 ${
+                        rowData.status === "active" ? "bg-green-500" : "bg-red-500"
+                    }`}
+                >
+                    {rowData.status}
+                </span>
             </>
         );
     };
+
+
 
     const notesBodyTemplate = (rowData: ResellerGroup) => {
         return (
@@ -280,7 +301,7 @@ const ResellerGroupPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -300,22 +321,22 @@ const ResellerGroupPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Reseller Group" sortable body={resellerGroupNameBodyTemplate}></Column>
-                        <Column field="guard_name" header="Discount Type" body={discount_typeBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Discount Value" body={discount_valueBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Sub Reseller Limit" body={subresellerLimitBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Can Add Sub-reseller" body={canAddSubResellerBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Can Sub-reseller add sub" body={canSubResellerCreateSubsBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Status" body={statusBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Notes" body={notesBodyTemplate} sortable></Column>
+                        <Column field="name" header="Reseller Group"  body={resellerGroupNameBodyTemplate}></Column>
+                        <Column field="guard_name" header="Discount Type" body={discount_typeBodyTemplate} ></Column>
+                        <Column field="guard_name" header="Discount Value" body={discount_valueBodyTemplate} ></Column>
+                        <Column field="guard_name" header="Sub Reseller Limit" body={subresellerLimitBodyTemplate} ></Column>
+                        <Column field="guard_name" header="Can Add Sub-reseller" body={canAddSubResellerBodyTemplate} ></Column>
+                        <Column field="guard_name" header="Can Sub-reseller add sub" body={canSubResellerCreateSubsBodyTemplate} ></Column>
+                        <Column field="guard_name" header="Status" body={statusBodyTemplate} ></Column>
+                        <Column field="guard_name" header="Notes" body={notesBodyTemplate} ></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
 
-                    <Dialog visible={resellerGroupDialog}  style={{ width: '750px' }} header="Purchased Product Details" modal className="p-fluid" footer={resellerGroupDialogFooter} onHide={hideDialog}>
-                        <div className="card flex flex-column md:flex-row gap-3">
-                            <div>
-                                <div className="field col flex-1">
+                    <Dialog visible={resellerGroupDialog}  style={{ width: '900px',padding:'5px' }} header="Purchased Product Details" modal className="p-fluid" footer={resellerGroupDialogFooter} onHide={hideDialog}>
+                        <div className="card flex flex-wrap p-fluid mt-3 gap-4">
+                            <div className='flex-1 col-12 lg:col-6'>
+                                <div className="field ">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Group Name</label>
                                     <InputText
                                         id="name"
@@ -334,7 +355,7 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
 
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Discount Value</label>
                                     <InputText
                                         id="discount_value"
@@ -353,7 +374,7 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
 
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Sub Reseller Limit</label>
                                     <InputText
                                         id="sub_reseller_limit"
@@ -372,7 +393,7 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
 
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="status" style={{fontWeight:'bold'}}>Status</label>
                                     <Dropdown
                                         id="status"
@@ -396,9 +417,8 @@ const ResellerGroupPage = () => {
 
 
                             </div>
-                            <br />
-                            <div>
-                                <div className="field col flex-1">
+                            <div className='flex-1 col-12 lg:col-6'>
+                                <div className="field ">
                                     <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Discount Type</label>
                                     <Dropdown
                                         id="discount_type"
@@ -419,7 +439,7 @@ const ResellerGroupPage = () => {
                                         className="w-full"
                                     />
                                 </div>
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="status" style={{fontWeight:'bold'}}>Can Add Sub-reseller</label>
                                     <Dropdown
                                         id="can_create_sub_resellers"
@@ -440,7 +460,7 @@ const ResellerGroupPage = () => {
                                         className="w-full"
                                     />
                                 </div>
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="status" style={{fontWeight:'bold'}}>Can Sub-reseller add Subs</label>
                                     <Dropdown
                                         id="can_sub_reseller_create_subs"
@@ -461,7 +481,7 @@ const ResellerGroupPage = () => {
                                         className="w-full"
                                     />
                                 </div>
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="notes" style={{fontWeight:'bold'}}>Notes</label>
                                     <InputTextarea
                                     value={resellerGroup.notes}

@@ -67,17 +67,18 @@ const TransactionPage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {transactions,loading,pagination}=useSelector((state:any)=>state.moneyTransactionReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
 
     useEffect(()=>{
-        dispatch(_fetchMoneyTransactionsList())
+        dispatch(_fetchMoneyTransactionsList(1,searchTag))
         dispatch(_fetchBundleList())
         dispatch(_fetchCurrencies())
         dispatch(_fetchServiceList())
         dispatch(_fetchCompanies())
         dispatch(_fetchServiceCategories())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     useEffect(()=>{
         //console.log(transactions)
@@ -367,7 +368,7 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
 
     const onPageChange = (event: any) => {
         const page = event.page + 1;
-        dispatch(_fetchMoneyTransactionsList(page));
+        dispatch(_fetchMoneyTransactionsList(page,searchTag));
     };
 
 

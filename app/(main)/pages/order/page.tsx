@@ -20,6 +20,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _deleteOrder, _fetchOrders } from '@/app/redux/actions/orderActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { SplitButton } from 'primereact/splitbutton';
 
 const OrderPage = () => {
 
@@ -37,12 +38,13 @@ const OrderPage = () => {
     const {orders,pagination,loading}=useSelector((state:any)=>state.orderReducer)
     const [order,setOrder]=useState<Order>();
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
 
     useEffect(()=>{
-        dispatch(_fetchOrders())
-    },[dispatch])
+        dispatch(_fetchOrders(1,searchTag))
+    },[dispatch,searchTag])
 
 
 
@@ -105,7 +107,7 @@ const OrderPage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
+                    <InputText type="search" onInput={(e) => setSearchTag(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -261,14 +263,57 @@ const statusBodyTemplate = (rowData: Order) => {
 
 
 
+    // const actionBodyTemplate = (rowData: Order) => {
+    //     return (
+    //         <>
+    //             {/* <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editOrder(rowData)}/> */}
+    //             <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteOrder(rowData)} />
+    //         </>
+    //     );
+    // };
+
     const actionBodyTemplate = (rowData: Order) => {
-        return (
-            <>
-                {/* <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editOrder(rowData)}/> */}
-                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteOrder(rowData)} />
-            </>
-        );
-    };
+                //const menuType = rowData.menuType; // Assuming `menuType` is part of your data
+
+                // Define the dropdown actions
+                const items = [
+                    // {
+                    //     label: 'Edit',
+                    //     icon: 'pi pi-pencil',
+                    //     command: () => editReseller(rowData),
+                    //     //disabled: menuType === 'guest', // Example condition
+                    // },
+                    {
+                        label: 'Delete',
+                        icon: 'pi pi-trash',
+                        command: () => confirmDeleteOrder(rowData),
+                        //disabled: menuType !== 'admin', // Example condition
+                    },
+                    // {
+                    //     label: 'Activate',
+                    //     icon: 'pi pi-check',
+                    //     command: () => confirmChangeStatus(rowData),
+                    //     visible: rowData.status === 0, // Disable if already active
+                    // },
+                    // {
+                    //     label: 'Deactivate',
+                    //     icon: 'pi pi-times',
+                    //     command: () => confirmChangeStatus(rowData),
+                    //     visible: rowData.status === 1, // Disable if already inactive
+                    // },
+
+                ];
+
+                return (
+                    <SplitButton
+                        label="Actions"
+                        icon="pi pi-cog"
+                        model={items}
+                        className="p-button-rounded"
+                        severity="info" // Optional: change severity or style
+                    />
+                );
+            };
 
     // const header = (
     //     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -301,7 +346,7 @@ const statusBodyTemplate = (rowData: Order) => {
 
     const onPageChange = (event: any) => {
         const page = event.page + 1;
-        dispatch(_fetchOrders(page));
+        dispatch(_fetchOrders(page,searchTag));
     };
 
 
@@ -330,17 +375,17 @@ const statusBodyTemplate = (rowData: Order) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')} sortable body={resellerNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')} sortable body={rechargeableAccountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.BUNDLEID')} sortable body={bundleIdBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')} sortable body={payableAmountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')} sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')} sortable body={rejectedReasonBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')} sortable body={categoryNameNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')} sortable body={createdAtBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')}  body={resellerNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="rechargeble_account" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')}  body={rechargeableAccountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="bundle.id" header={t('ORDER.TABLE.COLUMN.BUNDLEID')}  body={bundleIdBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')}  body={payableAmountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')}  body={rejectedReasonBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')}  body={companyNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')}  body={categoryNameNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')}  body={createdAtBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column field="status" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
                     </DataTable>
                     <Paginator
                         first={(pagination?.page - 1) * pagination?.items_per_page}

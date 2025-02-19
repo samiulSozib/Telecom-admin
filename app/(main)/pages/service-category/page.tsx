@@ -77,6 +77,16 @@ const Category = () => {
 
     const saveServiceCategory = () => {
         setSubmitted(true);
+        if (!serviceCategory.category_name || !serviceCategory.type) {
+
+                toast.current?.show({
+                    severity: 'error',
+                    summary: 'Validation Error',
+                    detail: 'Please fill in all required fields.',
+                    life: 3000,
+                });
+            return;
+        }
         if (serviceCategory.id && serviceCategory.id !== 0) {
             dispatch(_editServiceCategory(serviceCategory,toast));
 
@@ -86,6 +96,7 @@ const Category = () => {
 
         setServiceCategoryDialog(false);
         setServiceCategory(emptyServiceCategory);
+        setSubmitted(false)
     };
 
     const editServiceCategory = (serviceCategory: ServiceCategory) => {
@@ -127,21 +138,21 @@ const Category = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const serviceCategoryNameBodyTemplate = (rowData: ServiceCategory) => {
@@ -217,7 +228,7 @@ const Category = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -237,13 +248,13 @@ const Category = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
-                        <Column field="Country" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
+                        <Column field="category_name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
+                        <Column field="type" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={serviceCategoryDialog}  style={{ width: '700px',padding:'5px' }} header="Category Details" modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}>
+                        <div className='card' style={{padding:'40px'}}>
                             <div className="field">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYNAME')}</label>
                                 <InputText
@@ -283,6 +294,7 @@ const Category = () => {
                                         placeholder="Choose a Type"
                                         className="w-full"
                                     />
+                                    {submitted && !serviceCategory.type && <small className="p-invalid" style={{ color: 'red' }}>Category Type is required.</small>}
                                 </div>
                             </div>
                         </div>

@@ -81,6 +81,16 @@ const ProvincePage = () => {
 
     const saveProvince = () => {
         setSubmitted(true);
+        if (!province.province_name || !province.country ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (province.id && province.id !== 0) {
             dispatch(_editProvince(province.id,province,toast));
 
@@ -90,6 +100,7 @@ const ProvincePage = () => {
 
         setProvinceDialog(false);
         setProvince(emptyProvince);
+        setSubmitted(false)
     };
 
     const editProvince = (province: Province) => {
@@ -131,21 +142,21 @@ const ProvincePage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const provinceNameBodyTemplate = (rowData: Province) => {
@@ -234,7 +245,7 @@ useEffect(() => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -260,7 +271,7 @@ useEffect(() => {
                     </DataTable>
 
                     <Dialog visible={provinceDialog}  style={{ width: '700px',padding:'5px' }} header="Province Details" modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:"40px"}}>
+                        <div className='card' style={{padding:"40px"}}>
                             <div className="field">
                                 <label htmlFor="province_name" style={{fontWeight:'bold'}}>{t('PROVINCE.FORM.INPUT.PROVINCENAME')}</label>
                                 <InputText
@@ -300,6 +311,7 @@ useEffect(() => {
                                         placeholder={t('PROVINCE.FORM.PLACEHOLDER.COUNTRY')}
                                         className="w-full"
                                     />
+                                {submitted && !province.country && <small className="p-invalid" style={{ color: 'red' }}>Country is required.</small>}
 
                             </div>
                         </div>

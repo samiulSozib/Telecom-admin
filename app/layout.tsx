@@ -75,22 +75,26 @@ interface RootLayoutProps {
 const RootLayout = ({ children }: RootLayoutProps): JSX.Element => {
 
     return (
-        <Provider store={store}>
-            <PrimeReactProvider>
-                <LayoutProvider>
-                    <html lang="en-US" suppressHydrationWarning>
-                        <head>
-                            <link
-                                id="theme-css"
-                                href={`/themes/lara-light-indigo/theme.css`}
-                                rel="stylesheet"
-                            ></link>
-                        </head>
-                        <body>{children}</body>
-                    </html>
-                </LayoutProvider>
-            </PrimeReactProvider>
-        </Provider>
+        <html>
+            <head lang="en" suppressHydrationWarning>
+                <link
+                    id="theme-css"
+                    href={`/themes/lara-light-indigo/theme.css`}
+                    rel="stylesheet"
+                ></link>
+            </head>
+
+            <body>
+                <Provider store={store}>
+                <PrimeReactProvider>
+                    <LayoutProvider>
+                        {children}
+                    </LayoutProvider>
+                </PrimeReactProvider>
+                </Provider>
+            </body>
+        </html>
+
     );
 };
 

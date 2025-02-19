@@ -539,11 +539,12 @@
   "PAYMENT.FORM.CURRENCY.PLACEHOLDER": "انتخاب کنید",
   "PAYMENT.FORM.NOTES.LABEL": "یادداشت‌های پرداخت",
   "PAYMENT.FORM.NOTES.PLACEHOLDER": "یادداشت‌های پرداخت را وارد کنید",
-  "PAYMENT.FORM.DATE.LABEL": "تاریخ پرداخت"
+  "PAYMENT.FORM.DATE.LABEL": "تاریخ پرداخت",
 
 
 
 
+  "RESELLER.TABLE.COLUMN.AVAILABLEPAYMENT":"Available Payment"
 
 
 

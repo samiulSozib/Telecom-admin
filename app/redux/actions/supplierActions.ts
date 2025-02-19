@@ -21,12 +21,12 @@ const getAuthToken = (): string => {
 };
 
 // Fetch Suppliers
-export const _fetchSuppliers = () => async (dispatch: Dispatch) => {
+export const _fetchSuppliers = (search:string='') => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_SUPPLIERS_REQUEST });
   try {
     const token = getAuthToken();
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/suppliers`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/suppliers?search=${search}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

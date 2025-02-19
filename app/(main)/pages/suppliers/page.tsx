@@ -46,10 +46,11 @@ const SupplierPage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {suppliers,loading}=useSelector((state:any)=>state.suppliersReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
     useEffect(()=>{
-        dispatch(_fetchSuppliers())
-    },[dispatch])
+        dispatch(_fetchSuppliers(searchTag))
+    },[dispatch,searchTag])
 
 
 
@@ -76,6 +77,16 @@ const SupplierPage = () => {
 
     const saveSupplier = () => {
         setSubmitted(true);
+        if (!supplier.supplier_name || !supplier.contact_details || !supplier.address) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (supplier.id && supplier.id !== 0) {
             dispatch(_editSupplier(supplier.id,supplier,toast));
 
@@ -85,6 +96,7 @@ const SupplierPage = () => {
 
         setSupplierDialog(false);
         setSupplier(emptySupplier);
+        setSubmitted(false)
     };
 
     const editSupplier = (supplier: Supplier) => {
@@ -133,7 +145,7 @@ const SupplierPage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -279,7 +291,7 @@ const SupplierPage = () => {
                     </DataTable>
 
                     <Dialog visible={supplierDialog}  style={{ width: '700px',padding:'5px' }} header="Supplier Details" modal className="p-fluid" footer={supplierDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}>
+                        <div className='card' style={{padding:'40px'}}>
                         <div className="field">
                             <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SUPPLIER.FORM.INPUT.SUPPLIERNAME')}</label>
                             <InputText
@@ -316,6 +328,8 @@ const SupplierPage = () => {
                                 className="w-full p-2 border rounded"
 
                             />
+                            {submitted && !supplier.contact_details && <small className="p-invalid" style={{ color: 'red' }}>Contact Details is required.</small>}
+
                         </div>
 
                         <div className="field">
@@ -333,6 +347,8 @@ const SupplierPage = () => {
                                 className="w-full p-2 border rounded"
 
                             />
+                            {submitted && !supplier.address && <small className="p-invalid" style={{ color: 'red' }}>Address is required.</small>}
+
                         </div>
 
                         <div className="field">

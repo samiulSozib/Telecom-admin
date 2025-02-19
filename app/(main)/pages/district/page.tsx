@@ -84,6 +84,16 @@ const DistrictPage = () => {
 
     const saveDistrict = () => {
         setSubmitted(true);
+        if (!district.district_name || !district.province ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (district.id && district.id !== 0) {
             dispatch(_editDistrict(district.id,district,toast));
 
@@ -93,6 +103,7 @@ const DistrictPage = () => {
 
         setDistrictDialog(false);
         setDistrict(emptyDistrict);
+        setSubmitted(false)
     };
 
     const editDistrict = (district: District) => {
@@ -134,21 +145,21 @@ const DistrictPage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const districtNameBodyTemplate = (rowData: District) => {
@@ -235,7 +246,7 @@ const DistrictPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -260,8 +271,8 @@ const DistrictPage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={districtDialog}  style={{ width: '700px',padding:'5px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:"40px"}}>
+                    <Dialog visible={districtDialog}   style={{ width: '700px',padding:'5px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
+                        <div className='card' style={{padding:"40px"}}>
                             <div className="field">
                                 <label htmlFor="district_name" style={{fontWeight:'bold'}}>{t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')}</label>
                                 <InputText
@@ -301,6 +312,7 @@ const DistrictPage = () => {
                                         placeholder={t('DISTRICT.FORM.PLACEHOLDER.PROVINCE')}
                                         className="w-full"
                                     />
+                                {submitted && !district.province && <small className="p-invalid" style={{ color: 'red' }}>Province is required.</small>}
 
                             </div>
                         </div>

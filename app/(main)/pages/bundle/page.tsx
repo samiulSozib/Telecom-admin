@@ -67,16 +67,17 @@ const BundlePage = () => {
     const {bundles,pagination,loading}=useSelector((state:any)=>state.bundleReducer)
     const {currencies}=useSelector((state:any)=>state.currenciesReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
 
     useEffect(()=>{
-        dispatch(_fetchBundleList())
+        dispatch(_fetchBundleList(1,searchTag))
         dispatch(_fetchCurrencies())
         dispatch(_fetchServiceList())
         dispatch(_fetchCompanies())
         dispatch(_fetchServiceCategories())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     useEffect(()=>{
         //console.log(bundles)
@@ -109,6 +110,18 @@ const BundlePage = () => {
 
     const saveService = () => {
         setSubmitted(true);
+        if (!bundle.bundle_title || !bundle.bundle_description || !bundle.admin_buying_price || !bundle.buying_price || !bundle.selling_price
+            || !bundle.validity_type || !bundle.service || !bundle.currency
+        ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (bundle.id && bundle.id !== 0) {
             dispatch(_editBundle(bundle.id,bundle,toast));
 
@@ -118,6 +131,7 @@ const BundlePage = () => {
 
         setServiceDialog(false);
         setBundle(emptyBundle);
+        setSubmitted(false)
     };
 
     const editService = (bundle: Bundle) => {
@@ -166,7 +180,7 @@ const BundlePage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -351,7 +365,7 @@ const BundlePage = () => {
 
     const onPageChange = (event: any) => {
         const page = event.page + 1;
-        dispatch(_fetchBundleList(page));
+        dispatch(_fetchBundleList(page,searchTag));
     };
 
     useEffect(() => {
@@ -415,7 +429,7 @@ const BundlePage = () => {
 
 
                     <Dialog visible={serviceDialog}  style={{ width: '900px',padding:'5px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}>
+                        <div className='card' style={{padding:'40px'}}>
                         <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.BUNDLETITLE')}</label>
@@ -550,7 +564,7 @@ const BundlePage = () => {
                                     placeholder={t('BUNDLE.FORM.PLACEHOLDER.VALIDITYTYPE')}
                                     className="w-full"
                                 />
-
+                                {submitted && !bundle.validity_type && <small className="p-invalid" style={{ color: 'red' }}>Validity Type is required.</small>}
                             </div>
                         </div>
 
@@ -578,6 +592,7 @@ const BundlePage = () => {
                                         </div>
                                     )}
                                 />
+                            {submitted && !bundle.service && <small className="p-invalid" style={{ color: 'red' }}>Service is required.</small>}
                             </div>
                             <div className="field col">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('BUNDLE.FORM.INPUT.CURRENCY')}</label>
@@ -596,7 +611,7 @@ const BundlePage = () => {
                                     placeholder={t('')}
                                     className="w-full"
                                 />
-
+                                {submitted && !bundle.currency && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}
                             </div>
                         </div>
                         </div>

@@ -25,13 +25,14 @@ import {
     CHANGE_RESELLER_PIN_SUCCESS,
     CHANGE_RESELLER_PIN_FAIL,
 } from "../constants/resellerConstants";
-import { Reseller } from "@/types/interface";
+import { Pagination, Reseller } from "@/types/interface";
 
 interface ResellerState {
     loading: boolean;
     resellers: Reseller[];
     error: string | null;
     singleReseller: Reseller|null,
+    pagination: Pagination | null;
 }
 
 const initialState: ResellerState = {
@@ -39,6 +40,8 @@ const initialState: ResellerState = {
     resellers: [],
     error: null,
     singleReseller: null,
+    pagination:null
+
 };
 
 export const resellerReducer = (state = initialState, action: any): ResellerState => {
@@ -57,7 +60,8 @@ export const resellerReducer = (state = initialState, action: any): ResellerStat
             return {
                 ...state,
                 loading: false,
-                resellers: action.payload,
+                resellers: action.payload.data,
+                pagination:action.payload.pagination,
                 error: null,
             };
 

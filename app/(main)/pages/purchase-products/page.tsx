@@ -92,6 +92,18 @@ const PurchasedProductPage = () => {
 
     const savePurchasedProduct = () => {
         setSubmitted(true);
+        if (!purchasedProduct.supplier || !purchasedProduct.product_name || !purchasedProduct.purchase_price
+            || !purchasedProduct.service|| !purchasedProduct.quantity || !purchasedProduct.purchase_date
+        ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (purchasedProduct.id && purchasedProduct.id !== 0) {
             dispatch(_editPurchasedProduct(purchasedProduct.id,purchasedProduct,toast));
 
@@ -101,6 +113,7 @@ const PurchasedProductPage = () => {
 
         setPurchasedProductDialog(false);
         setPurchasedProduct(emptyPurchasedProduct);
+        setSubmitted(false)
     };
 
     const editPurchasedProduct = (purchasedProduct: PurchasedProduct) => {
@@ -142,21 +155,21 @@ const PurchasedProductPage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const supplierNameBodyTemplate = (rowData: PurchasedProduct) => {
@@ -288,7 +301,7 @@ const PurchasedProductPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -317,10 +330,10 @@ const PurchasedProductPage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={purchasedProductDialog}  style={{ width: '900px' }} header="Purchased Product Details" modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
-                    <div className="card flex flex-column md:flex-row gap-3">
-                        <div>
-                            <div className="field col flex-1">
+                    <Dialog visible={purchasedProductDialog}  style={{ width: '900px',padding:'5px' }} header="Purchased Product Details" modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
+                    <div className="card flex flex-wrap p-fluid mt-3 gap-4">
+                        <div className=' flex-1 col-12 lg:col-6'>
+                            <div className="field">
                                 <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.SUPPLIER')}</label>
                                 <Dropdown
                                     id="supplier"
@@ -338,9 +351,11 @@ const PurchasedProductPage = () => {
                                     placeholder="Choose a supplier"
                                     className="w-full"
                                 />
+                               {submitted && !purchasedProduct.supplier && <small className="p-invalid" style={{ color: 'red' }}>Supplier is required.</small>}
+
                             </div>
 
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="product_name" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.PRODUCTNAME')}</label>
                                 <InputText
                                     id="product_name"
@@ -359,7 +374,7 @@ const PurchasedProductPage = () => {
                                 />
                                 {submitted && !purchasedProduct.product_name && <small className="p-invalid" style={{ color: 'red' }}>Product Name is required.</small>}
                             </div>
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="purchase_price" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEPRICE')}</label>
                                 <InputText
                                     id="purchase_price"
@@ -402,8 +417,8 @@ const PurchasedProductPage = () => {
 
                         </div>
                         <br />
-                        <div>
-                            <div className="field col flex-1">
+                        <div className=' flex-1 col-12 lg:col-6'>
+                            <div className="field">
                                 <label htmlFor="service" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.SERVICE')}</label>
                                 <Dropdown
                                     id="service"
@@ -426,10 +441,12 @@ const PurchasedProductPage = () => {
                                         </div>
                                     )}
                                 />
+                                {submitted && !purchasedProduct.service && <small className="p-invalid" style={{ color: 'red' }}>Service is required.</small>}
+
                             </div>
 
 
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="purchasedProduct_date" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.QUANTITY')}</label>
                                 <InputText
                                     id="quantity"
@@ -446,9 +463,11 @@ const PurchasedProductPage = () => {
                                         'p-invalid': submitted && !purchasedProduct.quantity
                                     })}
                                 />
+                                {submitted && !purchasedProduct.quantity && <small className="p-invalid" style={{ color: 'red' }}>Quantity is required.</small>}
+
                             </div>
 
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="purchase_date" style={{fontWeight:'bold'}}>{t('PURCHASEDPRODUCT.FORM.INPUT.PURCHASEDATE')}</label>
                                 <InputText
                                     id="purchase_date"
@@ -465,6 +484,8 @@ const PurchasedProductPage = () => {
                                         'p-invalid': submitted && !purchasedProduct.purchase_date
                                     })}
                                 />
+                                {submitted && !purchasedProduct.purchase_date && <small className="p-invalid" style={{ color: 'red' }}>Date is required.</small>}
+
                             </div>
                         </div>
 

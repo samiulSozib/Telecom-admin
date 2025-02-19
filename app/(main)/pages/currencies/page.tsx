@@ -135,21 +135,21 @@ const CurrencyPage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const currencyCodeBodyTemplate = (rowData: Currency) => {
@@ -227,7 +227,7 @@ const CurrencyPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -254,7 +254,7 @@ const CurrencyPage = () => {
                     </DataTable>
 
                     <Dialog visible={currencyDialog}  style={{ width: '900px',padding:"5px" }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:"40px"}}>
+                        <div className='card' style={{padding:"40px"}}>
                             <div className="field">
                                 <small className="p-text-muted" style={{fontSize:'14px', fontWeight:'bold', display: 'block', marginBottom: '10px' }}>
                                     <b>Hints:</b><br />

@@ -30,6 +30,7 @@ import { _fetchResellerGroups } from '@/app/redux/actions/resellerGroupActions';
 import { InputSwitch } from 'primereact/inputswitch';
 import { SplitButton } from 'primereact/splitbutton';
 import { useRouter } from 'next/navigation';
+import { Paginator } from 'primereact/paginator';
 
 const ResellerPage = () => {
 
@@ -87,7 +88,7 @@ const ResellerPage = () => {
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
-    const {resellers,loading,singleReseller}=useSelector((state:any)=>state.resellerReducer)
+    const {resellers,loading,pagination,singleReseller}=useSelector((state:any)=>state.resellerReducer)
     const {countries}=useSelector((state:any)=>state.countriesReducer)
     const {districts}=useSelector((state:any)=>state.districtReducer)
     const {provinces}=useSelector((state:any)=>state.provinceReducer)
@@ -95,16 +96,17 @@ const ResellerPage = () => {
     const {reseller_groups}=useSelector((state:any)=>state.resellerGroupReducer)
     const {t}=useTranslation()
     const router=useRouter()
+    const [searchTag,setSearchTag]=useState("")
 
 
     useEffect(()=>{
-        dispatch(_fetchResellers())
+        dispatch(_fetchResellers(1,searchTag))
         dispatch(_fetchCountries())
         dispatch(_fetchDistricts())
         dispatch(_fetchProvinces())
         dispatch(_fetchCurrencies())
         dispatch(_fetchResellerGroups())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     useEffect(()=>{
         //console.log(resellers)
@@ -140,6 +142,19 @@ const ResellerPage = () => {
         setSubmitted(true);
         //console.log(reseller.code)
         //return
+        if (!reseller.reseller_name || !reseller.contact_name || !reseller.email || !reseller.phone || !reseller.account_password
+            || !reseller.country_id || !reseller.province_id || !reseller.districts_id || !reseller.code
+        || !reseller.reseller_group_id || !reseller.sub_reseller_limit
+         ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (reseller.id && reseller.id !== 0) {
             dispatch(_editReseller(reseller.id,reseller,toast));
 
@@ -149,6 +164,7 @@ const ResellerPage = () => {
 
         setResellerDialog(false);
         setReseller(emptyReseller);
+        setSubmitted(false)
     };
 
     const editReseller = (reseller: Reseller) => {
@@ -224,7 +240,7 @@ const ResellerPage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -272,7 +288,7 @@ const ResellerPage = () => {
         return (
             <>
                 <span className="p-column-title">Balance</span>
-                {rowData.balance}
+                <span style={{color:'green'}}>{rowData.balance}</span>
             </>
         );
     };
@@ -286,11 +302,20 @@ const ResellerPage = () => {
         );
     };
 
+    const availablePaymentBodyTemplate = (rowData: Reseller) => {
+        return (
+            <>
+                <span className="p-column-title">Available Payment</span>
+                {rowData.net_payment_balance}
+            </>
+        );
+    };
+
     const loanAmountBodyTemplate = (rowData: Reseller) => {
         return (
             <>
                 <span className="p-column-title">Loan Amount</span>
-                {rowData.loan_balance}
+                <span style={{color:'red'}}>{rowData.loan_balance}</span>
             </>
         );
     };
@@ -428,7 +453,10 @@ const ResellerPage = () => {
         </>
     );
 
-
+const onPageChange = (event: any) => {
+        const page = event.page + 1;
+        dispatch(_fetchResellers(page,searchTag));
+    };
 
 
 useEffect(() => {
@@ -459,31 +487,41 @@ useEffect(() => {
                         selection={selectedCompanies}
                         onSelectionChange={(e) => setSelectedCompanies(e.value as any)}
                         dataKey="id"
-                        paginator
-                        rows={10}
-                        rowsPerPageOptions={[5, 10, 25]}
+                        paginator={false} // Disable PrimeReact's built-in paginator
+                        rows={pagination?.items_per_page}
+                        totalRecords={pagination?.total}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} companies"
                         globalFilter={globalFilter}
                         emptyMessage="No Companies found."
                         // header={header}
+
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} sortable body={phoneBodyTemplate}></Column>
-                        <Column field="balance" header={t('MENU.BALANCE')} sortable body={balanceBodyTemplate}></Column>
-                        <Column field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')} sortable body={totalPaymentBodyTemplate}></Column>
-                        <Column field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')} sortable body={loanAmountBodyTemplate}></Column>
-                        <Column field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} sortable body={preferredCurrencyBodyTemplate}></Column>
-                        <Column field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')} sortable body={countryBodyTemplate}></Column>
-                        <Column field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} body={phoneBodyTemplate}></Column>
+                        <Column field="balance" header={t('MENU.BALANCE')}  body={balanceBodyTemplate}></Column>
+                        <Column field="available_payment" header={t('RESELLER.TABLE.COLUMN.AVAILABLEPAYMENT')}  body={availablePaymentBodyTemplate}></Column>
+                        <Column field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')}  body={totalPaymentBodyTemplate}></Column>
+                        <Column field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')}  body={loanAmountBodyTemplate}></Column>
+                        <Column field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} body={preferredCurrencyBodyTemplate}></Column>
+                        <Column field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')}  body={countryBodyTemplate}></Column>
+                        <Column field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
+
                     </DataTable>
+                    <Paginator
+                        first={(pagination?.page - 1) * pagination?.items_per_page}
+                        rows={pagination?.items_per_page}
+                        totalRecords={pagination?.total}
+                        onPageChange={(e) => onPageChange(e)}
+                        template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                    />
 
                     <Dialog visible={resellerDialog}  style={{ width: '900px',padding:'5px' }} header="Reseller Details" modal className="p-fluid" footer={resellerDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:"10px"}}>
+                        <div className='card' style={{padding:"10px"}}>
                         {reseller.profile_image_url && (
                             <img
                                 src={
@@ -634,7 +672,7 @@ useEffect(() => {
                                     placeholder="Choose a country"
                                     className="w-full"
                                 />
-
+                                {submitted && !reseller.country_id && <small className="p-invalid" style={{ color: 'red' }}>Country is required.</small>}
                             </div>
                             <div className="field col">
                                 <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.INPUT.PROVINCE')}</label>
@@ -654,6 +692,7 @@ useEffect(() => {
                                     placeholder="Choose a province"
                                     className="w-full"
                                 />
+                                {submitted && !reseller.province_id && <small className="p-invalid" style={{ color: 'red' }}>Province is required.</small>}
 
                             </div>
 
@@ -679,6 +718,7 @@ useEffect(() => {
                                     placeholder="Choose a district"
                                     className="w-full"
                                 />
+                                {submitted && !reseller.districts_id && <small className="p-invalid" style={{ color: 'red' }}>District is required.</small>}
 
                             </div>
                             <div className="field col">
@@ -699,7 +739,7 @@ useEffect(() => {
                                     placeholder={t('RESELLER.FORM.PLACEHOLDER.CURRENCY')}
                                     className="w-full"
                                 />
-
+                                {submitted && !reseller.code && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}
                             </div>
 
                         </div>
@@ -723,6 +763,7 @@ useEffect(() => {
                                     placeholder="Choose a group"
                                     className="w-full"
                                 />
+                                {submitted && !reseller.reseller_group_id && <small className="p-invalid" style={{ color: 'red' }}>Reseller Group is required.</small>}
 
                             </div>
                             <div className="field col">
@@ -742,6 +783,7 @@ useEffect(() => {
                                     })}
 
                                 />
+                                {submitted && !reseller.sub_reseller_limit && <small className="p-invalid" style={{ color: 'red' }}>Sub reseller Limit is required.</small>}
 
                             </div>
 

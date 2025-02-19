@@ -48,12 +48,13 @@ const CompanyCodePage = () => {
     const {companyCodes,loading}=useSelector((state:any)=>state.companyCodeReducer)
     const {companies}=useSelector((state:any)=>state.companyReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
     useEffect(()=>{
-        dispatch(_fetchCompanyCodes())
+        dispatch(_fetchCompanyCodes(searchTag))
         dispatch(_fetchCompanies())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     const openNew = () => {
         setCompanyCode(emptyCompanyCode)
@@ -81,6 +82,15 @@ const CompanyCodePage = () => {
 
     const saveCompanyCode = () => {
         setSubmitted(true);
+        if (!companyCode.reserved_digit || !companyCode.company) {
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+            return; // Prevent saving if validation fails
+        }
         if (companyCode.id && companyCode.id !== 0) {
             dispatch(_editCompanyCode(companyCode,toast));
 
@@ -90,6 +100,7 @@ const CompanyCodePage = () => {
 
         setCompanyCodeDialog(false);
         setCompanyCode(emptyCompanyCode);
+        setSubmitted(false)
     };
 
     const editCompanyCode = (companyCode: CompanyCode) => {
@@ -139,7 +150,7 @@ const CompanyCodePage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -270,15 +281,15 @@ const CompanyCodePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')} sortable body={reservedDigitBodyTemplate}></Column>
-                        <Column field="Country" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column field="Chat Id" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
-                        <Column field="Country Code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
+                        <Column field="reserved_digit" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')}  sortable body={reservedDigitBodyTemplate}></Column>
+                        <Column field="company.country.country_name" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column field="company.company_name" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
+                        <Column field="company.country.country_telecom_code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={companyCodeDialog}  style={{ width: '700px',padding:'5px' }} header={t('MENU.COMPANYCODE')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}>
+                        <div className='card' style={{padding:'40px'}}>
                             <div className="field">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('COMPANYCODE.FORM.INPUT.RESERVEDDIGIT')}</label>
                                 <InputText
@@ -297,7 +308,7 @@ const CompanyCodePage = () => {
                                         'p-invalid': submitted && !companyCode.reserved_digit
                                     })}
                                 />
-                                {submitted && !companyCode.reserved_digit && <small className="p-invalid" style={{ color: 'red' }}>Reserved Digit is required.</small>}
+                                {submitted && !companyCode?.reserved_digit  && (<small className="p-invalid" style={{ color: 'red' }}>Reserved Digit is required.</small>)}
                             </div>
 
                             <div className="formgrid grid">
@@ -319,7 +330,7 @@ const CompanyCodePage = () => {
                                         placeholder={t('COMPANYCODE.FORM.PLACEHOLDER.COMPANYNAME')}
                                         className="w-full"
                                     />
-
+                                {submitted && !companyCode?.company_id  && (<small className="p-invalid" style={{ color: 'red' }}>Company is required.</small>)}
                                 </div>
 
                             </div>

@@ -29,6 +29,7 @@ import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { Calendar } from 'primereact/calendar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { Reseller } from '../../../../types/interface';
 
 const PaymentPage = () => {
 
@@ -98,6 +99,18 @@ const PaymentPage = () => {
 
     const savePayment = () => {
         setSubmitted(true);
+        if (!payment.reseller || !payment.amount || !payment.notes
+            || !payment.payment_method|| !payment.currency || !payment.payment_date
+        ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (payment.id && payment.id !== 0) {
             dispatch(_editPayment(payment.id,payment,toast));
 
@@ -107,6 +120,7 @@ const PaymentPage = () => {
 
         setPaymentDialog(false);
         setPayment(emptyPayment);
+        setSubmitted(false)
     };
 
     const editPayment = (payment: Payment) => {
@@ -148,21 +162,21 @@ const PaymentPage = () => {
         );
     };
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className="flex items-center">
-                <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-                        placeholder={t('ECOMMERCE.COMMON.SEARCH')}
-                        className="w-full md:w-auto"
-                    />
-                </span>
-            </div>
-        );
-    };
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <div className="flex items-center">
+    //             <span className="block mt-2 md:mt-0 p-input-icon-left w-full md:w-auto">
+    //                 <i className="pi pi-search" />
+    //                 <InputText
+    //                     type="search"
+    //                     onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+    //                     placeholder={t('ECOMMERCE.COMMON.SEARCH')}
+    //                     className="w-full md:w-auto"
+    //                 />
+    //             </span>
+    //         </div>
+    //     );
+    // };
 
 
     const resellerNameBodyTemplate = (rowData: Payment) => {
@@ -311,7 +325,7 @@ const PaymentPage = () => {
                 <div className="card">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -342,10 +356,10 @@ const PaymentPage = () => {
                         <Column body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={paymentDialog}  style={{ width: '900px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
-                    <div className="card flex flex-column md:flex-row gap-3">
-                        <div>
-                            <div className="field col flex-1">
+                    <Dialog visible={paymentDialog}  style={{ width: '900px',padding:'5px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>
+                    <div className="card flex  flex-wrap p-fluid mt-3 gap-4">
+                        <div className=' flex-1 col-12 lg:col-6'>
+                            <div className="field">
                                 <label htmlFor="reseller" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.RESELLER')}</label>
                                 <Dropdown
                                     id="reseller"
@@ -363,9 +377,11 @@ const PaymentPage = () => {
                                     placeholder={t('PAYMENT.FORM.INPUT.RESELLER')}
                                     className="w-full"
                                 />
+                                {submitted && !payment.reseller && <small className="p-invalid" style={{ color: 'red' }}>Reseller is required.</small>}
+
                             </div>
 
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="email" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.AMOUNT')}</label>
                                 <InputText
                                     id="amount"
@@ -385,7 +401,7 @@ const PaymentPage = () => {
                                 />
                                 {submitted && !payment.amount && <small className="p-invalid" style={{ color: 'red' }}>Amount is required.</small>}
                             </div>
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="notes" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.NOTES')}</label>
                                 <InputTextarea
                                 value={payment.notes}
@@ -397,12 +413,16 @@ const PaymentPage = () => {
                                 } rows={3} cols={30}
                                 placeholder={t('PAYMENT.FORM.INPUT.NOTES')}
                                 />
+                                {submitted && !payment.notes && <small className="p-invalid" style={{ color: 'red' }}>Notes is required.</small>}
+
 
                             </div>
                         </div>
-                        <br />
-                        <div>
-                            <div className="field col flex-1">
+
+
+
+                        <div className=' flex-1 col-12 lg:col-6'>
+                            <div className="field">
                                 <label htmlFor="payment_method" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.PAYMENTMETHOD')}</label>
                                 <Dropdown
                                     id="payment_method"
@@ -420,9 +440,11 @@ const PaymentPage = () => {
                                     placeholder={t('PAYMENT.FORM.INPUT.PAYMENTMETHOD')}
                                     className="w-full"
                                 />
+                                 {submitted && !payment.payment_method && <small className="p-invalid" style={{ color: 'red' }}>Payment Method is required.</small>}
+
                             </div>
 
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="currency" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.CURRENCY')}</label>
                                 <Dropdown
                                     id="currency"
@@ -440,8 +462,10 @@ const PaymentPage = () => {
                                     placeholder={t('PAYMENT.FORM.INPUT.CURRENCY')}
                                     className="w-full"
                                 />
+                                {submitted && !payment.currency && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}
+
                             </div>
-                            <div className="field col flex-1">
+                            <div className="field">
                                 <label htmlFor="payment_date" style={{fontWeight:'bold'}}>{t('PAYMENT.FORM.INPUT.PAYMENTDATE')}</label>
                                 <InputText
                                     id="payment_date"
@@ -459,6 +483,8 @@ const PaymentPage = () => {
                                         'p-invalid': submitted && !payment.payment_date
                                     })}
                                 />
+                                {submitted && !payment.payment_date && <small className="p-invalid" style={{ color: 'red' }}>Payment Date is required.</small>}
+
                             </div>
                         </div>
 

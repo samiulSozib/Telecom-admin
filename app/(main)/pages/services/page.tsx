@@ -48,14 +48,15 @@ const Services = () => {
     const {services,loading}=useSelector((state:any)=>state.serviceReducer)
     const {serviceCategories}=useSelector((state:any)=>state.serviceCategoryReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
 
     useEffect(()=>{
-        dispatch(_fetchServiceList())
+        dispatch(_fetchServiceList(searchTag))
         dispatch(_fetchCompanies())
         dispatch(_fetchServiceCategories())
-    },[dispatch])
+    },[dispatch,searchTag])
 
 
     const openNew = () => {
@@ -84,6 +85,16 @@ const Services = () => {
 
     const saveService = () => {
         setSubmitted(true);
+        if (!service.service_name || !service.company || !service.service_category) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (service.id && service.id !== 0) {
             dispatch(_editService(service.id,service,toast));
 
@@ -93,6 +104,7 @@ const Services = () => {
 
         setServiceDialog(false);
         setService(emptyService);
+        setSubmitted(false)
     };
 
     const editService = (service: Service) => {
@@ -141,7 +153,7 @@ const Services = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -279,8 +291,8 @@ const Services = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={serviceDialog}  style={{ width: '700px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}>
+                    <Dialog visible={serviceDialog}  style={{ width: '700px',padding:'5px' }} header="Service Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                        <div className='card' style={{padding:'40px'}}>
                             <div className="field">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SERVICE.FORM.INPUT.SERVICENAME')}</label>
                                 <InputText
@@ -321,6 +333,7 @@ const Services = () => {
                                         placeholder={t('SERVICE.FORM.PLACEHOLDER.COMPANY')}
                                         className="w-full"
                                     />
+                                {submitted && !service.company && <small className="p-invalid" style={{ color: 'red' }}>Company is required.</small>}
 
                                 </div>
                             </div>
@@ -343,6 +356,7 @@ const Services = () => {
                                         placeholder={t('SERVICE.FORM.PLACEHOLDER.ServiceCategory')}
                                         className="w-full"
                                     />
+                                {submitted && !service.service_category && <small className="p-invalid" style={{ color: 'red' }}>Service Category is required.</small>}
 
                                 </div>
                             </div>

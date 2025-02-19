@@ -23,12 +23,12 @@ const getAuthToken = () => {
   };
 
 // FETCH COMPANY LIST ACTION
-export const _fetchCompanies=()=>async(dispatch:Dispatch)=>{
+export const _fetchCompanies=(search:string='')=>async(dispatch:Dispatch)=>{
     dispatch({type:FETCH_COMPANY_LIST_REQUEST})
 
     try{
         const token = getAuthToken();
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies?search=${search}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

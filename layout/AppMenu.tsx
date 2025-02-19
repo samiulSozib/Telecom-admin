@@ -23,6 +23,11 @@ const AppMenu = () => {
                     icon: 'pi pi-fw pi-home', // Home or main dashboard icon
                     to: '/',
                 },
+                // {
+                //     label: t('MENU.DASHBOARD'),
+                //     icon: 'pi pi-fw pi-home', // Home or main dashboard icon
+                //     to: '/pages/crud',
+                // },
                 {
                     label: t('MENU.COMPANY_SERVICES'),
                     icon: 'pi pi-fw pi-sitemap', // Hierarchy or company services
@@ -141,11 +146,11 @@ const AppMenu = () => {
                     icon: 'pi pi-list', // Bullhorn for advertisements pi-list
                     to: '/pages/advertisement',
                 },
-                {
-                    label: t('MENU.APPSETTING'),
-                    icon: 'pi pi-fw pi-cog', // Cogwheel for settings
-                    to: '/pages/general-settings',
-                },
+                // {
+                //     label: t('MENU.APPSETTING'),
+                //     icon: 'pi pi-fw pi-cog', // Cogwheel for settings
+                //     to: '/pages/general-settings',
+                // },
                 {
                     label: t('MENU.ROLES'),
                     icon: 'pi pi-fw pi-cog', // Cogwheel for settings

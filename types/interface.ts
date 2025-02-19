@@ -431,6 +431,20 @@ export interface Permission{
     pivot:null
 }
 
+export interface GroupDiscount{
+    id:number,
+    reseller_group_id:number,
+    service_id:number,
+    bundle_id:number,
+    discount_type:string|null,
+    discount_value:string|null,
+    created_at:string|null,
+    updated_at:string|null,
+    reseller_group:ResellerGroup|null,
+    service:Service|null,
+    bundle:Bundle|null
+}
+
 // export interface UserList {
 //     id: number;
 //     uuid: string;

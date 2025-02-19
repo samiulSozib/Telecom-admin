@@ -36,17 +36,22 @@ const getAuthToken = () => {
 };
 
 // Fetch Resellers
-export const _fetchResellers = () => async (dispatch: Dispatch) => {
+export const _fetchResellers = (page: number = 1,search:string='') => async (dispatch: Dispatch) => {
     dispatch({ type: FETCH_RESELLERS_REQUEST });
 
     try {
         const token = getAuthToken();
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/resellers`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/resellers?page=${page}&search=${search}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        dispatch({ type: FETCH_RESELLERS_SUCCESS, payload: response.data.data.resellers });
+        dispatch({ type: FETCH_RESELLERS_SUCCESS, payload:
+            {
+                data:response.data.data.resellers,
+                pagination: response.data.payload.pagination,
+            }
+     });
     } catch (error: any) {
         dispatch({ type: FETCH_RESELLERS_FAIL, payload: error.message });
     }

@@ -30,12 +30,11 @@ const UserListGroupPage = () => {
     let emptyUser:any={
         id: 0,
         uuid: '',
-        first_name: '',
-        last_name:'',
+        name: '',
         email: '',
         password:'',
         confirm_password:'',
-        phone_number: '',
+        phone: '',
         user_type: '',
         email_verified_at: '' ,
         currency_preference_code: '',
@@ -64,14 +63,15 @@ const UserListGroupPage = () => {
     const {roles}=useSelector((state:any)=>state.rolesReducer)
     const {users,loading}=useSelector((state:any)=>state.userReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
 
     useEffect(()=>{
-        dispatch(_fetchUserList())
+        dispatch(_fetchUserList(searchTag))
         dispatch(_fetchCurrencies())
         dispatch(_fetchRoleList())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     const openNew = () => {
         setUser(emptyUser)
@@ -96,6 +96,16 @@ const UserListGroupPage = () => {
 
     const saveUserList = () => {
         setSubmitted(true);
+        if (!user.name || ! user.password || !user.confirm_password || !user.phone || !user.email || !user.roles || !user.currency_preference_id) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (user.id && user.id !== 0) {
             dispatch(_editUser(user.id,user,toast));
 
@@ -105,6 +115,7 @@ const UserListGroupPage = () => {
 
         setUserListDialog(false);
         setUser(emptyUser);
+        setSubmitted(false)
     };
 
     const editUserList = (user: User) => {
@@ -153,7 +164,7 @@ const UserListGroupPage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -196,9 +207,9 @@ const UserListGroupPage = () => {
         return (
             <>
                 <span className="p-column-title">Role</span>
-                {rowData.roles && rowData.roles.length > 0
+                <span style={{color:'green'}}>{rowData.roles && rowData.roles.length > 0
                     ? rowData.roles.map((role) => role.name).join(', ')
-                    : 'No roles assigned'}
+                    : 'No roles assigned'}</span>
             </>
         );
     };
@@ -286,50 +297,30 @@ const UserListGroupPage = () => {
                     </DataTable>
 
 
-                    <Dialog visible={userListDialog}  style={{ width: '900px' }} header="User Details" modal className="p-fluid" footer={userListDialogFooter} onHide={hideDialog}>
-                        <div className="card flex flex-column md:flex-row gap-3">
-                            <div>
-                                <div className="field col flex-1">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>First Name</label>
+                    <Dialog visible={userListDialog}  style={{ width: '900px',padding:'5px' }} header="User Details" modal className="p-fluid" footer={userListDialogFooter} onHide={hideDialog}>
+                        <div className="card flex flex-wrap p-fluid mt-3 gap-4">
+                            <div className='flex-1 col-12 lg:col-6'>
+                                <div className="field ">
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>User Name</label>
                                     <InputText
-                                        id="first_name"
-                                        value={user.first_name}
+                                        id="name"
+                                        value={user.name}
                                         onChange={(e) =>
                                             setUser((prev:any) => ({
                                                 ...prev,
-                                                first_name: e.target.value,
+                                                name: e.target.value,
                                             }))
                                         }
                                         required
                                         autoFocus
                                         className={classNames({
-                                            'p-invalid': submitted && !user.first_name
+                                            'p-invalid': submitted && !user.name
                                         })}
                                     />
+                                    {submitted && !user.name && (<small style={{ color: "red", fontSize: "12px" }}>Name is required.</small>)}
                                 </div>
 
-                                <div className="field col flex-1">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Last Name</label>
-                                    <InputText
-                                        id="last_name"
-                                        value={user.last_name}
-                                        onChange={(e) =>
-                                            setUser((prev:any) => ({
-                                                ...prev,
-                                                last_name: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                        autoFocus
-                                        className={classNames({
-                                            'p-invalid': submitted && !user.last_name
-                                        })}
-                                    />
-                                </div>
-
-
-
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Password</label>
                                     <InputText
                                         id="sub_reseller_limit"
@@ -346,12 +337,13 @@ const UserListGroupPage = () => {
                                             'p-invalid': submitted && !user.sub_reseller_limit
                                         })}
                                     />
+                                    {submitted && !user.password && (<small style={{ color: "red", fontSize: "12px" }}>Password is required.</small>)}
                                 </div>
 
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Confirm Password</label>
                                     <InputText
-                                        id="sub_reseller_limit"
+                                        id="confirm_password"
                                         value={user.confirm_password}
                                         onChange={(e) =>
                                             setUser((prev:any) => ({
@@ -365,49 +357,9 @@ const UserListGroupPage = () => {
                                             'p-invalid': submitted && !user.confirm_password
                                         })}
                                     />
+                                    {submitted && !user.confirm_password && (<small style={{ color: "red", fontSize: "12px" }}>Confirm Password is required.</small>)}
                                 </div>
-
-
-                            </div>
-                            <br />
-                            <div>
-                            <div className="field col flex-1">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Email</label>
-                                    <InputText
-                                        id="discount_value"
-                                        value={user.email}
-                                        onChange={(e) =>
-                                            setUser((prev:any) => ({
-                                                ...prev,
-                                                email: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                        autoFocus
-                                        className={classNames({
-                                            'p-invalid': submitted && !user.email
-                                        })}
-                                    />
-                                </div>
-                            <div className="field col flex-1">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Phone Number</label>
-                                    <InputText
-                                        id="phone"
-                                        value={user.phone_number}
-                                        onChange={(e) =>
-                                            setUser((prev:any) => ({
-                                                ...prev,
-                                                phone_number: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                        autoFocus
-                                        className={classNames({
-                                            'p-invalid': submitted && !user.phone_number
-                                        })}
-                                    />
-                                </div>
-                                <div className="field col flex-1">
+                                <div className="field ">
                                     <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Role</label>
                                     <Dropdown
                                         id="discount_type"
@@ -425,8 +377,51 @@ const UserListGroupPage = () => {
                                         placeholder="Choose a Role"
                                         className="w-full"
                                     />
+                                    {submitted && !user.roles && (<small style={{ color: "red", fontSize: "12px" }}>Roles is required.</small>)}
                                 </div>
-                                <div className="field col flex-1">
+
+                            </div>
+                            <div className='flex-1 col-12 lg:col-6'>
+                                <div className="field ">
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Email</label>
+                                    <InputText
+                                        id="email"
+                                        value={user.email}
+                                        onChange={(e) =>
+                                            setUser((prev:any) => ({
+                                                ...prev,
+                                                email: e.target.value,
+                                            }))
+                                        }
+                                        required
+                                        autoFocus
+                                        className={classNames({
+                                            'p-invalid': submitted && !user.email
+                                        })}
+                                    />
+                                    {submitted && !user.email && (<small style={{ color: "red", fontSize: "12px" }}>Email is required.</small>)}
+                                </div>
+                                <div className="field ">
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Phone Number</label>
+                                    <InputText
+                                        id="phone"
+                                        value={user.phone}
+                                        onChange={(e) =>
+                                            setUser((prev:any) => ({
+                                                ...prev,
+                                                phone: e.target.value,
+                                            }))
+                                        }
+                                        required
+                                        autoFocus
+                                        className={classNames({
+                                            'p-invalid': submitted && !user.phone
+                                        })}
+                                    />
+                                    {submitted && !user.phone && (<small style={{ color: "red", fontSize: "12px" }}>Phone is required.</small>)}
+                                </div>
+
+                                <div className="field ">
                                     <label htmlFor="status" style={{fontWeight:'bold'}}>Currency</label>
                                     <Dropdown
                                         id="currency_preference_id"
@@ -443,6 +438,7 @@ const UserListGroupPage = () => {
                                         placeholder="Choose a currency"
                                         className="w-full"
                                     />
+                                    {submitted && !user.currency_preference_id && (<small style={{ color: "red", fontSize: "12px" }}>Currency is required.</small>)}
                                 </div>
 
                             </div>

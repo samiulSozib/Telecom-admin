@@ -79,7 +79,7 @@ const AppConfig = (props: AppConfigProps) => {
                             <Button icon="pi pi-plus" type="button" onClick={incrementScale} rounded text className="w-2rem h-2rem ml-2" disabled={layoutConfig.scale === scales[scales.length - 1]}></Button>
                         </div>
 
-                        <h5>Menu Type</h5>
+                        {/* <h5>Menu Type</h5>
                         <div className="flex">
                             <div className="field-radiobutton flex-1">
                                 <RadioButton name="menuMode" value={'static'} checked={layoutConfig.menuMode === 'static'} onChange={(e) => changeMenuMode(e)} inputId="mode1"></RadioButton>
@@ -89,9 +89,9 @@ const AppConfig = (props: AppConfigProps) => {
                                 <RadioButton name="menuMode" value={'overlay'} checked={layoutConfig.menuMode === 'overlay'} onChange={(e) => changeMenuMode(e)} inputId="mode2"></RadioButton>
                                 <label htmlFor="mode2">Overlay</label>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <h5>Input Style</h5>
+                        {/* <h5>Input Style</h5>
                         <div className="flex">
                             <div className="field-radiobutton flex-1">
                                 <RadioButton name="inputStyle" value={'outlined'} checked={layoutConfig.inputStyle === 'outlined'} onChange={(e) => changeInputStyle(e)} inputId="outlined_input"></RadioButton>
@@ -101,20 +101,20 @@ const AppConfig = (props: AppConfigProps) => {
                                 <RadioButton name="inputStyle" value={'filled'} checked={layoutConfig.inputStyle === 'filled'} onChange={(e) => changeInputStyle(e)} inputId="filled_input"></RadioButton>
                                 <label htmlFor="filled_input">Filled</label>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <h5>Ripple Effect</h5>
-                        <InputSwitch checked={layoutConfig.ripple as boolean} onChange={(e) => changeRipple(e)}></InputSwitch>
+                        {/* <h5>Ripple Effect</h5>
+                        <InputSwitch checked={layoutConfig.ripple as boolean} onChange={(e) => changeRipple(e)}></InputSwitch> */}
                     </>
                 )}
-                <h5>PrimeOne Design</h5>
+                <h5>Themes 1</h5>
                 <div className="grid">
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('lara-light-indigo', 'light')}>
                             <img src="/layout/images/themes/lara-light-indigo.png" className="w-2rem h-2rem" alt="Lara Light Indigo" />
                         </button>
                     </div>
-                    <div className="col-3">
+                    {/* <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('lara-light-blue', 'light')}>
                             <img src="/layout/images/themes/lara-light-blue.png" className="w-2rem h-2rem" alt="Lara Light Blue" />
                         </button>
@@ -128,13 +128,13 @@ const AppConfig = (props: AppConfigProps) => {
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('lara-light-teal', 'light')}>
                             <img src="/layout/images/themes/lara-light-teal.png" className="w-2rem h-2rem" alt="Lara Light Teal" />
                         </button>
-                    </div>
+                    </div> */}
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('lara-dark-indigo', 'dark')}>
                             <img src="/layout/images/themes/lara-dark-indigo.png" className="w-2rem h-2rem" alt="Lara Dark Indigo" />
                         </button>
                     </div>
-                    <div className="col-3">
+                    {/* <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('lara-dark-blue', 'dark')}>
                             <img src="/layout/images/themes/lara-dark-blue.png" className="w-2rem h-2rem" alt="Lara Dark Blue" />
                         </button>
@@ -148,8 +148,8 @@ const AppConfig = (props: AppConfigProps) => {
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('lara-dark-teal', 'dark')}>
                             <img src="/layout/images/themes/lara-dark-teal.png" className="w-2rem h-2rem" alt="Lara Dark Teal" />
                         </button>
-                    </div>
-                    <div className="col-3">
+                    </div> */}
+                    {/* <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('soho-light', 'light')}>
                             <img src="/layout/images/themes/soho-light.png" className="w-2rem h-2rem" alt="Soho Light" />
                         </button>
@@ -163,7 +163,7 @@ const AppConfig = (props: AppConfigProps) => {
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('viva-light', 'light')}>
                             <img src="/layout/images/themes/viva-light.svg" className="w-2rem h-2rem" alt="Viva Light" />
                         </button>
-                    </div>
+                    </div> */}
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('viva-dark', 'dark')}>
                             <img src="/layout/images/themes/viva-dark.svg" className="w-2rem h-2rem" alt="Viva Dark" />
@@ -171,31 +171,31 @@ const AppConfig = (props: AppConfigProps) => {
                     </div>
                 </div>
 
-                <h5>Bootstrap</h5>
+                <h5>Themes 2</h5>
                 <div className="grid">
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-light-blue', 'light')}>
                             <img src="/layout/images/themes/bootstrap4-light-blue.svg" className="w-2rem h-2rem" alt="Bootstrap Light Blue" />
                         </button>
                     </div>
-                    <div className="col-3">
+                    {/* <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-light-purple', 'light')}>
                             <img src="/layout/images/themes/bootstrap4-light-purple.svg" className="w-2rem h-2rem" alt="Bootstrap Light Purple" />
                         </button>
-                    </div>
+                    </div> */}
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-dark-blue', 'dark')}>
                             <img src="/layout/images/themes/bootstrap4-dark-blue.svg" className="w-2rem h-2rem" alt="Bootstrap Dark Blue" />
                         </button>
                     </div>
-                    <div className="col-3">
+                    {/* <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('bootstrap4-dark-purple', 'dark')}>
                             <img src="/layout/images/themes/bootstrap4-dark-purple.svg" className="w-2rem h-2rem" alt="Bootstrap Dark Purple" />
                         </button>
-                    </div>
+                    </div> */}
                 </div>
 
-                <h5>Material Design</h5>
+                {/* <h5>Material Design</h5>
                 <div className="grid">
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('md-light-indigo', 'light')}>
@@ -217,16 +217,16 @@ const AppConfig = (props: AppConfigProps) => {
                             <img src="/layout/images/themes/md-dark-deeppurple.svg" className="w-2rem h-2rem" alt="Material Dark DeepPurple" />
                         </button>
                     </div>
-                </div>
+                </div> */}
 
-                <h5>Material Design Compact</h5>
+                <h5>Themes 3</h5>
                 <div className="grid">
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('mdc-light-indigo', 'light')}>
                             <img src="/layout/images/themes/md-light-indigo.svg" className="w-2rem h-2rem" alt="Material Light Indigo" />
                         </button>
                     </div>
-                    <div className="col-3">
+                    {/* <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('mdc-light-deeppurple', 'light')}>
                             <img src="/layout/images/themes/md-light-deeppurple.svg" className="w-2rem h-2rem" alt="Material Light Deep Purple" />
                         </button>
@@ -235,7 +235,7 @@ const AppConfig = (props: AppConfigProps) => {
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('mdc-dark-indigo', 'dark')}>
                             <img src="/layout/images/themes/md-dark-indigo.svg" className="w-2rem h-2rem" alt="Material Dark Indigo" />
                         </button>
-                    </div>
+                    </div> */}
                     <div className="col-3">
                         <button className="p-link w-2rem h-2rem" onClick={() => _changeTheme('mdc-dark-deeppurple', 'dark')}>
                             <img src="/layout/images/themes/md-dark-deeppurple.svg" className="w-2rem h-2rem" alt="Material Dark Deep Purple" />

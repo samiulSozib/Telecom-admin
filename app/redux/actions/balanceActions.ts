@@ -22,12 +22,12 @@ const getAuthToken = () => {
 };
 
 // Fetch balances
-export const _fetchBalances = () => async (dispatch: Dispatch) => {
+export const _fetchBalances = (search:string='') => async (dispatch: Dispatch) => {
     dispatch({ type: FETCH_BALANCES_REQUEST });
 
     try {
         const token = getAuthToken();
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/balances`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/balances?search=${search}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

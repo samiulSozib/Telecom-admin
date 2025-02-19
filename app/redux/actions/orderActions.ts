@@ -23,12 +23,12 @@ const getAuthToken = () => {
 };
 
 // Fetch orders
-export const _fetchOrders = (page: number = 1) => async (dispatch: Dispatch) => {
+export const _fetchOrders = (page: number = 1,search:string='') => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_ORDERS_REQUEST });
 
   try {
     const token = getAuthToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/orders?page=${page}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/orders?page=${page}&search=${search}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

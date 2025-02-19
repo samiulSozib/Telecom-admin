@@ -51,12 +51,13 @@ const CompanyPage = () => {
     const {countries}=useSelector((state:any)=>state.countriesReducer)
     const {telegramChatIds}=useSelector((state:any)=>state.telegramReducer)
     const { t } = useTranslation();
+    const [searchTag,setSearchTag]=useState("")
 
     useEffect(()=>{
-        dispatch(_fetchCompanies())
+        dispatch(_fetchCompanies(searchTag))
         dispatch(_fetchCountries())
         dispatch(_fetchTelegramList())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     useEffect(()=>{
         //console.log(company)
@@ -94,7 +95,12 @@ const CompanyPage = () => {
             !company.telegram_chat_id
             ) {
 
-            // Don't proceed if any field is invalid
+                toast.current?.show({
+                    severity: 'error',
+                    summary: 'Validation Error',
+                    detail: 'Please fill in all required fields.',
+                    life: 3000,
+                });
             return;
         }
         if (company.id && company.id !== 0) {
@@ -106,6 +112,7 @@ const CompanyPage = () => {
 
         setCompanyDialog(false);
         setCompany(emptyCompany);
+        setSubmitted(false)
     };
 
     const editCompany = (company: Company) => {
@@ -165,7 +172,7 @@ const CompanyPage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -319,8 +326,8 @@ const CompanyPage = () => {
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={companyDialog}  style={{ width: '900px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:"40px"}}>
+                    <Dialog visible={companyDialog}  style={{ width: '750px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                        <div className='card' style={{padding:"40px"}}>
                         {company.company_logo && (
                             <img
                                 src={

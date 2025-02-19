@@ -67,14 +67,15 @@ const BalancePage = () => {
     const {resellers}=useSelector((state:any)=>state.resellerReducer)
     const {paymentMethods}=useSelector((state:any)=>state.paymentMethodsReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
 
 
     useEffect(()=>{
-        dispatch(_fetchBalances())
+        dispatch(_fetchBalances(searchTag))
         dispatch(_fetchCurrencies())
         dispatch(_fetchResellers())
         dispatch(_fetchPaymentMethods())
-    },[dispatch])
+    },[dispatch,searchTag])
 
     const openNew = () => {
         setBalance(emptyBalance)
@@ -99,6 +100,18 @@ const BalancePage = () => {
 
     const saveBalance = () => {
         setSubmitted(true);
+        if (!balance.reseller || !balance.amount || !balance.transaction_type
+            || !balance.currency_id|| !balance.description
+        ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (balance.id && balance.id !== 0) {
             dispatch(_editBalance(balance.id,balance,toast));
 
@@ -108,6 +121,7 @@ const BalancePage = () => {
 
         setBalanceDialog(false);
         setBalance(emptyBalance);
+        setSubmitted(false)
     };
 
     const editBalance = (balance: Balance) => {
@@ -154,7 +168,9 @@ const BalancePage = () => {
             <React.Fragment>
                 <span className="block mt-2 md:mt-0 p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
+                    <InputText type="search"
+                    onInput={(e) => setSearchTag(e.currentTarget.value)}
+                    placeholder={t('ECOMMERCE.COMMON.SEARCH')}  />
             </span>
             </React.Fragment>
         );
@@ -329,7 +345,7 @@ const BalancePage = () => {
                     </DataTable>
 
                     <Dialog visible={balanceDialog}  style={{ width: '900px',padding:'5px' }} header={t('BALANCE.DETAILS.TITLE')} modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>
-                        <div className="flex flex-wrap p-fluid mt-3 gap-4">
+                        <div className="card flex flex-wrap p-fluid mt-3 gap-4">
                             {/* Balance Details */}
                             <div className="flex-1 col-12 lg:col-6">
                                 <div className="card">
@@ -353,6 +369,8 @@ const BalancePage = () => {
                                             placeholder="Select a reseller"
                                             className="w-full"
                                         />
+                                        {submitted && !balance.reseller && <small className="p-invalid" style={{ color: 'red' }}>Reseller is required.</small>}
+
                                     </div>
 
                                     {/* Transaction Type */}
@@ -374,6 +392,7 @@ const BalancePage = () => {
                                             placeholder="Select transaction type"
                                             className="w-full"
                                         />
+                                        {submitted && !balance.transaction_type && <small className="p-invalid" style={{ color: 'red' }}>Transaction Type is required.</small>}
                                     </div>
 
                                     <div className="field">
@@ -391,6 +410,7 @@ const BalancePage = () => {
                                             type="number"
                                             className="w-full"
                                         />
+                                        {submitted && !balance.amount && <small className="p-invalid" style={{ color: 'red' }}>Amount is required.</small>}
                                     </div>
 
                                     {/* Currency */}
@@ -411,6 +431,7 @@ const BalancePage = () => {
                                             placeholder="Select a currency"
                                             className="w-full"
                                         />
+                                        {submitted && !balance.currency_id && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}
                                     </div>
 
                                     {/* Description */}
@@ -428,6 +449,7 @@ const BalancePage = () => {
                                             placeholder="Enter description"
                                             className="w-full"
                                         />
+                                        {submitted && !balance.description && <small className="p-invalid" style={{ color: 'red' }}>Description is required.</small>}
                                     </div>
                                 </div>
                             </div>

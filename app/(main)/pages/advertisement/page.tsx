@@ -49,11 +49,13 @@ const AdvertisementPage = () => {
     const dispatch=useDispatch<AppDispatch>()
     const {advertisements,loading}=useSelector((state:any)=>state.advertisementsReducer)
     const {t}=useTranslation()
+    const [searchTag,setSearchTag]=useState("")
+
 
 
     useEffect(()=>{
-        dispatch(_fetchAdvertisements())
-    },[dispatch])
+        dispatch(_fetchAdvertisements(searchTag))
+    },[dispatch,searchTag])
 
     const openNew = () => {
         setAdvertisement(emptyAdvertisement)
@@ -78,6 +80,16 @@ const AdvertisementPage = () => {
 
     const saveAdvertisement = () => {
         setSubmitted(true);
+        if (!advertisement.advertisement_title  ) {
+
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: 'Please fill in all required fields.',
+                life: 3000,
+            });
+        return;
+    }
         if (advertisement.id && advertisement.id !== 0) {
             dispatch(_editAdvertisement(advertisement.id,advertisement,toast));
 
@@ -87,6 +99,7 @@ const AdvertisementPage = () => {
 
         setAdvertisementDialog(false);
         setAdvertisement(emptyAdvertisement);
+        setSubmitted(false)
     };
 
     const editAdvertisement = (advertisement: Advertisement) => {
@@ -135,7 +148,7 @@ const AdvertisementPage = () => {
                     <i className="pi pi-search" />
                     <InputText
                         type="search"
-                        onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                        onInput={(e) => setSearchTag(e.currentTarget.value)}
                         placeholder={t('ECOMMERCE.COMMON.SEARCH')}
                         className="w-full md:w-auto"
                     />
@@ -269,7 +282,7 @@ const AdvertisementPage = () => {
                     </DataTable>
 
                     <Dialog visible={advertisementDialog}  style={{ width: '700px',padding:'5px' }} header="Advertisement Details" modal className="p-fluid" footer={advertisementDialogFooter} onHide={hideDialog}>
-                        <div style={{padding:'40px'}}></div>
+                        <div className='card' style={{padding:'40px'}}></div>
                         {advertisement.ad_slider_image_url && (
                             <img
                                 src={

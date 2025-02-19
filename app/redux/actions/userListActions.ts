@@ -22,11 +22,11 @@ const getAuthToken = () => {
 };
 
 // Fetch User List
-export const _fetchUserList = () => async (dispatch: Dispatch) => {
+export const _fetchUserList = (search:string='') => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_USER_LIST_REQUEST });
   try {
     const token = getAuthToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/users?search=${search}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,10 +52,9 @@ export const _addUser = (newUserData: any, toast: React.RefObject<Toast>) => asy
         const formData = new FormData();
 
         // Append each property of the `body` object to the `FormData` instance
-        formData.append("first_name", newUserData.first_name);
-        formData.append("last_name", newUserData.last_name);
+        formData.append("name", newUserData.name);
         formData.append("email", newUserData.email);
-        formData.append("phone_number", newUserData.phone_number);
+        formData.append("phone", newUserData.phone);
         formData.append("role", newUserData.role);
         formData.append("password", newUserData.password);
         formData.append("confirm_password", newUserData.confirm_password);
@@ -95,12 +94,22 @@ export const _addUser = (newUserData: any, toast: React.RefObject<Toast>) => asy
 };
 
 // Edit User
-export const _editUser = (userId: number, updatedUserData: User, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+export const _editUser = (userId: number, updatedUserData: any, toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_USER_REQUEST });
   try {
 
     const token = getAuthToken();
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/users/${userId}`, updatedUserData, {
+        const formData = new FormData();
+
+        // Append each property of the `body` object to the `FormData` instance
+        formData.append("name", updatedUserData.name);
+        formData.append("email", updatedUserData.email);
+        formData.append("phone", updatedUserData.phone);
+        formData.append("role", updatedUserData.role);
+        formData.append("password", updatedUserData.password);
+        formData.append("confirm_password", updatedUserData.confirm_password);
+        formData.append("currency_preference_id", updatedUserData.currency_preference_id);
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/users/${userId}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
