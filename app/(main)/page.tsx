@@ -34,7 +34,7 @@ const Dashboard = () => {
     },[dispatch])
 
     useEffect(()=>{
-        //console.log(userInfo)
+        console.log(userInfo)
     },[dispatch,userInfo])
 
     const applyLightTheme = () => {
