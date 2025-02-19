@@ -37,12 +37,12 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
     useEffect(() => {
       const token = localStorage.getItem('api_token');
 
-      if (token && isAuthenticated) {
+      if (token) {
         setIsCheckingAuth(false); // Authentication valid হলে লোডিং বন্ধ
       } else {
         router.replace('/auth/login'); // Redirect only if no token & not authenticated
       }
-    }, [router, isAuthenticated]);
+    }, [router]);
 
     if (isCheckingAuth) {
       return <div>Loading...</div>; // Prevent unnecessary logout during initial load
