@@ -40,7 +40,8 @@ interface PINValidationErrors{
 const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
     const dispatch = useDispatch<AppDispatch>();
     const { singleReseller } = useSelector((state: any) => state.resellerReducer);
-    const {userInfo}=useSelector((state:any)=>state.authReducer)
+    //const {userInfo}=useSelector((state:any)=>state.authReducer)
+    const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
     const {t}=useTranslation()
     const toast = useRef<Toast>(null);
 
