@@ -62,9 +62,7 @@ const LoginPage = () => {
                     icon: "success",
                     draggable: true
                   });
-                  setTimeout(() => {
-                    router.push('/'); // Navigate only on success after delay
-                }, 2000);
+                router.push('/'); // Navigate only on success
 
 
             } else {

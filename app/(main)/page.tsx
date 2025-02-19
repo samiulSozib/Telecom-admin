@@ -23,7 +23,8 @@ import { useTranslation } from 'react-i18next';
 const Dashboard = () => {
     const { layoutConfig } = useContext(LayoutContext);
     const {data}=useSelector((state:any)=>state.dashboardDataReducer)
-    const {userInfo}=useSelector((state:any)=>state.authReducer)
+    //const {userInfo}=useSelector((state:any)=>state.authReducer)
+    const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}'); // Default to empty object
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { t } = useTranslation();
 
