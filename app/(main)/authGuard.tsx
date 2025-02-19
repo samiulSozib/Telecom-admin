@@ -5,7 +5,7 @@
 // const withAuth = (WrappedComponent: React.ComponentType) => {
 //   const AuthComponent = (props: any) => {
 //     const router = useRouter();
-//     const isAuthenticated = useSelector((state: any) => state.authReducer.isAuthenticated);
+//     const {isAuthenticated} = useSelector((state: any) => state.authReducer);
 
 //     useEffect(() => {
 //       const token = localStorage.getItem('api_token'); // Replace with your actual auth check
