@@ -189,15 +189,15 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
 
 
     return (
+        <div className="grid -m-4">
+        <div className="card p-2" style={{width:'100%'}}>
 
-        <div className="card" style={{  maxWidth: '100%', boxSizing: 'border-box' }}>
-            <div className="">
-                <div className="flex gap-5">
+                <div className="flex gap-2">
                     <img
                         src={singleReseller.profile_image_url}
                         alt={singleReseller.reseller_name}
                         style={{
-                            width: '120px',
+                            width: '110px',
                             height: '120px',
                             borderRadius: '10%',
                             objectFit: 'cover',
@@ -264,7 +264,7 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
                                     className={PrimeIcons.ENVELOPE}
                                     style={{ marginRight: '0.5rem' }}
                                 ></i>
-                                {singleReseller.email}
+                                <span style={{fontSize:"12px"}}>{singleReseller.email}</span>
                             </p>
                         </div>
                     </div>
@@ -272,49 +272,61 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
                 </div>
 
 
-                <div >
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2" style={{ width: '100%' }}>
+                    <div className="grid mt-2">
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.balance} {userInfo?.currency?.symbol}</h4>
-                            <span>{t('RESELLER.VIEW.BALANCE')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.balance} {userInfo?.currency?.symbol}</h4>
+                                <span>{t('RESELLER.VIEW.BALANCE')}</span>
+                            </div>
                         </div>
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.today_orders}</h4>
-                            <span>{t('RESELLER.VIEW.TODAYORDER')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.today_orders}</h4>
+                                <span>{t('RESELLER.VIEW.TODAYORDER')}</span>
+                            </div>
                         </div>
 
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.total_orders}</h4>
-                            <span>{t('RESELLER.VIEW.TOTALORDER')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.total_orders}</h4>
+                                <span>{t('RESELLER.VIEW.TOTALORDER')}</span>
+                            </div>
                         </div>
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.today_sale}</h4>
-                            <span>{t('RESELLER.VIEW.TODAYSALE')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.today_sale}</h4>
+                                <span>{t('RESELLER.VIEW.TODAYSALE')}</span>
+                            </div>
                         </div>
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.total_sale}</h4>
-                            <span>{t('RESELLER.VIEW.TOTALSALE')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.total_sale}</h4>
+                                <span>{t('RESELLER.VIEW.TOTALSALE')}</span>
+                            </div>
                         </div>
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.today_profit}</h4>
-                            <span>{t('RESELLER.VIEW.TODAYPROFIT')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.today_profit}</h4>
+                                <span>{t('RESELLER.VIEW.TODAYPROFIT')}</span>
+                            </div>
                         </div>
 
-                        <div className="card" style={{maxHeight:"120px",minHeight:'120px'}}>
-                            <h4>{singleReseller.total_profit}</h4>
-                            <span>{t('RESELLER.VIEW.TOTALPROFIT')}</span>
+                        <div className="col-6 lg:col-6 xl:col-3" >
+                            <div className="card">
+                                <h4>{singleReseller.total_profit}</h4>
+                                <span>{t('RESELLER.VIEW.TOTALPROFIT')}</span>
+                            </div>
                         </div>
 
                     </div>
-                </div>
-            </div>
+
 
             <TabView>
                 <TabPanel header="Overview">
@@ -326,7 +338,7 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
                     </p>
                 </TabPanel>
                 <TabPanel header="Settings">
-                    <div className="card">
+                    <div className="card" style={{margin:"-20px", marginTop:'10px',marginBottom:'30px'}}>
                         <h5>{t('RESELLER.PASSWORDSETTING.RESELLERPASSWORDSETTING')}</h5>
                         <hr />
                         <div style={{paddingBottom:'40px',display:'flex', justifyContent:'space-between'}}>
@@ -341,7 +353,7 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
                         <hr />
                     </div>
 
-                    <div className="card">
+                    <div className="card" style={{margin:"-20px"}}>
                         <h5>{t('RESELLER.PINSETTING.RESELLERPINSETTING')}</h5>
                         <hr />
                         <div style={{paddingBottom:'40px',display:'flex', justifyContent:'space-between'}}>
@@ -502,7 +514,7 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
             </Dialog>
 
         </div>
-
+        </div>
     );
 };
 
