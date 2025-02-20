@@ -1,4 +1,4 @@
-// store/actions/languageActions.ts
+// store/actions/Group DiscountActions.ts
 import { Dispatch } from "redux";
 import axios from "axios";
 
@@ -23,8 +23,8 @@ const getAuthToken = () => {
   return localStorage.getItem("api_token") || ""; // Retrieve the token from localStorage
 };
 
-// Fetch languages
-export const _fetchLanguages = () => async (dispatch: Dispatch) => {
+// Fetch group discount
+export const _fetchGroupDiscounts = () => async (dispatch: Dispatch) => {
   dispatch({ type: FETCH_GROUP_DISCOUNTS_REQUEST });
 
   try {
@@ -41,91 +41,117 @@ export const _fetchLanguages = () => async (dispatch: Dispatch) => {
   }
 };
 
-// Add a language
-export const _addLanguage = (languageData: GroupDiscount,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+// Add a Group Discount
+export const _addGroupDiscount = (groupDiscountData: GroupDiscount,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: ADD_GROUP_DISCOUNT_REQUEST });
 
   try {
     const token = getAuthToken();
+    const formData=new FormData()
+    formData.append('reseller_group_id',groupDiscountData.reseller_group?.id?groupDiscountData.reseller_group?.id.toString():'')
+    formData.append('service_id',groupDiscountData.service?.id?groupDiscountData.service.id.toString():'')
+    formData.append('bundle_id',groupDiscountData.bundle?.id?groupDiscountData.bundle.id.toString():'')
+    formData.append('discount_type',groupDiscountData.discount_type)
+    formData.append('discount_value',groupDiscountData.discount_value)
+
+    formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+    });
+
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/group-discounts`,
-      languageData,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       }
     );
 
-    dispatch({ type: ADD_GROUP_DISCOUNT_SUCCESS, payload: response.data.data.language });
+    console.log(response)
+    const newData={...groupDiscountData,id:response.data.data.id}
+
+    dispatch({ type: ADD_GROUP_DISCOUNT_SUCCESS, payload: newData });
     toast.current?.show({
         severity: "success",
         summary: "Successful",
-        detail: "Language added",
+        detail: "Group Discount added",
         life: 3000,
       });
   } catch (error: any) {
+    console.log(error)
     dispatch({ type: ADD_GROUP_DISCOUNT_FAIL, payload: error.message });
     toast.current?.show({
         severity: "error",
         summary: "Error",
-        detail: "Failed to add language",
+        detail: "Failed to add Group Discount",
         life: 3000,
       });
   }
 };
 
-// Edit a language
-export const _editLanguage = (languageId: number, languageData: GroupDiscount,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+// Edit a Group Discount
+export const _editGroupDiscount = (groupDiscountId: number, groupDiscountData: GroupDiscount,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: EDIT_GROUP_DISCOUNT_REQUEST });
 
   try {
     const token = getAuthToken();
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/group-discounts/${languageId}`,
-      languageData,
+    const formData=new FormData()
+    formData.append('reseller_group_id',groupDiscountData.reseller_group?.id?groupDiscountData.reseller_group?.id.toString():'')
+    formData.append('service_id',groupDiscountData.service?.id?groupDiscountData.service.id.toString():'')
+    formData.append('bundle_id',groupDiscountData.bundle?.id?groupDiscountData.bundle.id.toString():'')
+    formData.append('discount_type',groupDiscountData.discount_type)
+    formData.append('discount_value',groupDiscountData.discount_value)
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/group-discounts/${groupDiscountId}`,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       }
     );
 
-    dispatch({ type: EDIT_GROUP_DISCOUNT_SUCCESS, payload: response.data.data.language });
+    const newData={...groupDiscountData,id:response.data.data.id}
+
+    dispatch({ type: EDIT_GROUP_DISCOUNT_SUCCESS, payload: newData });
     toast.current?.show({
         severity: "success",
         summary: "Successful",
-        detail: "Language edited",
+        detail: "Group Discount edited",
         life: 3000,
       });
   } catch (error: any) {
+    console.log(error)
     dispatch({ type: EDIT_GROUP_DISCOUNT_FAIL, payload: error.message });
     toast.current?.show({
         severity: "error",
         summary: "Error",
-        detail: "Failed to edit language",
+        detail: "Failed to edit Group Discount",
         life: 3000,
       });
   }
 };
 
-// Delete a language
-export const _deleteLanguage = (languageId: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
+// Delete a Group Discount
+export const _deleteGroupDiscount = (groupDiscountID: number,toast: React.RefObject<Toast>) => async (dispatch: Dispatch) => {
   dispatch({ type: DELETE_GROUP_DISCOUNT_REQUEST });
 
   try {
     const token = getAuthToken();
-    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/group-discounts/${languageId}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/group-discounts/${groupDiscountID}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    dispatch({ type: DELETE_GROUP_DISCOUNT_SUCCESS, payload: languageId });
+    dispatch({ type: DELETE_GROUP_DISCOUNT_SUCCESS, payload: groupDiscountID });
     toast.current?.show({
         severity: "success",
         summary: "Successful",
-        detail: "Language deleted",
+        detail: "Group Discount deleted",
         life: 3000,
       });
   } catch (error: any) {
@@ -133,7 +159,7 @@ export const _deleteLanguage = (languageId: number,toast: React.RefObject<Toast>
     toast.current?.show({
         severity: "error",
         summary: "Error",
-        detail: "Failed to delete language",
+        detail: "Failed to delete Group Discount",
         life: 3000,
       });
   }

@@ -21,6 +21,7 @@ import { _deleteOrder, _fetchOrders } from '@/app/redux/actions/orderActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { SplitButton } from 'primereact/splitbutton';
+import { customCellStyle } from '../../utilities/customRow';
 
 const OrderPage = () => {
 
@@ -306,7 +307,7 @@ const statusBodyTemplate = (rowData: Order) => {
 
                 return (
                     <SplitButton
-                        label="Actions"
+                        label=""
                         icon="pi pi-cog"
                         model={items}
                         className="p-button-rounded"
@@ -351,9 +352,9 @@ const statusBodyTemplate = (rowData: Order) => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                 {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -375,17 +376,17 @@ const statusBodyTemplate = (rowData: Order) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')}  body={resellerNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="rechargeble_account" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')}  body={rechargeableAccountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="bundle.id" header={t('ORDER.TABLE.COLUMN.BUNDLEID')}  body={bundleIdBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')}  body={payableAmountBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')}  body={rejectedReasonBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')}  body={companyNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')}  body={categoryNameNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')}  body={createdAtBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="status" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')}  body={resellerNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="rechargeble_account" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')}  body={rechargeableAccountBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="bundle.id" header={t('ORDER.TABLE.COLUMN.BUNDLEID')}  body={bundleIdBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')}  body={payableAmountBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')}  body={rejectedReasonBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')}  body={companyNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')}  body={categoryNameNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')}  body={createdAtBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="status" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} ></Column>
                     </DataTable>
                     <Paginator
                         first={(pagination?.page - 1) * pagination?.items_per_page}

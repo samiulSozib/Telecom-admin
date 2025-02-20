@@ -25,6 +25,7 @@ import { rolesReducer } from './rolesReducer';
 import { userReducer } from './userListReducer';
 import { resellerGroupReducer } from './resellerGroupReducer';
 import { permissionsReducer } from './permissionReducer';
+import { groupDiscountReducer } from './groupDiscountReducer';
 
 const rootReducer=combineReducers({
     currenciesReducer:currenciesReducer,
@@ -52,7 +53,8 @@ const rootReducer=combineReducers({
     rolesReducer:rolesReducer,
     userReducer:userReducer,
     resellerGroupReducer:resellerGroupReducer,
-    permissionsReducer:permissionsReducer
+    permissionsReducer:permissionsReducer,
+    groupDiscountReducer:groupDiscountReducer
 })
 
 

@@ -31,6 +31,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { SplitButton } from 'primereact/splitbutton';
 import { useRouter } from 'next/navigation';
 import { Paginator } from 'primereact/paginator';
+import { customCellStyleImage } from '../../utilities/customRow';
 
 const ResellerPage = () => {
 
@@ -212,9 +213,9 @@ const ResellerPage = () => {
         setStatusResellerDialog(false);
     }
 
-    const viewResellerDetails=(reseller:Reseller)=>{
+    const viewResellerDetails=(resellerId:string|number)=>{
         //dispatch(_getResellerById(reseller.id))
-        router.push(`/pages/reseller/${reseller.id}`);
+        router.push(`/pages/reseller/${resellerId}`);
     }
 
     useEffect(()=>{
@@ -260,8 +261,9 @@ const ResellerPage = () => {
                         alt={rowData.reseller_name}
                         className="shadow-2"
                         style={{
-                            width: '55px',
-                            height: '55px',
+                            padding:'2px',
+                            width: '45px',
+                            height: '45px',
                             borderRadius: '50%', // Makes the image circular
                             objectFit: 'cover', // Ensures the image is cropped correctly within the circle
                         }}
@@ -302,20 +304,36 @@ const ResellerPage = () => {
         );
     };
 
+    const totalBalanceSentBodyTemplate = (rowData: Reseller) => {
+        return (
+            <>
+                <span className="p-column-title">Total Balance Sent</span>
+                {rowData.total_balance_sent}
+            </>
+        );
+    };
+
     const availablePaymentBodyTemplate = (rowData: Reseller) => {
+        const totalPayments = Number(rowData?.total_payments_received) || 0;
+        const totalBalance = Number(rowData?.total_balance_sent) || 0;
+        const availablePaymentAmount = totalPayments - totalBalance;
+
         return (
             <>
                 <span className="p-column-title">Available Payment</span>
-                {rowData.net_payment_balance}
+                {availablePaymentAmount > 0 ? availablePaymentAmount : 0}
             </>
         );
     };
 
     const loanAmountBodyTemplate = (rowData: Reseller) => {
+        const total_payments_received = Number(rowData.total_payments_received);
+        const total_balance_sent = Number(rowData.total_balance_sent);
+        const loanAmount = total_balance_sent - total_payments_received;
         return (
             <>
                 <span className="p-column-title">Loan Amount</span>
-                <span style={{color:'red'}}>{rowData.loan_balance}</span>
+                <span style={{color:'red'}}>{loanAmount}</span>
             </>
         );
     };
@@ -370,7 +388,6 @@ const ResellerPage = () => {
 
 
         const actionBodyTemplate = (rowData: Reseller) => {
-            //const menuType = rowData.menuType; // Assuming `menuType` is part of your data
 
             // Define the dropdown actions
             const items = [
@@ -401,13 +418,14 @@ const ResellerPage = () => {
                 {
                     label: 'View Details',
                     icon: 'pi pi-info-circle',
-                    command: () => viewResellerDetails(rowData),
+                    command: () => viewResellerDetails(rowData.id),
                 },
             ];
 
             return (
                 <SplitButton
-                    label="Actions"
+                style={{fontSize:'8px'}}
+                    label=""
                     icon="pi pi-cog"
                     model={items}
                     className="p-button-rounded"
@@ -474,9 +492,9 @@ useEffect(() => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -485,7 +503,7 @@ useEffect(() => {
                         ref={dt}
                         value={resellers}
                         selection={selectedCompanies}
-                        onSelectionChange={(e) => setSelectedCompanies(e.value as any)}
+                        onRowClick={(e)=>viewResellerDetails(e.data.id)}
                         dataKey="id"
                         paginator={false} // Disable PrimeReact's built-in paginator
                         rows={pagination?.items_per_page}
@@ -500,16 +518,17 @@ useEffect(() => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} body={phoneBodyTemplate}></Column>
-                        <Column field="balance" header={t('MENU.BALANCE')}  body={balanceBodyTemplate}></Column>
-                        <Column field="available_payment" header={t('RESELLER.TABLE.COLUMN.AVAILABLEPAYMENT')}  body={availablePaymentBodyTemplate}></Column>
-                        <Column field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')}  body={totalPaymentBodyTemplate}></Column>
-                        <Column field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')}  body={loanAmountBodyTemplate}></Column>
-                        <Column field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} body={preferredCurrencyBodyTemplate}></Column>
-                        <Column field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')}  body={countryBodyTemplate}></Column>
-                        <Column field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ width: '5rem' }}></Column>
+                        <Column style={customCellStyleImage} field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} body={phoneBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="balance" header={t('MENU.BALANCE')}  body={balanceBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="available_payment" header={t('RESELLER.TABLE.COLUMN.AVAILABLEPAYMENT')}  body={availablePaymentBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')}  body={totalPaymentBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="total_balance" header={t('RESELLER.TABLE.COLUMN.TOTAL_BALANCE')}  body={totalBalanceSentBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')}  body={loanAmountBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} body={preferredCurrencyBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')}  body={countryBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
 
                     </DataTable>
                     <Paginator

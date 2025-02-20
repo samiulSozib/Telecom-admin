@@ -22,6 +22,7 @@ import { _fetchLanguages } from '@/app/redux/actions/languageActions';
 import { FileUpload } from 'primereact/fileupload';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyleImage } from '../../utilities/customRow';
 
 const CountryPage = () => {
 
@@ -272,9 +273,9 @@ const CountryPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -297,12 +298,12 @@ const CountryPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="" header="" sortable body={imageBodyTemplate}></Column>
-                        <Column field="name" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} sortable body={countryNameBodyTemplate}></Column>
-                        <Column field="country_code" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} body={countryCodeBodyTemplate} sortable></Column>
-                        <Column field="currency" header={t('COUNTRY.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
-                        <Column field="language" header={t('COUNTRY.TABLE.COLUMN.LANGUAGE')} body={languageBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyleImage} field="" header="" sortable body={imageBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="name" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} sortable body={countryNameBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="country_code" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} body={countryCodeBodyTemplate} sortable></Column>
+                        <Column style={customCellStyleImage} field="currency" header={t('COUNTRY.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
+                        <Column style={customCellStyleImage} field="language" header={t('COUNTRY.TABLE.COLUMN.LANGUAGE')} body={languageBodyTemplate} sortable></Column>
+                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={countryDialog}  style={{ width: '700px',padding:'5px' }} header="Country Details" modal className="p-fluid" footer={countryDialogFooter} onHide={hideDialog}>

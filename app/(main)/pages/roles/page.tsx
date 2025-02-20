@@ -25,6 +25,7 @@ import { permissionsReducer } from '../../../redux/reducers/permissionReducer';
 import { _fetchPermissions } from '@/app/redux/actions/permissionActions';
 import { Checkbox } from 'primereact/checkbox';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const RolesPage = () => {
 
@@ -275,9 +276,9 @@ const RolesPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -300,9 +301,9 @@ const RolesPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Role" sortable body={roleNameBodyTemplate}></Column>
-                        <Column field="guard_name" header="Guard Name" body={guardNameBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="name" header="Role" sortable body={roleNameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Guard Name" body={guardNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog

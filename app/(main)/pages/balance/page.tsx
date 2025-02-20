@@ -27,6 +27,7 @@ import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import { paymentMethodsReducer } from '../../../redux/reducers/paymentMethodReducer';
 import { _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
 import { Calendar } from 'primereact/calendar';
+import { customCellStyle } from '../../utilities/customRow';
 
 const BalancePage = () => {
 
@@ -309,9 +310,9 @@ const BalancePage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -334,14 +335,14 @@ const BalancePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} sortable></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} sortable></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.REMAINING_BALANCE')} body={remainingBalanceBodyTemplate} sortable></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} sortable></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.DESCRIPTIONS')} body={descriptionBodyTemplate} sortable></Column>
-                        <Column header={t('BALANCE.TABLE.COLUMN.BALANCEDATE')} body={createdAtBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.REMAINING_BALANCE')} body={remainingBalanceBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.DESCRIPTIONS')} body={descriptionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.BALANCEDATE')} body={createdAtBodyTemplate} ></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={balanceDialog}  style={{ width: '900px',padding:'5px' }} header={t('BALANCE.DETAILS.TITLE')} modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>

@@ -20,8 +20,11 @@ import { ServiceCategory } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const Category = () => {
+
+
 
 
     let emptyServiceCategory:ServiceCategory={
@@ -223,9 +226,9 @@ const Category = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -248,9 +251,9 @@ const Category = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="category_name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
-                        <Column field="type" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="category_name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="type" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={serviceCategoryDialog}  style={{ width: '700px',padding:'5px' }} header="Category Details" modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>

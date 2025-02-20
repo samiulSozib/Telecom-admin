@@ -20,6 +20,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _addSupplier, _deleteSupplier, _editSupplier, _fetchSuppliers } from '@/app/redux/actions/supplierActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const SupplierPage = () => {
 
@@ -258,9 +259,9 @@ const SupplierPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -283,11 +284,11 @@ const SupplierPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('SUPPLIER.TABLE.COLUMN.SUPPLIERNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column field="Contact Details" header={t('SUPPLIER.TABLE.COLUMN.CONTACTDETAILS')} body={contactDetailsBodyTemplate} sortable></Column>
-                        <Column field="Address" header={t('SUPPLIER.TABLE.COLUMN.ADDRESS')} body={addressBodyTemplate} sortable></Column>
-                        <Column header={t('SUPPLIER.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="name" header={t('SUPPLIER.TABLE.COLUMN.SUPPLIERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="Contact Details" header={t('SUPPLIER.TABLE.COLUMN.CONTACTDETAILS')} body={contactDetailsBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="Address" header={t('SUPPLIER.TABLE.COLUMN.ADDRESS')} body={addressBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} header={t('SUPPLIER.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={supplierDialog}  style={{ width: '700px',padding:'5px' }} header="Supplier Details" modal className="p-fluid" footer={supplierDialogFooter} onHide={hideDialog}>

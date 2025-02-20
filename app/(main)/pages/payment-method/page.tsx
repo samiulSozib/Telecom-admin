@@ -22,6 +22,7 @@ import { _addPaymentMethod, _deletePaymentMethod, _editPaymentMethod, _fetchPaym
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { customCellStyleImage } from '../../utilities/customRow';
 
 const PaymentMethodPage = () => {
 
@@ -259,9 +260,9 @@ const PaymentMethodPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -284,11 +285,11 @@ const PaymentMethodPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('PAYMENTMETHOD.TABLE.COLUMN.METHODNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column field="Account Details" header={t('PAYMENTMETHOD.TABLE.COLUMN.ACCOUNTDETAILS')} body={accountDetailsBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENTMETHOD.TABLE.COLUMN.IMAGE')} body={imageBodyTemplate}></Column>
-                        <Column header={t('PAYMENTMETHOD.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyleImage} field="name" header={t('PAYMENTMETHOD.TABLE.COLUMN.METHODNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="Account Details" header={t('PAYMENTMETHOD.TABLE.COLUMN.ACCOUNTDETAILS')} body={accountDetailsBodyTemplate} sortable></Column>
+                        <Column style={customCellStyleImage} header={t('PAYMENTMETHOD.TABLE.COLUMN.IMAGE')} body={imageBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} header={t('PAYMENTMETHOD.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={methodDialog}  style={{ width: '700px',padding:'5px' }} header="Method Details" modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>

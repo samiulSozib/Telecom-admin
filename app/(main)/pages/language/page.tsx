@@ -20,6 +20,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _addLanguage, _deleteLanguage, _editLanguage, _fetchLanguages } from '@/app/redux/actions/languageActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const LanguagePage = () => {
 
@@ -231,9 +232,9 @@ const LanguagePage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -256,10 +257,10 @@ const LanguagePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGENAME')} sortable body={languageNameBodyTemplate}></Column>
-                        <Column field="language_code" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGECODE')} body={languageCodeBodyTemplate} sortable></Column>
-                        <Column field="direction" header={t('LANGUAGE.TABLE.COLUMN.DIRECTION')} sortable body={directionBodyTemplate} ></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="name" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGENAME')} sortable body={languageNameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="language_code" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGECODE')} body={languageCodeBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="direction" header={t('LANGUAGE.TABLE.COLUMN.DIRECTION')} sortable body={directionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={languageDialog}  style={{ width: '700px',padding:'5px' }} header="Language Details" modal className="p-fluid" footer={languageDialogFooter} onHide={hideDialog}>

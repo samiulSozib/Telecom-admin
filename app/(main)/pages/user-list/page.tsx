@@ -24,6 +24,7 @@ import { userReducer } from '../../../redux/reducers/userListReducer';
 import { rolesReducer } from '../../../redux/reducers/rolesReducer';
 import { _fetchRoleList } from '@/app/redux/actions/rolesActions';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const UserListGroupPage = () => {
 
@@ -264,9 +265,9 @@ const UserListGroupPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -289,11 +290,11 @@ const UserListGroupPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="First Name" sortable body={userNameBodyTemplate}></Column>
-                        <Column field="guard_name" header="Email" body={emailBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Phone Number" body={phoneNumberBodyTemplate} sortable></Column>
-                        <Column field="guard_name" header="Role" body={roleBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="name" header="First Name" sortable body={userNameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Email" body={emailBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Phone Number" body={phoneNumberBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Role" body={roleBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
 

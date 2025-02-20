@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import { _fetchTelegramList } from '@/app/redux/actions/telegramActions';
 import { AppDispatch } from '@/app/redux/store';
-import { ResellerGroup } from '@/types/interface';
+import { GroupDiscount, ResellerGroup } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { _addResellerGroup, _deleteResellerGroup, _editResellerGroup, _fetchResellerGroups } from '@/app/redux/actions/resellerGroupActions';
 import { _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
@@ -23,19 +23,26 @@ import { FileUpload } from 'primereact/fileupload';
 import { resellerGroupReducer } from '../../../redux/reducers/resellerGroupReducer';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { useTranslation } from 'react-i18next';
+import { _addGroupDiscount, _deleteGroupDiscount, _editGroupDiscount, _fetchGroupDiscounts } from '@/app/redux/actions/groupDiscountActions';
+import { groupDiscountReducer } from '../../../redux/reducers/groupDiscountReducer';
+import { _fetchServiceList } from '@/app/redux/actions/serviceActions';
+import { _fetchBundleList } from '@/app/redux/actions/bundleActions';
+import serviceReducer from '../../../redux/reducers/serviceReducer';
+import bundleReducer from '../../../redux/reducers/bundleReducer';
+import { customCellStyle } from '../../utilities/customRow';
 
 const ResellerGroupPage = () => {
 
-    let emptyResellerGroup:ResellerGroup={
+    let emptyGroupDiscount:GroupDiscount={
         id:0,
-        name:'',
+        reseller_group_id:0,
+        service_id:0,
+        bundle_id:0,
         discount_type:'',
         discount_value:'',
-        can_create_sub_resellers:0,
-        can_sub_reseller_create_subs:0,
-        sub_reseller_limit:0,
-        status:'',
-        notes:'',
+        reseller_group:null,
+        service:null,
+        bundle:null,
         created_at:'',
         updated_at:''
     }
@@ -45,7 +52,7 @@ const ResellerGroupPage = () => {
     const [resellerGroupDialog, setResellerGroupDialog] = useState(false);
     const [deleteResellerGroupDialog, setDeleteResellerGroupDialog] = useState(false);
     const [deleteResellerGroupsDialog, setDeleteResellerGroupsDialog] = useState(false);
-    const [resellerGroup,setResellerGroup]=useState<ResellerGroup>(emptyResellerGroup)
+    const [groupDiscount,setGroupDiscount]=useState<GroupDiscount>(emptyGroupDiscount)
     const [selectedCompanies, setSelectedResellerGroup] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
@@ -53,19 +60,27 @@ const ResellerGroupPage = () => {
     const dt = useRef<DataTable<any>>(null);
     const dispatch=useDispatch<AppDispatch>()
     const {countries,loading}=useSelector((state:any)=>state.countriesReducer)
-    const {currencies}=useSelector((state:any)=>state.currenciesReducer)
-    const {languages}=useSelector((state:any)=>state.languageReducer)
+    const {bundles}=useSelector((state:any)=>state.bundleReducer)
+    const {services}=useSelector((state:any)=>state.serviceReducer)
     const {reseller_groups}=useSelector((state:any)=>state.resellerGroupReducer)
+    const {group_discounts}=useSelector((state:any)=>state.groupDiscountReducer)
+
     const {t}=useTranslation()
 
 
     useEffect(()=>{
         dispatch(_fetchResellerGroups())
-
+        dispatch(_fetchGroupDiscounts())
+        dispatch(_fetchServiceList())
+        dispatch(_fetchBundleList())
     },[dispatch])
 
+    useEffect(()=>{
+        console.log(group_discounts)
+    },[dispatch,group_discounts])
+
     const openNew = () => {
-        setResellerGroup(emptyResellerGroup)
+        setGroupDiscount(emptyGroupDiscount)
         setSubmitted(false);
         setResellerGroupDialog(true);
     };
@@ -87,34 +102,36 @@ const ResellerGroupPage = () => {
 
     const saveResellerGroup = () => {
         setSubmitted(true);
-        if (resellerGroup.id && resellerGroup.id !== 0) {
-            dispatch(_editResellerGroup(resellerGroup.id,resellerGroup,toast));
+        console.log(groupDiscount)
+        //return;
+        if (groupDiscount.id && groupDiscount.id !== 0) {
+            dispatch(_editGroupDiscount(groupDiscount.id,groupDiscount,toast));
 
         } else {
-            dispatch(_addResellerGroup(resellerGroup,toast));
+            dispatch(_addGroupDiscount(groupDiscount,toast));
         }
 
         setResellerGroupDialog(false);
-        setResellerGroup(emptyResellerGroup);
+        setGroupDiscount(emptyGroupDiscount);
     };
 
-    const editResellerGroup = (resellerGroup: ResellerGroup) => {
-        setResellerGroup({ ...resellerGroup});
+    const editResellerGroup = (groupDiscount: GroupDiscount) => {
+        setGroupDiscount({ ...groupDiscount});
 
         setResellerGroupDialog(true);
     };
 
-    const confirmDeleteResellerGroup = (resellerGroup: ResellerGroup) => {
-        setResellerGroup(resellerGroup);
+    const confirmDeleteResellerGroup = (groupDiscount: GroupDiscount) => {
+        setGroupDiscount(groupDiscount);
         setDeleteResellerGroupDialog(true);
     };
 
     const deleteResellerGroup = () => {
-        if (!resellerGroup?.id) {
+        if (!groupDiscount?.id) {
             console.error("ResellerGroup  ID is undefined.");
             return;
         }
-        dispatch(_deleteResellerGroup(resellerGroup?.id,toast))
+        dispatch(_deleteGroupDiscount(groupDiscount?.id,toast))
         setDeleteResellerGroupDialog(false);
 
     };
@@ -156,83 +173,64 @@ const ResellerGroupPage = () => {
 
 
 
-    const resellerGroupNameBodyTemplate = (rowData: ResellerGroup) => {
+    const groupNameBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
-                <span className="p-column-title">ResellerGroup</span>
-                {rowData.name}
+                <span className="p-column-title">Group Name</span>
+                {rowData?.reseller_group?.name}
             </>
         );
     };
 
-    const discount_typeBodyTemplate = (rowData: ResellerGroup) => {
+    const discount_typeBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
                 <span className="p-column-title">Discount Type</span>
-                {rowData.discount_type}
+                {rowData?.discount_type}
             </>
         );
     };
 
-    const discount_valueBodyTemplate = (rowData: ResellerGroup) => {
+    const discount_valueBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
                 <span className="p-column-title">Discount Value</span>
-                {rowData.discount_value}
+                {rowData?.discount_value}
             </>
         );
     };
 
-    const subresellerLimitBodyTemplate = (rowData: ResellerGroup) => {
+    const serviceBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
-                <span className="p-column-title">Sub reseller Limit</span>
-                {rowData.sub_reseller_limit}
+                <span className="p-column-title">Service</span>
+                {rowData?.service?.service_category?.category_name} {rowData?.service?.company?.company_name}
             </>
         );
     };
 
-    const canAddSubResellerBodyTemplate = (rowData: ResellerGroup) => {
+    const BundleBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
-                <span className="p-column-title">Can Add Sub-reseller</span>
-                <span style={{borderRadius:'10px'}}
-                    className={`px-3 py-1 text-center font-semibold inline-block w-16 ${
-                        rowData.can_create_sub_resellers ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                    }`}
-                >
-                    {rowData.can_create_sub_resellers ? "Yes" : "No"}
-                </span>
-            </>
-        );
-    };
-
-    const canSubResellerCreateSubsBodyTemplate = (rowData: ResellerGroup) => {
-        return (
-            <>
-                <span className="p-column-title">Can Sub-reseller Add Sub</span>
-                <span style={{borderRadius:'10px'}}
-                    className={`px-3 py-1 text-center font-semibold inline-block w-16 ${
-                        rowData.can_sub_reseller_create_subs ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                    }`}
-                >
-                    {rowData.can_sub_reseller_create_subs ? "Yes" : "No"}
-                </span>
+                <span className="p-column-title">Bundle</span>
+                {rowData?.bundle?.bundle_title}
             </>
         );
     };
 
 
-    const statusBodyTemplate = (rowData: ResellerGroup) => {
+
+
+    const statusBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
                 <span className="p-column-title">Status</span>
                 <span style={{borderRadius:'10px' ,textAlign:'center'}}
                     className={`px-2 py-2  text-center text-white font-semibold inline-block w-24 ${
-                        rowData.status === "active" ? "bg-green-500" : "bg-red-500"
+                        rowData?.reseller_group?.status === "active" ? "bg-green-500" : "bg-red-500"
                     }`}
                 >
-                    {rowData.status}
+                    {rowData?.reseller_group?.status}
                 </span>
             </>
         );
@@ -240,11 +238,11 @@ const ResellerGroupPage = () => {
 
 
 
-    const notesBodyTemplate = (rowData: ResellerGroup) => {
+    const notesBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
                 <span className="p-column-title">Notes</span>
-                {rowData.notes}
+                {rowData?.reseller_group?.notes}
             </>
         );
     };
@@ -254,7 +252,7 @@ const ResellerGroupPage = () => {
 
 
 
-    const actionBodyTemplate = (rowData: ResellerGroup) => {
+    const actionBodyTemplate = (rowData: GroupDiscount) => {
         return (
             <>
                 <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editResellerGroup(rowData)}/>
@@ -305,7 +303,7 @@ const ResellerGroupPage = () => {
 
                     <DataTable
                         ref={dt}
-                        value={reseller_groups}
+                        value={group_discounts}
                         selection={selectedCompanies}
                         onSelectionChange={(e) => setSelectedResellerGroup(e.value as any)}
                         dataKey="id"
@@ -321,99 +319,89 @@ const ResellerGroupPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header="Reseller Group"  body={resellerGroupNameBodyTemplate}></Column>
-                        <Column field="guard_name" header="Discount Type" body={discount_typeBodyTemplate} ></Column>
-                        <Column field="guard_name" header="Discount Value" body={discount_valueBodyTemplate} ></Column>
-                        <Column field="guard_name" header="Sub Reseller Limit" body={subresellerLimitBodyTemplate} ></Column>
-                        <Column field="guard_name" header="Can Add Sub-reseller" body={canAddSubResellerBodyTemplate} ></Column>
-                        <Column field="guard_name" header="Can Sub-reseller add sub" body={canSubResellerCreateSubsBodyTemplate} ></Column>
-                        <Column field="guard_name" header="Status" body={statusBodyTemplate} ></Column>
-                        <Column field="guard_name" header="Notes" body={notesBodyTemplate} ></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="name" header="Group Name"  body={groupNameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="service" header="Service" body={serviceBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="bundle" header="Bundle" body={BundleBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Discount Type" body={discount_typeBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Discount Value" body={discount_valueBodyTemplate} ></Column>
+
+                        <Column style={customCellStyle} field="guard_name" header="Status" body={statusBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="guard_name" header="Notes" body={notesBodyTemplate} ></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
 
-                    <Dialog visible={resellerGroupDialog}  style={{ width: '900px',padding:'5px' }} header="Reseller Group Details" modal className="p-fluid" footer={resellerGroupDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={resellerGroupDialog}  style={{ width: '900px',padding:'5px' }} header="Group Discount Details" modal className="p-fluid" footer={resellerGroupDialogFooter} onHide={hideDialog}>
                         <div className="card flex flex-wrap p-fluid mt-3 gap-4">
                             <div className='flex-1 col-12 lg:col-6'>
                                 <div className="field ">
                                     <label htmlFor="supplier" style={{fontWeight:'bold'}}>Group Name</label>
-                                    <InputText
-                                        id="name"
-                                        value={resellerGroup.name}
-                                        onChange={(e) =>
-                                            setResellerGroup((prev) => ({
-                                                ...prev,
-                                                name: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                        autoFocus
-                                        className={classNames({
-                                            'p-invalid': submitted && !resellerGroup.name
-                                        })}
-                                    />
-                                </div>
-
-                                <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Discount Value</label>
-                                    <InputText
-                                        id="discount_value"
-                                        value={resellerGroup.discount_value}
-                                        onChange={(e) =>
-                                            setResellerGroup((prev) => ({
-                                                ...prev,
-                                                discount_value: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                        autoFocus
-                                        className={classNames({
-                                            'p-invalid': submitted && !resellerGroup.discount_value
-                                        })}
-                                    />
-                                </div>
-
-                                <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Sub Reseller Limit</label>
-                                    <InputText
-                                        id="sub_reseller_limit"
-                                        value={resellerGroup.sub_reseller_limit.toString()}
-                                        onChange={(e) =>
-                                            setResellerGroup((prev) => ({
-                                                ...prev,
-                                                sub_reseller_limit: e.target.value,
-                                            }))
-                                        }
-                                        required
-                                        autoFocus
-                                        className={classNames({
-                                            'p-invalid': submitted && !resellerGroup.sub_reseller_limit
-                                        })}
-                                    />
-                                </div>
-
-                                <div className="field ">
-                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Status</label>
                                     <Dropdown
-                                        id="status"
-                                        value={resellerGroup.status}
-                                        options={[
-                                            { label: 'Active', value: 'Active' },
-                                            { label: 'Inactive', value: 'Inactive' },
-                                        ]}
+                                        id=""
+                                        value={groupDiscount.reseller_group}
+                                        options={reseller_groups}
                                         onChange={(e) =>
-                                            setResellerGroup((prev) => ({
+                                            setGroupDiscount((prev) => ({
                                                 ...prev,
-                                                status: e.value,
+                                                reseller_group: e.value,
                                             }))
                                         }
-                                        optionLabel="label"
-                                        optionValue="value"
-                                        placeholder="Choose a status"
+                                        optionLabel="name"
+                                        //optionValue="id"
+                                        placeholder="Choose a Reseller Group"
                                         className="w-full"
                                     />
                                 </div>
+
+                                <div className="field ">
+                                    <label htmlFor="service" style={{fontWeight:'bold'}}>Service</label>
+                                    <Dropdown
+                                        id=""
+                                        value={groupDiscount.service}
+                                        options={services}
+                                        onChange={(e) =>
+                                            setGroupDiscount((prev) => ({
+                                                ...prev,
+                                                service: e.value,
+                                            }))
+                                        }
+                                        optionLabel="service_category.category_name"
+                                        placeholder="Choose a Service"
+                                        className="w-full"
+                                        itemTemplate={(option) => (
+                                            <div style={{display:'flex', gap:"5px"}}>
+                                                <div>{option.service_category?.category_name}</div>
+                                                <div>{option.company?.company_name}</div>
+                                            </div>
+                                        )}
+                                    />
+                                </div>
+
+                                <div className="field ">
+                                    <label htmlFor="bundle" style={{fontWeight:'bold'}}>Bundle</label>
+                                    <Dropdown
+                                        id=""
+                                        value={groupDiscount.bundle}
+                                        options={bundles}
+                                        onChange={(e) =>
+                                            setGroupDiscount((prev) => ({
+                                                ...prev,
+                                                bundle: e.value,
+                                            }))
+                                        }
+                                        optionLabel="bundle_title"
+                                        placeholder="Choose a Bundle"
+                                        className="w-full"
+                                        itemTemplate={(option) => (
+                                            <div style={{display:'flex', gap:"5px"}}>
+                                                <div>{option?.bundle_title}</div>
+                                                <div>{option.service.company?.company_name}</div>
+                                            </div>
+                                        )}
+                                    />
+                                </div>
+
+
 
 
                             </div>
@@ -422,13 +410,13 @@ const ResellerGroupPage = () => {
                                     <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Discount Type</label>
                                     <Dropdown
                                         id="discount_type"
-                                        value={resellerGroup.discount_type}
+                                        value={groupDiscount.discount_type}
                                         options={[
-                                            { label: 'Percentage', value: 'Percentage' },
-                                            { label: 'Fixed', value: 'Fixed' },
+                                            { label: 'Percentage', value: 'percentage' },
+                                            { label: 'Fixed', value: 'fixed' },
                                         ]}
                                         onChange={(e) =>
-                                            setResellerGroup((prev) => ({
+                                            setGroupDiscount((prev) => ({
                                                 ...prev,
                                                 discount_type: e.value,
                                             }))
@@ -440,61 +428,25 @@ const ResellerGroupPage = () => {
                                     />
                                 </div>
                                 <div className="field ">
-                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Can Add Sub-reseller</label>
-                                    <Dropdown
-                                        id="can_create_sub_resellers"
-                                        value={resellerGroup.can_create_sub_resellers}
-                                        options={[
-                                            { label: 'Yes', value: 1 },
-                                            { label: 'No', value: 0 },
-                                        ]}
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Discount Value</label>
+                                    <InputText
+                                        id="discount_value"
+                                        value={groupDiscount.discount_value}
                                         onChange={(e) =>
-                                            setResellerGroup((prev) => ({
+                                            setGroupDiscount((prev) => ({
                                                 ...prev,
-                                                can_create_sub_resellers: e.value,
+                                                discount_value: e.target.value,
                                             }))
                                         }
-                                        optionLabel="label"
-                                        optionValue="value"
-                                        placeholder="Choose a status"
-                                        className="w-full"
+                                        required
+                                        autoFocus
+                                        className={classNames({
+                                            'p-invalid': submitted && !groupDiscount.discount_value
+                                        })}
                                     />
                                 </div>
-                                <div className="field ">
-                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Can Sub-reseller add Subs</label>
-                                    <Dropdown
-                                        id="can_sub_reseller_create_subs"
-                                        value={resellerGroup.can_sub_reseller_create_subs}
-                                        options={[
-                                            { label: 'Yes', value: 1 },
-                                            { label: 'No', value: 0 },
-                                        ]}
-                                        onChange={(e) =>
-                                            setResellerGroup((prev) => ({
-                                                ...prev,
-                                                can_sub_reseller_create_subs: e.value,
-                                            }))
-                                        }
-                                        optionLabel="label"
-                                        optionValue="value"
-                                        placeholder="Choose a status"
-                                        className="w-full"
-                                    />
-                                </div>
-                                <div className="field ">
-                                    <label htmlFor="notes" style={{fontWeight:'bold'}}>Notes</label>
-                                    <InputTextarea
-                                    value={resellerGroup.notes}
-                                    onChange={(e) =>
-                                        setResellerGroup((prev) => ({
-                                        ...prev,
-                                        notes: e.target.value,
-                                    }))
-                                    } rows={3} cols={30}
-                                    placeholder=''
-                                    />
 
-                                </div>
+
                             </div>
 
 
@@ -504,9 +456,9 @@ const ResellerGroupPage = () => {
                     <Dialog visible={deleteResellerGroupDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteResellerGroupDialogFooter} onHide={hideDeleteResellerGroupDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {resellerGroup && (
+                            {groupDiscount && (
                                 <span>
-                                    Are you sure you want to delete <b>{resellerGroup.name}</b>?
+                                    Are you sure you want to delete <b>{groupDiscount.reseller_group?.name}</b>?
                                 </span>
                             )}
                         </div>
@@ -515,7 +467,7 @@ const ResellerGroupPage = () => {
                     <Dialog visible={deleteResellerGroupsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteCompaniesDialogFooter} onHide={hideDeleteResellerGroupsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {resellerGroup && <span>Are you sure you want to delete the selected companies?</span>}
+                            {groupDiscount && <span>Are you sure you want to delete the selected companies?</span>}
                         </div>
                     </Dialog>
                 </div>

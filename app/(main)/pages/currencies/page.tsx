@@ -20,6 +20,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _addCurrency, _deleteCurrency, _editCurrency, _fetchCurrencies } from '@/app/redux/actions/currenciesActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const CurrencyPage = () => {
 
@@ -222,9 +223,9 @@ const CurrencyPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -247,10 +248,10 @@ const CurrencyPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="name" header={t('CURRENCY.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyNameBodyTemplate}></Column>
-                        <Column field="code" header={t('CURRENCY.TABLE.COLUMN.CURRENCYCODE')} sortable body={currencyCodeBodyTemplate}></Column>
-                        <Column field="exchange_rate" header={t('CURRENCY.TABLE.COLUMN.EXCHANGERATE')} sortable body={exchangeRateBodyTemplate}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="name" header={t('CURRENCY.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyNameBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="code" header={t('CURRENCY.TABLE.COLUMN.CURRENCYCODE')} sortable body={currencyCodeBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="exchange_rate" header={t('CURRENCY.TABLE.COLUMN.EXCHANGERATE')} sortable body={exchangeRateBodyTemplate}></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={currencyDialog}  style={{ width: '900px',padding:"5px" }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>

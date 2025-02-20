@@ -146,11 +146,11 @@ const AppMenu = () => {
                     icon: 'pi pi-list', // Bullhorn for advertisements pi-list
                     to: '/pages/advertisement',
                 },
-                // {
-                //     label: t('MENU.APPSETTING'),
-                //     icon: 'pi pi-fw pi-cog', // Cogwheel for settings
-                //     to: '/pages/general-settings',
-                // },
+                {
+                    label: t('MENU.APPSETTING'),
+                    icon: 'pi pi-fw pi-cog', // Cogwheel for settings
+                    to: '/pages/general-settings',
+                },
                 {
                     label: t('MENU.ROLES'),
                     icon: 'pi pi-fw pi-cog', // Cogwheel for settings
@@ -165,6 +165,11 @@ const AppMenu = () => {
                     label: t('MENU.RESELLER_GROUP'),
                     icon: 'pi pi-fw pi-cog', // Cogwheel for settings
                     to: '/pages/reseller-group',
+                },
+                {
+                    label: t('MENU.GROUP_DISCOUNT'),
+                    icon: 'pi pi-fw pi-cog', // Cogwheel for settings
+                    to: '/pages/group-discount',
                 },
             ],
         },

@@ -21,6 +21,7 @@ import { _addProvince, _deleteProvince, _editProvince, _fetchProvinces } from '@
 import { countriesReducer } from '../../../redux/reducers/countriesReducer';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const ProvincePage = () => {
 
@@ -240,9 +241,9 @@ useEffect(() => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -265,9 +266,9 @@ useEffect(() => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="province_name" header={t('PROVINCE.TABLE.COLUMN.PROVINCENAME')} body={provinceNameBodyTemplate} sortable></Column>
-                        <Column field="country_name" header={t('PROVINCE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="province_name" header={t('PROVINCE.TABLE.COLUMN.PROVINCENAME')} body={provinceNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="country_name" header={t('PROVINCE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={provinceDialog}  style={{ width: '700px',padding:'5px' }} header="Province Details" modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>

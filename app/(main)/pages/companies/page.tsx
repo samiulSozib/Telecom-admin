@@ -21,6 +21,7 @@ import { Company, Country } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import { useTranslation } from 'react-i18next';
 import withAuth from '../../authGuard';
+import { customCellStyle, customCellStyleImage } from '../../utilities/customRow';
 
 const CompanyPage = () => {
 
@@ -197,8 +198,9 @@ const CompanyPage = () => {
                 <span className="p-column-title">Image</span>
                 <img src={`${rowData.company_logo}`} alt={rowData.company_name.toString()} className="shadow-2"
                 style={{
-                    width: '55px',
-                    height: '55px',
+                    padding:'2px',
+                    width: '45px',
+                    height: '45px',
                     borderRadius: '50%', // Makes the image circular
                     objectFit: 'cover', // Ensures the image is cropped correctly within the circle
                 }}/>
@@ -293,9 +295,9 @@ const CompanyPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2" >
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4 flex flex-col md:flex-row justify-between items-center" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -318,12 +320,12 @@ const CompanyPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="company_name" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={imageBodyTemplate}></Column>
-                        <Column field="country_name" header={t('COMPANY.TABLE.COLUMN.COUNTRYNAME')} body={countryBodyTemplate}></Column>
-                        <Column field="Chat Id" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={chatIdBodyTemplate} ></Column>
-                        <Column field="Group Name" header={t('COMPANY.TABLE.COLUMN.CHATGROUPNAME')} body={telegramGroupNameBodyTemplate} ></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyleImage} field="company_name" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={imageBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="country_name" header={t('COMPANY.TABLE.COLUMN.COUNTRYNAME')} body={countryBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="Chat Id" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={chatIdBodyTemplate} ></Column>
+                        <Column style={customCellStyleImage} field="Group Name" header={t('COMPANY.TABLE.COLUMN.CHATGROUPNAME')} body={telegramGroupNameBodyTemplate} ></Column>
+                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={companyDialog}  style={{ width: '750px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>

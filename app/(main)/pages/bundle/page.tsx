@@ -24,6 +24,7 @@ import { Bundle, Service } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const BundlePage = () => {
 
@@ -383,9 +384,9 @@ const BundlePage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                 {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -407,17 +408,17 @@ const BundlePage = () => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Bundle Title" header={t('BUNDLE.TABLE.COLUMN.BUNDLENAME')} sortable body={bundleTitleBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Description" header={t('BUNDLE.TABLE.COLUMN.BUNDLEDESCRIPTION')} sortable body={descriptionBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Validity Type" header={t('BUNDLE.TABLE.COLUMN.VALIDITYTYPE')} sortable body={validityTypeBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Admin Buying" header={t('BUNDLE.TABLE.COLUMN.ADMINBUYINGPRICE')} sortable body={adminBuyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Buying Price" header={t('BUNDLE.TABLE.COLUMN.BUYINGPRICE')} sortable body={buyingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Selling Price" header={t('BUNDLE.TABLE.COLUMN.SELLINGPRICE')} sortable body={sellingPriceBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Currency" header={t('BUNDLE.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Service" header={t('BUNDLE.TABLE.FILTER.SERVICE')}  sortable body={serviceNameBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Category" header={t('BUNDLE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryBodyTemplate} headerStyle={{ fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column field="Created" header={t('TABLE.GENERAL.CREATEDAT')}  body={createdAtBodyTemplate} headerStyle={{ minWidth:'4rem', fontSize: '0.9rem', color: '#000' }}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="Bundle Title" header={t('BUNDLE.TABLE.COLUMN.BUNDLENAME')}  body={bundleTitleBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Description" header={t('BUNDLE.TABLE.COLUMN.BUNDLEDESCRIPTION')}  body={descriptionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Validity Type" header={t('BUNDLE.TABLE.COLUMN.VALIDITYTYPE')}  body={validityTypeBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Admin Buying" header={t('BUNDLE.TABLE.COLUMN.ADMINBUYINGPRICE')}  body={adminBuyingPriceBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Buying Price" header={t('BUNDLE.TABLE.COLUMN.BUYINGPRICE')}  body={buyingPriceBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Selling Price" header={t('BUNDLE.TABLE.COLUMN.SELLINGPRICE')}  body={sellingPriceBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Currency" header={t('BUNDLE.TABLE.COLUMN.CURRENCYNAME')}  body={currencyBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Service" header={t('BUNDLE.TABLE.FILTER.SERVICE')}   body={serviceNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Category" header={t('BUNDLE.TABLE.COLUMN.SERVICECATEGORY')}  body={serviceCategoryBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Created" header={t('TABLE.GENERAL.CREATEDAT')}  body={createdAtBodyTemplate} ></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
                     <Paginator
                         first={(pagination?.page - 1) * pagination?.items_per_page}

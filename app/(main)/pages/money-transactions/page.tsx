@@ -25,6 +25,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { _fetchMoneyTransactionsList } from '@/app/redux/actions/moneyTransactionsActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const TransactionPage = () => {
 
@@ -373,9 +374,9 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                 {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -397,15 +398,15 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Reseller" header={t('TRANSACTION.TABLE.COLUMN.RESELLERNAME')} sortable body={resellerBodyTemplate} ></Column>
-                        <Column field="Amount" header={t('TRANSACTION.TABLE.COLUMN.AMOUNT')} sortable body={amountBodyTemplate} ></Column>
-                        <Column field="Currency" header={t('TRANSACTION.TABLE.COLUMN.CURRENCY')} sortable body={currencyBodyTemplate} ></Column>
-                        <Column field="Remaining Balance" header={t('TRANSACTION.TABLE.COLUMN.REMAININGBALANCE')} sortable body={remainingBalanceBodyTemplate} ></Column>
-                        <Column field="Bundle Title" header={t('TRANSACTION.TABLE.COLUMN.BUNDLETITLE')} sortable body={bundleTitleBodyTemplate} ></Column>
-                        <Column field="Transaction Date" header={t('TRANSACTION.TABLE.COLUMN.TRANSACTIONEDDATE')} sortable body={transactionDateBodyTemplate} ></Column>
-                        <Column field="Status" header={t('TRANSACTION.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} ></Column>
-                        <Column field="Initiator" header={t('TRANSACTION.TABLE.COLUMN.INITIATORTYPE')} sortable body={initiatorTypeBodyTemplate} ></Column>
-                        <Column field="Description" header={t('TRANSACTION.TABLE.COLUMN.DESCRIPTION')} sortable body={descriptionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Reseller" header={t('TRANSACTION.TABLE.COLUMN.RESELLERNAME')}  body={resellerBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Amount" header={t('TRANSACTION.TABLE.COLUMN.AMOUNT')}  body={amountBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Currency" header={t('TRANSACTION.TABLE.COLUMN.CURRENCY')}  body={currencyBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Remaining Balance" header={t('TRANSACTION.TABLE.COLUMN.REMAININGBALANCE')}  body={remainingBalanceBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Bundle Title" header={t('TRANSACTION.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Transaction Date" header={t('TRANSACTION.TABLE.COLUMN.TRANSACTIONEDDATE')}  body={transactionDateBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Status" header={t('TRANSACTION.TABLE.COLUMN.STATUS')}  body={statusBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Initiator" header={t('TRANSACTION.TABLE.COLUMN.INITIATORTYPE')}  body={initiatorTypeBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="Description" header={t('TRANSACTION.TABLE.COLUMN.DESCRIPTION')}  body={descriptionBodyTemplate} ></Column>
                         {/* <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
                     </DataTable>
                     <Paginator

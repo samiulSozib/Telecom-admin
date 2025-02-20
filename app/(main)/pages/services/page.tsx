@@ -20,6 +20,7 @@ import { Company, Service } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyleImage } from '../../utilities/customRow';
 
 const Services = () => {
     let emptyService:Service={
@@ -181,8 +182,9 @@ const Services = () => {
                         alt={rowData.company?.company_logo.toString()}
                         className="shadow-2"
                         style={{
-                            width: '55px',
-                            height: '55px',
+                            padding:'2px',
+                            width: '45px',
+                            height: '45px',
                             borderRadius: '50%', // Makes the image circular
                             objectFit: 'cover', // Ensures the image is cropped correctly within the circle
                         }}
@@ -260,9 +262,9 @@ const Services = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -285,10 +287,10 @@ const Services = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="Company Name" header={t('SERVICE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyInfoBodyTemplate} ></Column>
-                        <Column field="Country" header={t('SERVICE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column field="Service Category" header={t('SERVICE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryNameBodyTemplate} ></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyleImage} field="Company Name" header={t('SERVICE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyInfoBodyTemplate} ></Column>
+                        <Column style={customCellStyleImage} field="Country" header={t('SERVICE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyleImage} field="Service Category" header={t('SERVICE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryNameBodyTemplate} ></Column>
+                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={serviceDialog}  style={{ width: '700px',padding:'5px' }} header="Service Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>

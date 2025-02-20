@@ -21,6 +21,7 @@ import { Company, CompanyCode } from '@/types/interface';
 import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const CompanyCodePage = () => {
 
@@ -255,10 +256,11 @@ const CompanyCodePage = () => {
 
 
 
+
     return (
-        <div className="grid crud-demo">
+        <div className="grid -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -279,13 +281,14 @@ const CompanyCodePage = () => {
                         emptyMessage="No Company Codes found."
                         // header={header}
                         responsiveLayout="scroll"
+
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="reserved_digit" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')}  sortable body={reservedDigitBodyTemplate}></Column>
-                        <Column field="company.country.country_name" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column field="company.company_name" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
-                        <Column field="company.country.country_telecom_code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyle} field="reserved_digit" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')}  sortable body={reservedDigitBodyTemplate}></Column>
+                        <Column style={customCellStyle} field="company.country.country_name" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="company.company_name" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="company.country.country_telecom_code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={companyCodeDialog}  style={{ width: '700px',padding:'5px' }} header={t('MENU.COMPANYCODE')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>

@@ -30,6 +30,7 @@ import { Calendar } from 'primereact/calendar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { Reseller } from '../../../../types/interface';
+import { customCellStyle } from '../../utilities/customRow';
 
 const PaymentPage = () => {
 
@@ -281,8 +282,8 @@ const PaymentPage = () => {
     const actionBodyTemplate = (rowData: Payment) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editPayment(rowData)}/>
-                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeletePayment(rowData)} />
+                <Button  icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editPayment(rowData)}/>
+                <Button  icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeletePayment(rowData)} />
             </>
         );
     };
@@ -320,9 +321,9 @@ const PaymentPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -345,15 +346,15 @@ const PaymentPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.PAYMENTMETHOD')} body={paymentMethodBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.REMAININGPAYMENTAMOUNT')} body={remainingPaymentBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.NOTES')} body={noteBodyTemplate} sortable></Column>
-                        <Column header={t('PAYMENT.TABLE.COLUMN.PAYMENTDATE')} body={paymentDateBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.PAYMENTMETHOD')} body={paymentMethodBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.REMAININGPAYMENTAMOUNT')} body={remainingPaymentBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.NOTES')} body={noteBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.PAYMENTDATE')} body={paymentDateBodyTemplate} ></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={paymentDialog}  style={{ width: '900px',padding:'5px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>

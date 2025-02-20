@@ -22,6 +22,7 @@ import { provinceReducer } from '../../../redux/reducers/provinceReducer';
 import { _fetchProvinces } from '@/app/redux/actions/provinceActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const DistrictPage = () => {
 
@@ -241,9 +242,9 @@ const DistrictPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -266,9 +267,9 @@ const DistrictPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="district_name" header={t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')} body={districtNameBodyTemplate} sortable></Column>
-                        <Column field="province_name" header={t('DISTRICT.TABLE.COLUMN.PROVINCE')} body={provinceNameBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} field="district_name" header={t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')} body={districtNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} field="province_name" header={t('DISTRICT.TABLE.COLUMN.PROVINCE')} body={provinceNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={districtDialog}   style={{ width: '700px',padding:'5px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>

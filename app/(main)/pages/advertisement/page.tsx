@@ -22,6 +22,7 @@ import { FileUpload } from 'primereact/fileupload';
 import { _addAdvertisement, _deleteAdvertisement, _editAdvertisement, _fetchAdvertisements } from '@/app/redux/actions/advertisementActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyleImage } from '../../utilities/customRow';
 
 const AdvertisementPage = () => {
 
@@ -250,9 +251,9 @@ const AdvertisementPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -275,10 +276,10 @@ const AdvertisementPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTIMAGE')} sortable body={imageBodyTemplate}></Column>
-                        <Column field="name" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTTITLE')}  sortable body={advertisementTitleBodyTemplate}></Column>
-                        <Column field="status" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTSTATUS')}  body={statusBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={customCellStyleImage} field="" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTIMAGE')} sortable body={imageBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="name" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTTITLE')}  sortable body={advertisementTitleBodyTemplate}></Column>
+                        <Column style={customCellStyleImage} field="status" header={t('ADVERTISEMENT.TABLE.COLUMN.ADVERTISEMENTSTATUS')}  body={statusBodyTemplate} sortable></Column>
+                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={advertisementDialog}  style={{ width: '700px',padding:'5px' }} header="Advertisement Details" modal className="p-fluid" footer={advertisementDialogFooter} onHide={hideDialog}>

@@ -27,6 +27,7 @@ import { suppliersReducer } from '../../../redux/reducers/supplierReducer';
 import serviceReducer from '../../../redux/reducers/serviceReducer';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
+import { customCellStyle } from '../../utilities/customRow';
 
 const PurchasedProductPage = () => {
 
@@ -296,9 +297,9 @@ const PurchasedProductPage = () => {
 
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid crud-demo -m-5">
             <div className="col-12">
-                <div className="card">
+                <div className="card p-2">
                     {loading && <ProgressBar mode="indeterminate" style={{ height: '6px' }} />}
                     <Toast ref={toast} />
                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
@@ -321,13 +322,13 @@ const PurchasedProductPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SUPPLIER')} body={supplierNameBodyTemplate} sortable></Column>
-                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PRODUCTNAME')} body={productNameBodyTemplate} sortable></Column>
-                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.QUANTITY')} body={quantityBodyTemplate} sortable></Column>
-                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEPRICE')} body={purchasePriceBodyTemplate} sortable></Column>
-                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEDATE')} body={purchasedProductDateBodyTemplate} sortable></Column>
-                        <Column header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SERVICE')} body={serviceBodyTemplate} sortable></Column>
-                        <Column body={actionBodyTemplate} ></Column>
+                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SUPPLIER')} body={supplierNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PRODUCTNAME')} body={productNameBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.QUANTITY')} body={quantityBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEPRICE')} body={purchasePriceBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEDATE')} body={purchasedProductDateBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SERVICE')} body={serviceBodyTemplate} sortable></Column>
+                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={purchasedProductDialog}  style={{ width: '900px',padding:'5px' }} header="Purchased Product Details" modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
