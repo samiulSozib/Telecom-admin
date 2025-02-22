@@ -22,6 +22,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { useTranslation } from 'react-i18next';
 import withAuth from '../../authGuard';
 import { customCellStyle, customCellStyleImage } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const CompanyPage = () => {
 
@@ -154,6 +155,7 @@ const CompanyPage = () => {
                     severity="success"
                     className="mr-2"
                     onClick={openNew}
+                    style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }}
                 />
                 <Button
                     label="Delete"
@@ -161,6 +163,7 @@ const CompanyPage = () => {
                     severity="danger"
                     onClick={confirmDeleteSelected}
                     disabled={!selectedCompanies || !(selectedCompanies as any).length}
+                    style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }}
                 />
             </div>
         );
@@ -243,7 +246,7 @@ const CompanyPage = () => {
     const actionBodyTemplate = (rowData: Company) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editCompany(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editCompany(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteCompany(rowData)} />
             </>
         );
@@ -320,15 +323,15 @@ const CompanyPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyleImage} field="company_name" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={imageBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="country_name" header={t('COMPANY.TABLE.COLUMN.COUNTRYNAME')} body={countryBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="Chat Id" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={chatIdBodyTemplate} ></Column>
-                        <Column style={customCellStyleImage} field="Group Name" header={t('COMPANY.TABLE.COLUMN.CHATGROUPNAME')} body={telegramGroupNameBodyTemplate} ></Column>
-                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="company_name" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={imageBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="country_name" header={t('COMPANY.TABLE.COLUMN.COUNTRYNAME')} body={countryBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Chat Id" header={t('COMPANY.TABLE.COLUMN.COMPANYNAME')} body={chatIdBodyTemplate} ></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Group Name" header={t('COMPANY.TABLE.COLUMN.CHATGROUPNAME')} body={telegramGroupNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={companyDialog}  style={{ width: '750px',padding:'5px' }} header="Company Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={companyDialog}  style={{ width: '750px',padding:'5px' }} header={t('COMPANY.DETAILS')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:"40px"}}>
                         {company.company_logo && (
                             <img
@@ -415,7 +418,7 @@ const CompanyPage = () => {
                                         }))
                                     }
                                     optionLabel="group_name"
-                                    placeholder="Choose a group"
+                                    placeholder={t('COMPANY.FORM.PLACEHOLDER.TELEGRAM_GROUP')}
                                     className="w-full"
                                 />
                             {submitted && !company.telegram_chat_id && <small className="p-invalid" style={{ color: 'red' }}>Telegram is required.</small>}

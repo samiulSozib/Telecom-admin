@@ -28,6 +28,7 @@ import { paymentMethodsReducer } from '../../../redux/reducers/paymentMethodRedu
 import { _fetchPaymentMethods } from '@/app/redux/actions/paymentMethodActions';
 import { Calendar } from 'primereact/calendar';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const BalancePage = () => {
 
@@ -157,8 +158,8 @@ const BalancePage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label={t('RESELLER.BALANCETRANSACTION.ADDBALANCE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('RESELLER.BALANCETRANSACTION.ADDBALANCE')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -271,7 +272,7 @@ const BalancePage = () => {
     const actionBodyTemplate = (rowData: Balance) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editBalance(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editBalance(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteBalance(rowData)} />
             </>
         );
@@ -335,14 +336,14 @@ const BalancePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.REMAINING_BALANCE')} body={remainingBalanceBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.DESCRIPTIONS')} body={descriptionBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('BALANCE.TABLE.COLUMN.BALANCEDATE')} body={createdAtBodyTemplate} ></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.REMAINING_BALANCE')} body={remainingBalanceBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.DESCRIPTIONS')} body={descriptionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('BALANCE.TABLE.COLUMN.BALANCEDATE')} body={createdAtBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={balanceDialog}  style={{ width: '900px',padding:'5px' }} header={t('BALANCE.DETAILS.TITLE')} modal className="p-fluid" footer={balanceDialogFooter} onHide={hideDialog}>
@@ -350,11 +351,11 @@ const BalancePage = () => {
                             {/* Balance Details */}
                             <div className="flex-1 col-12 lg:col-6">
                                 <div className="card">
-                                    <h5 className="mb-4">Balance Details</h5>
+                                    <h5 className="mb-4">{t('BALANCE.DETAILS.TITLE')}</h5>
 
                                     {/* Reseller */}
                                     <div className="field">
-                                        <label htmlFor="reseller_id">Reseller *</label>
+                                        <label htmlFor="reseller_id">{t('BALANCE.FORM.INPUT.RESELLER')} *</label>
                                         <Dropdown
                                             id="reseller_id"
                                             value={balance.reseller_id}
@@ -367,7 +368,7 @@ const BalancePage = () => {
                                             }
                                             optionLabel="reseller_name"
                                             optionValue="id"
-                                            placeholder="Select a reseller"
+                                            placeholder={t('BALANCE.FORM.RESELLER.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                         {submitted && !balance.reseller && <small className="p-invalid" style={{ color: 'red' }}>Reseller is required.</small>}
@@ -376,7 +377,7 @@ const BalancePage = () => {
 
                                     {/* Transaction Type */}
                                     <div className="field">
-                                        <label htmlFor="transaction_type">Transaction Type *</label>
+                                        <label htmlFor="transaction_type">{t('BALANCE.FORM.INPUT.TRANSACTIONTYPE')} *</label>
                                         <Dropdown
                                             id="transaction_type"
                                             value={balance.transaction_type}
@@ -390,14 +391,14 @@ const BalancePage = () => {
                                                     transaction_type: e.value,
                                                 }))
                                             }
-                                            placeholder="Select transaction type"
+                                            placeholder={t('BALANCE.FORM.TRANSACTIONTYPE.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                         {submitted && !balance.transaction_type && <small className="p-invalid" style={{ color: 'red' }}>Transaction Type is required.</small>}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="amount">Balance Amount *</label>
+                                        <label htmlFor="amount">{t('BALANCE.FORM.INPUT.BALANCEAMOUNT')} *</label>
                                         <InputText
                                             id="amount"
                                             value={balance.amount}
@@ -416,7 +417,7 @@ const BalancePage = () => {
 
                                     {/* Currency */}
                                     <div className="field">
-                                        <label htmlFor="currency_id">Currency *</label>
+                                        <label htmlFor="currency_id">{t('BALANCE.FORM.INPUT.CURRENCY')} *</label>
                                         <Dropdown
                                             id="currency_id"
                                             value={balance.currency_id}
@@ -429,7 +430,7 @@ const BalancePage = () => {
                                             }
                                             optionLabel="name"
                                             optionValue="id"
-                                            placeholder="Select a currency"
+                                            placeholder={t('BALANCE.FORM.CURRENCY.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                         {submitted && !balance.currency_id && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}
@@ -437,7 +438,7 @@ const BalancePage = () => {
 
                                     {/* Description */}
                                     <div className="field">
-                                        <label htmlFor="description">Description *</label>
+                                        <label htmlFor="description">{t('BALANCE.FORM.INPUT.DESCRIPTION')} *</label>
                                         <InputText
                                             id="description"
                                             value={balance.description}
@@ -447,7 +448,7 @@ const BalancePage = () => {
                                                     description: e.target.value,
                                                 }))
                                             }
-                                            placeholder="Enter description"
+                                            placeholder={t('BALANCE.FORM.DESCRIPTION.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                         {submitted && !balance.description && <small className="p-invalid" style={{ color: 'red' }}>Description is required.</small>}
@@ -458,11 +459,11 @@ const BalancePage = () => {
                             {/* Payment Details */}
                             <div className="flex-1 col-12 lg:col-6">
                                 <div className="card">
-                                    <h5 className="mb-4">Payment Details</h5>
+                                    <h5 className="mb-4">{t('PAYMENT.DETAILS.TITLE')}</h5>
 
                                     {/* Payment Method */}
                                     <div className="field">
-                                        <label htmlFor="payment_method_id">Payment Method</label>
+                                        <label htmlFor="payment_method_id">{t('BALANCE.FORM.INPUT.PAYMENTMETHOD')}</label>
                                         <Dropdown
                                             id="payment_method_id"
                                             value={balance.payment_method_id}
@@ -475,14 +476,14 @@ const BalancePage = () => {
                                             }
                                             optionLabel="method_name"
                                             optionValue="id"
-                                            placeholder="Select a payment method"
+                                            placeholder={t('PAYMENT.FORM.METHOD.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                     </div>
 
                                     {/* Payment Amount */}
                                     <div className="field">
-                                        <label htmlFor="payment_amount">Payment Amount</label>
+                                        <label htmlFor="payment_amount">{t('BALANCE.FORM.INPUT.PAYMENTAMOUNT')}</label>
                                         <InputText
                                             id="payment_amount"
                                             value={balance.payment_amount}
@@ -500,7 +501,7 @@ const BalancePage = () => {
 
                                     {/* Payment Currency */}
                                     <div className="field">
-                                        <label htmlFor="payment_currency_id">Payment Currency</label>
+                                        <label htmlFor="payment_currency_id">{t('BALANCE.FORM.INPUT.PAYMENTCURRENCY')}</label>
                                         <Dropdown
                                             id="payment_currency_id"
                                             value={balance.payment_currency_id}
@@ -513,14 +514,14 @@ const BalancePage = () => {
                                             }
                                             optionLabel="name"
                                             optionValue="id"
-                                            placeholder="Select a currency"
+                                            placeholder={t('PAYMENT.FORM.CURRENCY.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                     </div>
 
                                     {/* Payment Notes */}
                                     <div className="field">
-                                        <label htmlFor="payment_notes">Payment Notes</label>
+                                        <label htmlFor="payment_notes">{t('BALANCE.FORM.INPUT.PAYMENTNOTES')}</label>
                                         <InputText
                                             id="payment_notes"
                                             value={balance.payment_notes}
@@ -530,14 +531,14 @@ const BalancePage = () => {
                                                     payment_notes: e.target.value,
                                                 }))
                                             }
-                                            placeholder="Enter payment notes"
+                                            placeholder={t('PAYMENT.FORM.NOTES.PLACEHOLDER')}
                                             className="w-full"
                                         />
                                     </div>
 
                                     {/* Payment Date */}
                                     <div className="field">
-                                        <label htmlFor="payment_date">Payment Date</label>
+                                        <label htmlFor="payment_date">{t('BALANCE.FORM.INPUT.PAYMENTDATE')}</label>
                                         <Calendar
                                             id="payment_date"
                                             value={balance.payment_date ? new Date(balance.payment_date) : null}
@@ -547,7 +548,7 @@ const BalancePage = () => {
                                                     payment_date: e.value,
                                                 }))
                                             }
-                                            placeholder="mm/dd/yyyy"
+                                            placeholder={t('PAYMENT.FORM.DATE.LABEL')}
                                             className="w-full"
                                         />
                                     </div>

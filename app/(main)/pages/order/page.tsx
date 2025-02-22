@@ -22,6 +22,7 @@ import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { SplitButton } from 'primereact/splitbutton';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const OrderPage = () => {
 
@@ -96,8 +97,8 @@ const OrderPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    {/* <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} /> */}
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    {/* <Button label="New" icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} /> */}
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -267,7 +268,7 @@ const statusBodyTemplate = (rowData: Order) => {
     // const actionBodyTemplate = (rowData: Order) => {
     //     return (
     //         <>
-    //             {/* <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editOrder(rowData)}/> */}
+    //             {/* <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editOrder(rowData)}/> */}
     //             <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteOrder(rowData)} />
     //         </>
     //     );
@@ -376,17 +377,17 @@ const statusBodyTemplate = (rowData: Order) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')}  body={resellerNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="rechargeble_account" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')}  body={rechargeableAccountBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="bundle.id" header={t('ORDER.TABLE.COLUMN.BUNDLEID')}  body={bundleIdBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')}  body={payableAmountBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')}  body={rejectedReasonBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')}  body={companyNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')}  body={categoryNameNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')}  body={createdAtBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="status" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.RESELLERNAME')}  body={resellerNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="rechargeble_account" header={t('ORDER.TABLE.COLUMN.RECHARGEABLEACCOUNT')}  body={rechargeableAccountBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="bundle.id" header={t('ORDER.TABLE.COLUMN.BUNDLEID')}  body={bundleIdBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.PAYABLEAMOUNT')}  body={payableAmountBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.REJECTREASON')}  body={rejectedReasonBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.COMPANYNAME')}  body={companyNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.CATEGORYNAME')}  body={categoryNameNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header={t('ORDER.TABLE.COLUMN.ORDEREDDATE')}  body={createdAtBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="status" header={t('ORDER.TABLE.COLUMN.STATUS')} sortable body={statusBodyTemplate} ></Column>
                     </DataTable>
                     <Paginator
                         first={(pagination?.page - 1) * pagination?.items_per_page}

@@ -28,6 +28,7 @@ import serviceReducer from '../../../redux/reducers/serviceReducer';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const PurchasedProductPage = () => {
 
@@ -149,8 +150,8 @@ const PurchasedProductPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('PURCHASEDPRODUCT.TABLE.CREATEPURCHASEDPRODUCT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('PURCHASEDPRODUCT.TABLE.CREATEPURCHASEDPRODUCT')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -258,7 +259,7 @@ const PurchasedProductPage = () => {
     const actionBodyTemplate = (rowData: PurchasedProduct) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editPurchasedProduct(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editPurchasedProduct(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeletePurchasedProduct(rowData)} />
             </>
         );
@@ -322,16 +323,16 @@ const PurchasedProductPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SUPPLIER')} body={supplierNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PRODUCTNAME')} body={productNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.QUANTITY')} body={quantityBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEPRICE')} body={purchasePriceBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEDATE')} body={purchasedProductDateBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SERVICE')} body={serviceBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SUPPLIER')} body={supplierNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PRODUCTNAME')} body={productNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.QUANTITY')} body={quantityBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEPRICE')} body={purchasePriceBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.PURCHASEDATE')} body={purchasedProductDateBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PURCHASEDPRODUCT.TABLE.COLUMN.SERVICE')} body={serviceBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={purchasedProductDialog}  style={{ width: '900px',padding:'5px' }} header="Purchased Product Details" modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={purchasedProductDialog}  style={{ width: '900px',padding:'5px' }} header={t('PURCHASEDPRODUCTS.DETAILS')} modal className="p-fluid" footer={purchasedProductDialogFooter} onHide={hideDialog}>
                     <div className="card flex flex-wrap p-fluid mt-3 gap-4">
                         <div className=' flex-1 col-12 lg:col-6'>
                             <div className="field">
@@ -349,7 +350,7 @@ const PurchasedProductPage = () => {
                                     }
                                     optionLabel='supplier_name'
                                     // optionValue='id'
-                                    placeholder="Choose a supplier"
+                                    placeholder={t('PURCHASEDPRODUCTS.FORM.PLACEHOLDER.CHOOSE.A.SUPPLIER')}
                                     className="w-full"
                                 />
                                {submitted && !purchasedProduct.supplier && <small className="p-invalid" style={{ color: 'red' }}>Supplier is required.</small>}
@@ -369,6 +370,7 @@ const PurchasedProductPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('PURCHASEDPRODUCTS.FORM.PLACEHOLDER.PRODUCT.NAME')}
                                     className={classNames({
                                         'p-invalid': submitted && !purchasedProduct.product_name
                                     })}
@@ -388,6 +390,7 @@ const PurchasedProductPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('PURCHASEDPRODUCTS.FORM.PLACEHOLDER.PURCHASE.PRICE')}
                                     className={classNames({
                                         'p-invalid': submitted && !purchasedProduct.purchase_price
                                     })}
@@ -433,7 +436,7 @@ const PurchasedProductPage = () => {
                                     }
                                     optionLabel='company.company_name'
                                     // optionValue='id'
-                                    placeholder="Choose a Type"
+                                    placeholder={t('PURCHASEDPRODUCTS.FORM.PLACEHOLDER.CHOOSE.A.SERVICE')}
                                     className="w-full"
                                     itemTemplate={(option) => (
                                         <div style={{display:'flex', gap:"5px"}}>
@@ -481,6 +484,7 @@ const PurchasedProductPage = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('PURCHASEDPRODUCTS.FORM.PLACEHOLDER.PURCHASE.DATE')}
                                     className={classNames({
                                         'p-invalid': submitted && !purchasedProduct.purchase_date
                                     })}

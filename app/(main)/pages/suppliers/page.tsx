@@ -21,6 +21,7 @@ import { _addSupplier, _deleteSupplier, _editSupplier, _fetchSuppliers } from '@
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const SupplierPage = () => {
 
@@ -132,8 +133,8 @@ const SupplierPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2  ">
-                    <Button label={t('SUPPLIER.TABLE.CREATESUPPLIER')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('SUPPLIER.TABLE.CREATESUPPLIER')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -220,7 +221,7 @@ const SupplierPage = () => {
     const actionBodyTemplate = (rowData: Supplier) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editSupplier(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editSupplier(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteSupplier(rowData)} />
             </>
         );
@@ -284,14 +285,14 @@ const SupplierPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="name" header={t('SUPPLIER.TABLE.COLUMN.SUPPLIERNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="Contact Details" header={t('SUPPLIER.TABLE.COLUMN.CONTACTDETAILS')} body={contactDetailsBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="Address" header={t('SUPPLIER.TABLE.COLUMN.ADDRESS')} body={addressBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} header={t('SUPPLIER.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('SUPPLIER.TABLE.COLUMN.SUPPLIERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Contact Details" header={t('SUPPLIER.TABLE.COLUMN.CONTACTDETAILS')} body={contactDetailsBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Address" header={t('SUPPLIER.TABLE.COLUMN.ADDRESS')} body={addressBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('SUPPLIER.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={supplierDialog}  style={{ width: '700px',padding:'5px' }} header="Supplier Details" modal className="p-fluid" footer={supplierDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={supplierDialog}  style={{ width: '700px',padding:'5px' }} header={t('SUPPLIER.DETAILS')} modal className="p-fluid" footer={supplierDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:'40px'}}>
                         <div className="field">
                             <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SUPPLIER.FORM.INPUT.SUPPLIERNAME')}</label>

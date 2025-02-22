@@ -23,6 +23,7 @@ import { _fetchProvinces } from '@/app/redux/actions/provinceActions';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const DistrictPage = () => {
 
@@ -139,8 +140,8 @@ const DistrictPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('DISTRICT.TABLE.CREATEDISTRICT')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('DISTRICT.TABLE.CREATEDISTRICT')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -192,7 +193,7 @@ const DistrictPage = () => {
     const actionBodyTemplate = (rowData: District) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editDistrict(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editDistrict(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteDistrict(rowData)} />
             </>
         );
@@ -267,12 +268,12 @@ const DistrictPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="district_name" header={t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')} body={districtNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="province_name" header={t('DISTRICT.TABLE.COLUMN.PROVINCE')} body={provinceNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="district_name" header={t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')} body={districtNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="province_name" header={t('DISTRICT.TABLE.COLUMN.PROVINCE')} body={provinceNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={districtDialog}   style={{ width: '700px',padding:'5px' }} header="District Details" modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={districtDialog}   style={{ width: '700px',padding:'5px' }} header={t('DISTRICT.DETAILS')} modal className="p-fluid" footer={districtDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:"40px"}}>
                             <div className="field">
                                 <label htmlFor="district_name" style={{fontWeight:'bold'}}>{t('DISTRICT.TABLE.COLUMN.DISTRICTNAME')}</label>

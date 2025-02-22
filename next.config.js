@@ -2,7 +2,7 @@
 const path = require('path');
 const nextConfig = {
     i18n: {
-        locales: ['de','en' , 'es' , 'fr' , 'ja' , 'zh' , 'tr' , 'fa' , 'pa'],
+        locales: ['fa','en' , 'bn' , 'ar' , 'tr' , 'ps' , 'ge' , 'hi' ],
         defaultLocale: 'en', // Set the default locale
         localeDetection: true,
     },

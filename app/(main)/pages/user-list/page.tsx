@@ -25,6 +25,7 @@ import { rolesReducer } from '../../../redux/reducers/rolesReducer';
 import { _fetchRoleList } from '@/app/redux/actions/rolesActions';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const UserListGroupPage = () => {
 
@@ -151,8 +152,8 @@ const UserListGroupPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('CREATE.NEWUSER')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -226,7 +227,7 @@ const UserListGroupPage = () => {
     const actionBodyTemplate = (rowData: User) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editUserList(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editUserList(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteUserList(rowData)} />
             </>
         );
@@ -244,20 +245,20 @@ const UserListGroupPage = () => {
 
     const userListDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" severity="danger" onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" severity="success" onClick={saveUserList} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveUserList} />
         </>
     );
     const deleteUserListDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteUserListDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="success" onClick={deleteUserList} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteUserListDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteUserList} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteUserListsDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="success"  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteUserListsDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -290,19 +291,19 @@ const UserListGroupPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="name" header="First Name" sortable body={userNameBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="guard_name" header="Email" body={emailBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="guard_name" header="Phone Number" body={phoneNumberBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="guard_name" header="Role" body={roleBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('USER.TABLE.FIRSTNAME')} sortable body={userNameBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="guard_name" header={t('USER.TABLE.EMAIL')} body={emailBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="guard_name" header={t('USER.TABLE.PHONENUMBER')} body={phoneNumberBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="guard_name" header={t('USER.TABLE.ROLE')} body={roleBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
 
-                    <Dialog visible={userListDialog}  style={{ width: '900px',padding:'5px' }} header="User Details" modal className="p-fluid" footer={userListDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={userListDialog}  style={{ width: '900px',padding:'5px' }} header={t('USER.DETAILS')} modal className="p-fluid" footer={userListDialogFooter} onHide={hideDialog}>
                         <div className="card flex flex-wrap p-fluid mt-3 gap-4">
                             <div className='flex-1 col-12 lg:col-6'>
                                 <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>User Name</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.USERNAME')}</label>
                                     <InputText
                                         id="name"
                                         value={user.name}
@@ -314,6 +315,7 @@ const UserListGroupPage = () => {
                                         }
                                         required
                                         autoFocus
+                                        placeholder={t('USER.FORM.PLACEHOLDER.USERNAME')}
                                         className={classNames({
                                             'p-invalid': submitted && !user.name
                                         })}
@@ -322,7 +324,7 @@ const UserListGroupPage = () => {
                                 </div>
 
                                 <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Password</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.PASSWORD')}</label>
                                     <InputText
                                         id="sub_reseller_limit"
                                         value={user.password}
@@ -334,15 +336,16 @@ const UserListGroupPage = () => {
                                         }
                                         required
                                         autoFocus
+                                        placeholder={t('USER.FORM.PLACEHOLDER.PASSWORD')}
                                         className={classNames({
-                                            'p-invalid': submitted && !user.sub_reseller_limit
+                                            'p-invalid': submitted
                                         })}
                                     />
                                     {submitted && !user.password && (<small style={{ color: "red", fontSize: "12px" }}>Password is required.</small>)}
                                 </div>
 
                                 <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Confirm Password</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.CONFIRMPASSWORD')}</label>
                                     <InputText
                                         id="confirm_password"
                                         value={user.confirm_password}
@@ -354,6 +357,7 @@ const UserListGroupPage = () => {
                                         }
                                         required
                                         autoFocus
+                                        placeholder={t('USER.FORM.PLACEHOLDER.CONFIRMPASSWORD')}
                                         className={classNames({
                                             'p-invalid': submitted && !user.confirm_password
                                         })}
@@ -361,7 +365,7 @@ const UserListGroupPage = () => {
                                     {submitted && !user.confirm_password && (<small style={{ color: "red", fontSize: "12px" }}>Confirm Password is required.</small>)}
                                 </div>
                                 <div className="field ">
-                                    <label htmlFor="discount_type" style={{fontWeight:'bold'}}>Role</label>
+                                    <label htmlFor="discount_type" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.ROLE')}</label>
                                     <Dropdown
                                         id="discount_type"
                                         value={user.role}
@@ -374,8 +378,7 @@ const UserListGroupPage = () => {
                                         }
                                         optionLabel="name"
                                         optionValue="id"
-
-                                        placeholder="Choose a Role"
+                                        placeholder={t('USER.FORM.PLACEHOLDER.ROLE')}
                                         className="w-full"
                                     />
                                     {submitted && !user.roles && (<small style={{ color: "red", fontSize: "12px" }}>Roles is required.</small>)}
@@ -384,7 +387,7 @@ const UserListGroupPage = () => {
                             </div>
                             <div className='flex-1 col-12 lg:col-6'>
                                 <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Email</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.EMAIL')}</label>
                                     <InputText
                                         id="email"
                                         value={user.email}
@@ -396,6 +399,7 @@ const UserListGroupPage = () => {
                                         }
                                         required
                                         autoFocus
+                                        placeholder={t('USER.FORM.PLACEHOLDER.EMAIL')}
                                         className={classNames({
                                             'p-invalid': submitted && !user.email
                                         })}
@@ -403,7 +407,7 @@ const UserListGroupPage = () => {
                                     {submitted && !user.email && (<small style={{ color: "red", fontSize: "12px" }}>Email is required.</small>)}
                                 </div>
                                 <div className="field ">
-                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>Phone Number</label>
+                                    <label htmlFor="supplier" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.PHONENUMBER')}</label>
                                     <InputText
                                         id="phone"
                                         value={user.phone}
@@ -415,6 +419,7 @@ const UserListGroupPage = () => {
                                         }
                                         required
                                         autoFocus
+                                        placeholder={t('USER.FORM.PLACEHOLDER.PHONENUMBER')}
                                         className={classNames({
                                             'p-invalid': submitted && !user.phone
                                         })}
@@ -423,7 +428,7 @@ const UserListGroupPage = () => {
                                 </div>
 
                                 <div className="field ">
-                                    <label htmlFor="status" style={{fontWeight:'bold'}}>Currency</label>
+                                    <label htmlFor="status" style={{fontWeight:'bold'}}>{t('USER.FORM.LABEL.CURRENCY')}</label>
                                     <Dropdown
                                         id="currency_preference_id"
                                         value={user.currency_preference_id}
@@ -436,7 +441,7 @@ const UserListGroupPage = () => {
                                         }
                                         optionLabel="name"
                                         optionValue="id"
-                                        placeholder="Choose a currency"
+                                        placeholder={t('USER.FORM.PLACEHOLDER.CURRENCY')}
                                         className="w-full"
                                     />
                                     {submitted && !user.currency_preference_id && (<small style={{ color: "red", fontSize: "12px" }}>Currency is required.</small>)}

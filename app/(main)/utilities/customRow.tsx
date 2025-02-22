@@ -11,5 +11,6 @@ export const customCellStyle = {
     padding: '2px 8px',
     lineHeight: '1.2',
     height: '60px',
-color:'black'
+    color:'black',
+
   };

@@ -21,6 +21,7 @@ import { _addCurrency, _deleteCurrency, _editCurrency, _fetchCurrencies } from '
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const CurrencyPage = () => {
 
@@ -129,8 +130,8 @@ const CurrencyPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('CURRENCY.TABLE.CREATECURRENCY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('CURRENCY.TABLE.CREATECURRENCY')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -184,7 +185,7 @@ const CurrencyPage = () => {
     const actionBodyTemplate = (rowData: Currency) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editCurrency(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editCurrency(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteCurrency(rowData)} />
             </>
         );
@@ -248,13 +249,13 @@ const CurrencyPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="name" header={t('CURRENCY.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyNameBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="code" header={t('CURRENCY.TABLE.COLUMN.CURRENCYCODE')} sortable body={currencyCodeBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="exchange_rate" header={t('CURRENCY.TABLE.COLUMN.EXCHANGERATE')} sortable body={exchangeRateBodyTemplate}></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('CURRENCY.TABLE.COLUMN.CURRENCYNAME')} sortable body={currencyNameBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="code" header={t('CURRENCY.TABLE.COLUMN.CURRENCYCODE')} sortable body={currencyCodeBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="exchange_rate" header={t('CURRENCY.TABLE.COLUMN.EXCHANGERATE')} sortable body={exchangeRateBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={currencyDialog}  style={{ width: '900px',padding:"5px" }} header="Currency Details" modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={currencyDialog}  style={{ width: '900px',padding:"5px" }} header={t('CURRENCY.DETAILS')} modal className="p-fluid" footer={currencyDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:"40px"}}>
                             <div className="field">
                                 <small className="p-text-muted" style={{fontSize:'14px', fontWeight:'bold', display: 'block', marginBottom: '10px' }}>

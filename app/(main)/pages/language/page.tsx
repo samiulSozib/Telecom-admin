@@ -21,6 +21,7 @@ import { _addLanguage, _deleteLanguage, _editLanguage, _fetchLanguages } from '@
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const LanguagePage = () => {
 
@@ -133,8 +134,8 @@ const LanguagePage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('LANGUAGE.TABLE.CREATELANGUAGE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('LANGUAGE.TABLE.CREATELANGUAGE')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -193,7 +194,7 @@ const LanguagePage = () => {
     const actionBodyTemplate = (rowData: Language) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editLanguage(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editLanguage(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteLanguage(rowData)} />
             </>
         );
@@ -257,13 +258,13 @@ const LanguagePage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="name" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGENAME')} sortable body={languageNameBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="language_code" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGECODE')} body={languageCodeBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="direction" header={t('LANGUAGE.TABLE.COLUMN.DIRECTION')} sortable body={directionBodyTemplate} ></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGENAME')} sortable body={languageNameBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="language_code" header={t('LANGUAGE.TABLE.COLUMN.LANGUAGECODE')} body={languageCodeBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="direction" header={t('LANGUAGE.TABLE.COLUMN.DIRECTION')} sortable body={directionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={languageDialog}  style={{ width: '700px',padding:'5px' }} header="Language Details" modal className="p-fluid" footer={languageDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={languageDialog}  style={{ width: '700px',padding:'5px' }} header={t('LANGUAGE.DETAILS')} modal className="p-fluid" footer={languageDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:"40px"}}>
                         <div className="field">
                             <label htmlFor="language_name" style={{fontWeight:'bold'}}>{t('LANGUAGE.FORM.INPUT.LANGUAGENAME')}</label>

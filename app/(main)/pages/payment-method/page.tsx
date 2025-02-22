@@ -23,6 +23,7 @@ import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { customCellStyleImage } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const PaymentMethodPage = () => {
 
@@ -134,8 +135,8 @@ const PaymentMethodPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('PAYMENTMETHOD.TABLE.CREATEPAYMENTMETHOD')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('PAYMENTMETHOD.TABLE.CREATEPAYMENTMETHOD')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -221,7 +222,7 @@ const PaymentMethodPage = () => {
     const actionBodyTemplate = (rowData: PaymentMethod) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editMethod(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editMethod(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteMethod(rowData)} />
             </>
         );
@@ -285,14 +286,14 @@ const PaymentMethodPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyleImage} field="name" header={t('PAYMENTMETHOD.TABLE.COLUMN.METHODNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="Account Details" header={t('PAYMENTMETHOD.TABLE.COLUMN.ACCOUNTDETAILS')} body={accountDetailsBodyTemplate} sortable></Column>
-                        <Column style={customCellStyleImage} header={t('PAYMENTMETHOD.TABLE.COLUMN.IMAGE')} body={imageBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} header={t('PAYMENTMETHOD.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('PAYMENTMETHOD.TABLE.COLUMN.METHODNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Account Details" header={t('PAYMENTMETHOD.TABLE.COLUMN.ACCOUNTDETAILS')} body={accountDetailsBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENTMETHOD.TABLE.COLUMN.IMAGE')} body={imageBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENTMETHOD.TABLE.COLUMN.STATUS')} body={statusBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={methodDialog}  style={{ width: '700px',padding:'5px' }} header="Method Details" modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={methodDialog}  style={{ width: '700px',padding:'5px' }} header={t('PAYMENT.METHOD.DETAILS')} modal className="p-fluid" footer={methodDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:'40px'}}>
                             {paymentMethod.account_image && (
                                 <img

@@ -26,6 +26,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         setProfileMenuVisible((prevVisible) => !prevVisible);
     };
 
+
     useEffect(() => {
         dispatch(_fetchLanguages());
     }, [dispatch]);
@@ -46,6 +47,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 setCurrentLanguage(language.language_code); // Update state
                 //console.log(`Language changed to: ${language.language_code}`);
                 router.refresh()
+
             })
             .catch((err) => {
                 console.error('Error changing language:', err);
@@ -62,6 +64,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         topbarmenu: topbarmenuRef.current,
         topbarmenubutton: topbarmenubuttonRef.current
     }));
+
+
 
     return (
         <div className="layout-topbar" >

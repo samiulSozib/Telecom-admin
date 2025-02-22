@@ -25,6 +25,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const BundlePage = () => {
 
@@ -167,8 +168,8 @@ const BundlePage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('BUNDLE.TABLE.CREATEBUNDLE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('BUNDLE.TABLE.CREATEBUNDLE')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -329,7 +330,7 @@ const BundlePage = () => {
     const actionBodyTemplate = (rowData: Bundle) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editService(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editService(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteService(rowData)} />
             </>
         );
@@ -408,17 +409,17 @@ const BundlePage = () => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="Bundle Title" header={t('BUNDLE.TABLE.COLUMN.BUNDLENAME')}  body={bundleTitleBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Description" header={t('BUNDLE.TABLE.COLUMN.BUNDLEDESCRIPTION')}  body={descriptionBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Validity Type" header={t('BUNDLE.TABLE.COLUMN.VALIDITYTYPE')}  body={validityTypeBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Admin Buying" header={t('BUNDLE.TABLE.COLUMN.ADMINBUYINGPRICE')}  body={adminBuyingPriceBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Buying Price" header={t('BUNDLE.TABLE.COLUMN.BUYINGPRICE')}  body={buyingPriceBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Selling Price" header={t('BUNDLE.TABLE.COLUMN.SELLINGPRICE')}  body={sellingPriceBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Currency" header={t('BUNDLE.TABLE.COLUMN.CURRENCYNAME')}  body={currencyBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Service" header={t('BUNDLE.TABLE.FILTER.SERVICE')}   body={serviceNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Category" header={t('BUNDLE.TABLE.COLUMN.SERVICECATEGORY')}  body={serviceCategoryBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Created" header={t('TABLE.GENERAL.CREATEDAT')}  body={createdAtBodyTemplate} ></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Bundle Title" header={t('BUNDLE.TABLE.COLUMN.BUNDLENAME')}  body={bundleTitleBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Description" header={t('BUNDLE.TABLE.COLUMN.BUNDLEDESCRIPTION')}  body={descriptionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Validity Type" header={t('BUNDLE.TABLE.COLUMN.VALIDITYTYPE')}  body={validityTypeBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Admin Buying" header={t('BUNDLE.TABLE.COLUMN.ADMINBUYINGPRICE')}  body={adminBuyingPriceBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Buying Price" header={t('BUNDLE.TABLE.COLUMN.BUYINGPRICE')}  body={buyingPriceBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Selling Price" header={t('BUNDLE.TABLE.COLUMN.SELLINGPRICE')}  body={sellingPriceBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Currency" header={t('BUNDLE.TABLE.COLUMN.CURRENCYNAME')}  body={currencyBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Service" header={t('BUNDLE.TABLE.FILTER.SERVICE')}   body={serviceNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Category" header={t('BUNDLE.TABLE.COLUMN.SERVICECATEGORY')}  body={serviceCategoryBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Created" header={t('TABLE.GENERAL.CREATEDAT')}  body={createdAtBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
                     <Paginator
                         first={(pagination?.page - 1) * pagination?.items_per_page}
@@ -429,7 +430,7 @@ const BundlePage = () => {
                     />
 
 
-                    <Dialog visible={serviceDialog}  style={{ width: '900px',padding:'5px' }} header="Bundle Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={serviceDialog}  style={{ width: '900px',padding:'5px' }} header={t('BUNDLE.DETAILS')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:'40px'}}>
                         <div className="formgrid grid">
                             <div className="field col">
@@ -609,7 +610,7 @@ const BundlePage = () => {
                                     }
                                     optionLabel='name'
                                     // optionValue='id'
-                                    placeholder={t('')}
+                                    placeholder={t('CURRENCY.GENERAL.SELECTCURRENCY')}
                                     className="w-full"
                                 />
                                 {submitted && !bundle.currency && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}

@@ -23,6 +23,7 @@ import { FileUpload } from 'primereact/fileupload';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyleImage } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const CountryPage = () => {
 
@@ -147,8 +148,8 @@ const CountryPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('COUNTRY.TABLE.CREATECOUNTRY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('COUNTRY.TABLE.CREATECOUNTRY')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -223,7 +224,7 @@ const CountryPage = () => {
     const actionBodyTemplate = (rowData: Country) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editCountry(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editCountry(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteCountry(rowData)} />
             </>
         );
@@ -298,15 +299,15 @@ const CountryPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyleImage} field="" header="" sortable body={imageBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="name" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} sortable body={countryNameBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="country_code" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} body={countryCodeBodyTemplate} sortable></Column>
-                        <Column style={customCellStyleImage} field="currency" header={t('COUNTRY.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
-                        <Column style={customCellStyleImage} field="language" header={t('COUNTRY.TABLE.COLUMN.LANGUAGE')} body={languageBodyTemplate} sortable></Column>
-                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="" header="" sortable body={imageBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} sortable body={countryNameBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="country_code" header={t('COUNTRY.TABLE.COLUMN.COUNTRYTELECOMCODE')} body={countryCodeBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="currency" header={t('COUNTRY.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="language" header={t('COUNTRY.TABLE.COLUMN.LANGUAGE')} body={languageBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={countryDialog}  style={{ width: '700px',padding:'5px' }} header="Country Details" modal className="p-fluid" footer={countryDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={countryDialog}  style={{ width: '700px',padding:'5px' }} header={t('COUNTRY.DETAILS')} modal className="p-fluid" footer={countryDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:'40px'}}>
                         {country.country_flag_image_url && (
                             <img
@@ -409,7 +410,7 @@ const CountryPage = () => {
                                     }
                                     optionLabel='name'
                                     // optionValue='id'
-                                    placeholder="Choose a currency"
+                                    placeholder={t('COUNTRY.FORM.INPUT.CURRENCY')}
                                     className="w-full"
                                 />
                                 {submitted && !country.currency && <small className="p-invalid" style={{ color: 'red' }}>Currency is required.</small>}
@@ -432,7 +433,7 @@ const CountryPage = () => {
                                     }
                                     optionLabel='language_name'
                                     // optionValue='id'
-                                    placeholder="Choose a language"
+                                    placeholder={t('COUNTRY.FORM.INPUT.LANGUAGE')}
                                     className="w-full"
                                 />
                             {submitted && !country.language && <small className="p-invalid" style={{ color: 'red' }}>Language is required.</small>}

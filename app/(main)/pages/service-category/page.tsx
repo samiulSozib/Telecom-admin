@@ -21,6 +21,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const Category = () => {
 
@@ -134,8 +135,8 @@ const Category = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2  ">
-                    <Button label={t('SERVICECATEGORY.TABLE.CREATESERVICECATEGORY')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('SERVICECATEGORY.TABLE.CREATESERVICECATEGORY')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -187,7 +188,7 @@ const Category = () => {
     const actionBodyTemplate = (rowData: ServiceCategory) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editServiceCategory(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editServiceCategory(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteServiceCategory(rowData)} />
             </>
         );
@@ -251,12 +252,12 @@ const Category = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="category_name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="type" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="category_name" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYNAME')} sortable body={serviceCategoryNameBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="type" header={t('SERVICECATEGORY.TABLE.COLUMN.SERVICECATEGORYTYPE')} body={serviceCategoryTypeBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={serviceCategoryDialog}  style={{ width: '700px',padding:'5px' }} header="Category Details" modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={serviceCategoryDialog}  style={{ width: '700px',padding:'5px' }} header={t('SERVICE.CATEGORY.DETAILS')} modal className="p-fluid" footer={serviceCategoryDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:'40px'}}>
                             <div className="field">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SERVICECATEGORY.FORM.INPUT.SERVICECATEGORYNAME')}</label>
@@ -271,6 +272,7 @@ const Category = () => {
                                     }
                                     required
                                     autoFocus
+                                    placeholder={t('SERVICE.FORM.PLACEHOLDER.CATEGORY_NAME')}
                                     className={classNames({
                                         'p-invalid': submitted && !serviceCategory.category_name
                                     })}
@@ -294,7 +296,7 @@ const Category = () => {
                                                 type: e.value,
                                             }))
                                         }
-                                        placeholder="Choose a Type"
+                                        placeholder={t('SERVICE.FORM.PLACEHOLDER.CHOOSE_A_TYPE')}
                                         className="w-full"
                                     />
                                     {submitted && !serviceCategory.type && <small className="p-invalid" style={{ color: 'red' }}>Category Type is required.</small>}

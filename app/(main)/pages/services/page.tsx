@@ -21,6 +21,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyleImage } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const Services = () => {
     let emptyService:Service={
@@ -140,8 +141,8 @@ const Services = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('SERVICE.TABLE.CREATESERVICE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('SERVICE.TABLE.CREATESERVICE')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -212,7 +213,7 @@ const Services = () => {
     const actionBodyTemplate = (rowData: Service) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editService(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editService(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteService(rowData)} />
             </>
         );
@@ -287,13 +288,13 @@ const Services = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyleImage} field="Company Name" header={t('SERVICE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyInfoBodyTemplate} ></Column>
-                        <Column style={customCellStyleImage} field="Country" header={t('SERVICE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyleImage} field="Service Category" header={t('SERVICE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryNameBodyTemplate} ></Column>
-                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Company Name" header={t('SERVICE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyInfoBodyTemplate} ></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Country" header={t('SERVICE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Service Category" header={t('SERVICE.TABLE.COLUMN.SERVICECATEGORY')} sortable body={serviceCategoryNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={serviceDialog}  style={{ width: '700px',padding:'5px' }} header="Service Details" modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={serviceDialog}  style={{ width: '700px',padding:'5px' }} header={t('SERVICE.DETAILS')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:'40px'}}>
                             <div className="field">
                                 <label htmlFor="name" style={{fontWeight:'bold'}}>{t('SERVICE.FORM.INPUT.SERVICENAME')}</label>

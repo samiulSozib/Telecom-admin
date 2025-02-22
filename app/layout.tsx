@@ -66,17 +66,37 @@ import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import '../i18n'
+import i18n from 'i18next';
+
 interface RootLayoutProps {
     children: ReactNode;
 }
 
 const RootLayout = ({ children }: RootLayoutProps): JSX.Element => {
 
+
+    const [locale, setLocale] = useState(i18n.language);
+    const [direction, setDirection] = useState<'ltr' | 'rtl'>('ltr');
+
+    // useEffect(() => {
+    //     // Update the direction based on the current locale
+    //     if (locale === 'ar' || locale === 'fa' || locale === 'ps') {
+    //         setDirection('rtl');
+    //     } else {
+    //         setDirection('ltr');
+    //     }
+    // }, [locale]);
+
+    // useEffect(()=>{
+    //     console.log(locale)
+    //     console.log(direction)
+    // },[direction,locale])
+
     return (
         <html>
-            <head lang="en" suppressHydrationWarning>
+            <head lang={locale} suppressHydrationWarning>
                 <link
                     id="theme-css"
                     href={`/themes/lara-light-indigo/theme.css`}
@@ -84,7 +104,7 @@ const RootLayout = ({ children }: RootLayoutProps): JSX.Element => {
                 ></link>
             </head>
 
-            <body>
+            <body dir={["ar", "fa", "ps","bn"].includes(i18n.language) ? "rtl" : "ltr"}>
                 <Provider store={store}>
                 <PrimeReactProvider>
                     <LayoutProvider>

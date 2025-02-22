@@ -22,6 +22,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const CompanyCodePage = () => {
 
@@ -137,8 +138,8 @@ const CompanyCodePage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2    ">
-                    <Button label={t('COMPANYCODE.TABLE.CREATECOMPANYCODE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('COMPANYCODE.TABLE.CREATECOMPANYCODE')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -206,7 +207,7 @@ const CompanyCodePage = () => {
     const actionBodyTemplate = (rowData: CompanyCode) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editCompanyCode(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editCompanyCode(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteCompany(rowData)} />
             </>
         );
@@ -284,11 +285,11 @@ const CompanyCodePage = () => {
 
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="reserved_digit" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')}  sortable body={reservedDigitBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="company.country.country_name" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="company.company_name" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="company.country.country_telecom_code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="reserved_digit" header={t('COMPANYCODE.TABLE.COLUMN.RESERVEDDIGIT')}  sortable body={reservedDigitBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="company.country.country_name" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYNAME')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="company.company_name" header={t('COMPANYCODE.TABLE.COLUMN.COMPANYNAME')} sortable body={companyNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="company.country.country_telecom_code" header={t('COMPANYCODE.TABLE.COLUMN.COUNTRYCODE')} sortable body={countryCodeBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={companyCodeDialog}  style={{ width: '700px',padding:'5px' }} header={t('MENU.COMPANYCODE')} modal className="p-fluid" footer={companyDialogFooter} onHide={hideDialog}>

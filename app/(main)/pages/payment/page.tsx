@@ -31,6 +31,7 @@ import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { Reseller } from '../../../../types/interface';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const PaymentPage = () => {
 
@@ -156,8 +157,8 @@ const PaymentPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label="Add Payment" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Add Payment" icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -346,15 +347,15 @@ const PaymentPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.PAYMENTMETHOD')} body={paymentMethodBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.REMAININGPAYMENTAMOUNT')} body={remainingPaymentBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.NOTES')} body={noteBodyTemplate} ></Column>
-                        <Column style={customCellStyle} header={t('PAYMENT.TABLE.COLUMN.PAYMENTDATE')} body={paymentDateBodyTemplate} ></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.RESELLER')} body={resellerNameBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.PAYMENTMETHOD')} body={paymentMethodBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.AMOUNT')} body={amountBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.CURRENCY')} body={currencyBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.REMAININGPAYMENTAMOUNT')} body={remainingPaymentBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.STATUS')} body={statusBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.NOTES')} body={noteBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} header={t('PAYMENT.TABLE.COLUMN.PAYMENTDATE')} body={paymentDateBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
                     <Dialog visible={paymentDialog}  style={{ width: '900px',padding:'5px' }} header={t('PAYMENT.DETAILS.TITLE')} modal className="p-fluid" footer={paymentDialogFooter} onHide={hideDialog}>

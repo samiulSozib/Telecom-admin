@@ -26,6 +26,7 @@ import { _fetchMoneyTransactionsList } from '@/app/redux/actions/moneyTransactio
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const TransactionPage = () => {
 
@@ -152,8 +153,8 @@ const TransactionPage = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    {/* <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} /> */}
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    {/* <Button label="New" icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} /> */}
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -332,7 +333,7 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
     // const actionBodyTemplate = (rowData: Bundle) => {
     //     return (
     //         <>
-    //             <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editService(rowData)}/>
+    //             <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editService(rowData)}/>
     //             <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteService(rowData)} />
     //         </>
     //     );
@@ -398,15 +399,15 @@ const initiatorTypeBodyTemplate = (rowData: MoneyTransaction) => {
                         currentPageReportTemplate={`Showing {first} to {last} of {totalRecords} items`}
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="Reseller" header={t('TRANSACTION.TABLE.COLUMN.RESELLERNAME')}  body={resellerBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Amount" header={t('TRANSACTION.TABLE.COLUMN.AMOUNT')}  body={amountBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Currency" header={t('TRANSACTION.TABLE.COLUMN.CURRENCY')}  body={currencyBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Remaining Balance" header={t('TRANSACTION.TABLE.COLUMN.REMAININGBALANCE')}  body={remainingBalanceBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Bundle Title" header={t('TRANSACTION.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Transaction Date" header={t('TRANSACTION.TABLE.COLUMN.TRANSACTIONEDDATE')}  body={transactionDateBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Status" header={t('TRANSACTION.TABLE.COLUMN.STATUS')}  body={statusBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Initiator" header={t('TRANSACTION.TABLE.COLUMN.INITIATORTYPE')}  body={initiatorTypeBodyTemplate} ></Column>
-                        <Column style={customCellStyle} field="Description" header={t('TRANSACTION.TABLE.COLUMN.DESCRIPTION')}  body={descriptionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Reseller" header={t('TRANSACTION.TABLE.COLUMN.RESELLERNAME')}  body={resellerBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Amount" header={t('TRANSACTION.TABLE.COLUMN.AMOUNT')}  body={amountBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Currency" header={t('TRANSACTION.TABLE.COLUMN.CURRENCY')}  body={currencyBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Remaining Balance" header={t('TRANSACTION.TABLE.COLUMN.REMAININGBALANCE')}  body={remainingBalanceBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Bundle Title" header={t('TRANSACTION.TABLE.COLUMN.BUNDLETITLE')}  body={bundleTitleBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Transaction Date" header={t('TRANSACTION.TABLE.COLUMN.TRANSACTIONEDDATE')}  body={transactionDateBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Status" header={t('TRANSACTION.TABLE.COLUMN.STATUS')}  body={statusBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Initiator" header={t('TRANSACTION.TABLE.COLUMN.INITIATORTYPE')}  body={initiatorTypeBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="Description" header={t('TRANSACTION.TABLE.COLUMN.DESCRIPTION')}  body={descriptionBodyTemplate} ></Column>
                         {/* <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
                     </DataTable>
                     <Paginator

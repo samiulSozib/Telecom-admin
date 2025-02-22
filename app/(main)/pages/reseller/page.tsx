@@ -32,6 +32,7 @@ import { SplitButton } from 'primereact/splitbutton';
 import { useRouter } from 'next/navigation';
 import { Paginator } from 'primereact/paginator';
 import { customCellStyleImage } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const ResellerPage = () => {
 
@@ -227,8 +228,8 @@ const ResellerPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('RESELLER.TABLE.CREATERESELLER')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('RESELLER.TABLE.CREATERESELLER')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -518,17 +519,17 @@ useEffect(() => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyleImage} body={actionBodyTemplate} headerStyle={{ width: '5rem' }}></Column>
-                        <Column style={customCellStyleImage} field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} body={phoneBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="balance" header={t('MENU.BALANCE')}  body={balanceBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="available_payment" header={t('RESELLER.TABLE.COLUMN.AVAILABLEPAYMENT')}  body={availablePaymentBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')}  body={totalPaymentBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="total_balance" header={t('RESELLER.TABLE.COLUMN.TOTAL_BALANCE')}  body={totalBalanceSentBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')}  body={loanAmountBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} body={preferredCurrencyBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')}  body={countryBodyTemplate}></Column>
-                        <Column style={customCellStyleImage} field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ width: '5rem' }}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('RESELLER.TABLE.COLUMN.RESELLERNAME')} sortable body={nameBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="phone" header={t('RESELLER.TABLE.COLUMN.PHONE')} body={phoneBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="balance" header={t('MENU.BALANCE')}  body={balanceBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="available_payment" header={t('RESELLER.TABLE.COLUMN.AVAILABLEPAYMENT')}  body={availablePaymentBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="total_payment" header={t('RESELLER.TABLE.COLUMN.PAYMENT')}  body={totalPaymentBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="total_balance" header={t('RESELLER.TABLE.COLUMN.TOTAL_BALANCE')}  body={totalBalanceSentBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="loan_amount" header={t('RESELLER.TABLE.COLUMN.LOANAMOUNT')}  body={loanAmountBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="preferred_currency" header={t('RESELLER.TABLE.COLUMN.CURRENCYPREFERENCE')} body={preferredCurrencyBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="country" header={t('RESELLER.TABLE.COLUMN.COUNTRY')}  body={countryBodyTemplate}></Column>
+                        <Column style={{...customCellStyleImage,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="status" header={t('BUNDLE.TABLE.FILTER.STATUS')} sortable body={statusBodyTemplate}></Column>
 
                     </DataTable>
                     <Paginator
@@ -539,7 +540,7 @@ useEffect(() => {
                         template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                     />
 
-                    <Dialog visible={resellerDialog}  style={{ width: '900px',padding:'5px' }} header="Reseller Details" modal className="p-fluid" footer={resellerDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={resellerDialog}  style={{ width: '900px',padding:'5px' }} header={t('RESELLER.DETAILS')} modal className="p-fluid" footer={resellerDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:"10px"}}>
                         {reseller.profile_image_url && (
                             <img
@@ -765,7 +766,7 @@ useEffect(() => {
 
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label style={{fontWeight:'bold'}} htmlFor="name">Reseller Group</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.LABEL.RESELLERGROUP')}</label>
                                 <Dropdown
                                     id="reseller_group_id"
                                     value={reseller.reseller_group_id}
@@ -786,7 +787,7 @@ useEffect(() => {
 
                             </div>
                             <div className="field col">
-                                <label style={{fontWeight:'bold'}} htmlFor="name">Sub Reseller Limit</label>
+                                <label style={{fontWeight:'bold'}} htmlFor="name">{t('RESELLER.FORM.LABEL.SUBRESELLERLIMIT')}</label>
                                 <InputText
                                     id="sub_reseller_limit"
                                     value={reseller.sub_reseller_limit.toString()}
@@ -822,7 +823,7 @@ useEffect(() => {
                                     }
                                     className="w-small"
                                 />
-                                <label style={{ fontWeight: 'bold' }} htmlFor="inputSwitch1">Can Create Sub Reseller</label>
+                                <label style={{ fontWeight: 'bold' }} htmlFor="inputSwitch1">{t('RESELLER.FORM.LABEL.CANCREATESUBRESELLER')}</label>
                             </div>
 
                             <div className="field col flex align-items-center gap-2">
@@ -838,7 +839,7 @@ useEffect(() => {
                                     }
                                     className="w-small"
                                 />
-                                <label style={{ fontWeight: 'bold' }} htmlFor="inputSwitch1">Sub Reseller Can Create Sub Reseller</label>
+                                <label style={{ fontWeight: 'bold' }} htmlFor="inputSwitch1">{t('RESELLER.FORM.LABEL.SUBRESELLERCANCREATESUBRESELLER')}</label>
                             </div>
 
 

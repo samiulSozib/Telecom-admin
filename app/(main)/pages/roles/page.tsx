@@ -26,6 +26,7 @@ import { _fetchPermissions } from '@/app/redux/actions/permissionActions';
 import { Checkbox } from 'primereact/checkbox';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const RolesPage = () => {
 
@@ -161,8 +162,8 @@ const RolesPage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('ROLES.CREATENEW')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -214,7 +215,7 @@ const RolesPage = () => {
     const actionBodyTemplate = (rowData: Roles) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editRole(rowData.id)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editRole(rowData.id)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteRole(rowData)} />
             </>
         );
@@ -232,20 +233,20 @@ const RolesPage = () => {
 
     const roleDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" severity="danger" onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" severity="success" onClick={saveRole} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={saveRole} />
         </>
     );
     const deleteRoleDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteRoleDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="success" onClick={deleteRole} />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteRoleDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success" onClick={deleteRole} />
         </>
     );
     const deleteCompaniesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" severity="danger" onClick={hideDeleteRolesDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="success"  />
+            <Button label={t('APP.GENERAL.CANCEL')} icon="pi pi-times" severity="danger" onClick={hideDeleteRolesDialog} />
+            <Button label={t('FORM.GENERAL.SUBMIT')} icon="pi pi-check" severity="success"  />
         </>
     );
 
@@ -301,9 +302,9 @@ const RolesPage = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="name" header="Role" sortable body={roleNameBodyTemplate}></Column>
-                        <Column style={customCellStyle} field="guard_name" header="Guard Name" body={guardNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="name" header={t('ROLES.TABLE.ROLE')} sortable body={roleNameBodyTemplate}></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="guard_name" header={t('ROLES.TABLE.GUARDNAME')} body={guardNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog
@@ -315,7 +316,7 @@ const RolesPage = () => {
                             padding: "1rem",
                             margin:'5px'
                         }}
-                        header="Role Details"
+                        header={t('ROLE.DETAILS')}
                         modal
                         className="p-fluid"
                         footer={roleDialogFooter}
@@ -336,7 +337,7 @@ const RolesPage = () => {
                                     fontSize: "14px",
                                 }}
                             >
-                                Role Name
+                                {t('ROLE.FORM.ROLENAME')}
                             </label>
                             <InputText
                                 id="name"
@@ -349,6 +350,7 @@ const RolesPage = () => {
                                 }
                                 required
                                 autoFocus
+                                placeholder={t('ROLE.FORM.PLACEHOLDER.ROLENAME')}
                                 style={{
                                     width: "100%",
                                     padding: "0.5rem",
@@ -363,7 +365,7 @@ const RolesPage = () => {
                             )}
                         </div>
 
-                        <h5>Permissions</h5>
+                        <h5>{t('PERMISSIONS')}</h5>
                         {/* Select All Checkbox */}
                         <div
                             style={{
@@ -387,7 +389,7 @@ const RolesPage = () => {
                                     fontWeight: "500",
                                 }}
                             >
-                                Select All
+                                {t('SELECTALL')}
                             </label>
                         </div>
                         <hr />

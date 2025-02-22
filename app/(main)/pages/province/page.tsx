@@ -22,6 +22,7 @@ import { countriesReducer } from '../../../redux/reducers/countriesReducer';
 import withAuth from '../../authGuard';
 import { useTranslation } from 'react-i18next';
 import { customCellStyle } from '../../utilities/customRow';
+import i18n from '@/i18n';
 
 const ProvincePage = () => {
 
@@ -136,8 +137,8 @@ const ProvincePage = () => {
         return (
             <React.Fragment>
                 <div className="flex justify-end items-center space-x-2">
-                    <Button label={t('PROVINCE.TABLE.CREATEPROVINCE')} icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label={t('PROVINCE.TABLE.CREATEPROVINCE')} icon="pi pi-plus" severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"} onClick={openNew} />
+                    <Button style={{ gap: ["ar", "fa", "ps", "bn"].includes(i18n.language) ? '0.5rem' : '' }} label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCompanies || !(selectedCompanies as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -189,7 +190,7 @@ const ProvincePage = () => {
     const actionBodyTemplate = (rowData: Province) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"  onClick={()=>editProvince(rowData)}/>
+                <Button icon="pi pi-pencil" rounded severity="success" className={["ar", "fa", "ps", "bn"].includes(i18n.language) ? "ml-2" : "mr-2"}  onClick={()=>editProvince(rowData)}/>
                 <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteProvince(rowData)} />
             </>
         );
@@ -266,12 +267,12 @@ useEffect(() => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column style={customCellStyle} field="province_name" header={t('PROVINCE.TABLE.COLUMN.PROVINCENAME')} body={provinceNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} field="country_name" header={t('PROVINCE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
-                        <Column style={customCellStyle} body={actionBodyTemplate} ></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="province_name" header={t('PROVINCE.TABLE.COLUMN.PROVINCENAME')} body={provinceNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} field="country_name" header={t('PROVINCE.TABLE.COLUMN.COUNTRY')} body={countryNameBodyTemplate} sortable></Column>
+                        <Column style={{...customCellStyle,textAlign: ["ar", "fa", "ps","bn"].includes(i18n.language) ? "right" : "left" }} body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={provinceDialog}  style={{ width: '700px',padding:'5px' }} header="Province Details" modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={provinceDialog}  style={{ width: '700px',padding:'5px' }} header={t("PROVINCE.DETAILS")} modal className="p-fluid" footer={provinceDialogFooter} onHide={hideDialog}>
                         <div className='card' style={{padding:"40px"}}>
                             <div className="field">
                                 <label htmlFor="province_name" style={{fontWeight:'bold'}}>{t('PROVINCE.FORM.INPUT.PROVINCENAME')}</label>
