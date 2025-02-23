@@ -276,14 +276,14 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
                     <div className="grid mt-2">
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.balance} {userInfo?.currency?.symbol}</h4>
                                 <span>{t('RESELLER.VIEW.BALANCE')}</span>
                             </div>
                         </div>
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.today_orders}</h4>
                                 <span>{t('RESELLER.VIEW.TODAYORDER')}</span>
                             </div>
@@ -291,35 +291,35 @@ const ResellerDetailsPage = ({params}: ResellerDetailsPageProps) => {
 
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.total_orders}</h4>
                                 <span>{t('RESELLER.VIEW.TOTALORDER')}</span>
                             </div>
                         </div>
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.today_sale}</h4>
                                 <span>{t('RESELLER.VIEW.TODAYSALE')}</span>
                             </div>
                         </div>
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.total_sale}</h4>
                                 <span>{t('RESELLER.VIEW.TOTALSALE')}</span>
                             </div>
                         </div>
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.today_profit}</h4>
                                 <span>{t('RESELLER.VIEW.TODAYPROFIT')}</span>
                             </div>
                         </div>
 
                         <div className="col-6 lg:col-6 xl:col-3" >
-                            <div className="card">
+                            <div className="card" style={{maxHeight:'120px'}}>
                                 <h4>{singleReseller.total_profit}</h4>
                                 <span>{t('RESELLER.VIEW.TOTALPROFIT')}</span>
                             </div>

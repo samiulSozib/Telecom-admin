@@ -122,7 +122,7 @@ const Dashboard = () => {
     return (
         <div className="grid -m-5">
             <div className="col-6 lg:col-6 xl:col-3">
-                <div className="card mb-0" style={{maxHeight:"130px"}}>
+                <div className="card mb-0" style={{maxHeight:"120px"}}>
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">{t('DASHBOARD.TODAYORDER')}</span>
