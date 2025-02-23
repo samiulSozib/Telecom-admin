@@ -4,7 +4,7 @@ const nextConfig = {
     i18n: {
         locales: ['fa','en' , 'bn' , 'ar' , 'tr' , 'ps' , 'ge' , 'hi' ],
         defaultLocale: 'en', // Set the default locale
-        localeDetection: true,
+        localeDetection: false,
     },
     reactStrictMode: false,
     localePath: path.resolve('./public/locales'),
