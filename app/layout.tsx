@@ -96,7 +96,7 @@ const RootLayout = ({ children }: RootLayoutProps): JSX.Element => {
 
     return (
         <html>
-            <head lang={locale} suppressHydrationWarning>
+            <head lang='en' suppressHydrationWarning>
                 <link
                     id="theme-css"
                     href={`/themes/lara-light-indigo/theme.css`}
