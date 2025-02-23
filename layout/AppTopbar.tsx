@@ -65,6 +65,18 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         topbarmenubutton: topbarmenubuttonRef.current
     }));
 
+    const isRTL = ['ar', 'fa', 'ps'].includes(currentLanguage); // Check if it's an RTL language
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 991);
+        };
+
+        handleResize(); // Initial check
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
 
     return (
@@ -79,12 +91,15 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 <i className="pi pi-bars" />
             </button>
 
-            <button ref={topbarmenubuttonRef} type="button" className="p-link layout-topbar-menu-button layout-topbar-button" onClick={showProfileSidebar}>
+            <button  ref={topbarmenubuttonRef} type="button" className="p-link layout-topbar-menu-button layout-topbar-button" onClick={showProfileSidebar}>
                 <i className="pi pi-ellipsis-v" />
             </button>
 
             {/* Profile Button */}
-            <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
+            <div style={{
+                marginLeft: isRTL ? '0' : 'auto', // Move left for Arabic
+                marginRight: isRTL ? 'auto' : '0' // Default for LTR
+            }} ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
                 <button
                     type="button"
                     className="p-link layout-topbar-button"
@@ -97,18 +112,21 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
 
                 {/* Profile Dropdown Menu */}
                 {profileMenuVisible && (
+
                     <div
                         style={{
                             position: 'absolute',
                             top: '100%',
-                            right: '0',
+                            right: isRTL ? 'auto' : '0', // Align to left when RTL
+                            left: isRTL ? '0' : 'auto', // Align to right when LTR
                             backgroundColor: 'white',
                             border: '1px solid #ccc',
                             borderRadius: '8px',
                             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                             zIndex: 1000,
                             width: '300px',
-                            padding: '16px',
+                            padding: '20px',
+                            marginLeft: isRTL && isMobile ? '-100px' : '',
                         }}
                     >
                         {/* User Info */}
@@ -124,7 +142,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                     alignItems: 'center',
                                     color: 'white',
                                     fontSize: '24px',
-                                    marginRight: '12px',
+                                    marginRight: isRTL ? '0' : '12px', // Adjust for RTL
+                                    marginLeft: isRTL ? '12px' : '0', // Adjust for RTL
                                 }}
                             >
                                 <i className="pi pi-user"></i>
@@ -166,7 +185,6 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                     }}
                                 >
                                     {currentLanguage}
-
                                 </span>
 
                                 {/* Language Dropdown */}
@@ -175,7 +193,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                         style={{
                                             position: 'absolute',
                                             top: '100%',
-                                            left: '0',
+                                            left: isRTL ? 'auto' : '0', // Align to left when LTR
+                                            right: isRTL ? '0' : 'auto', // Align to right when RTL
                                             background: '#fff',
                                             border: '1px solid #ccc',
                                             borderRadius: '8px',
@@ -228,6 +247,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                             </li>
                         </ul>
                     </div>
+
                 )}
             </div>
         </div>

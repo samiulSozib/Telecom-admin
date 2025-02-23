@@ -33,7 +33,14 @@
         &.layout-static {
             .layout-main-container {
                 margin-left: 280px;
+                [dir="rtl"] & {
+                    margin-left: 0;
+                    margin-right: 280px;
+                }
+
             }
+
+
 
             &.layout-static-inactive {
                 .layout-sidebar {
